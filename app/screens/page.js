@@ -11,7 +11,7 @@ export default function ScreensPage() {
         description={
           <>
             Everything you can imagine is real..{" "}
-            <span className="text-[#027864]"> Playground :0</span>
+            <span className="text-[#4447A9]"> Playground :0</span>
           </>
         }
       />

@@ -4,9 +4,10 @@ export default function page() {
   return (
     <section>
       <Body
+        activePage="/now"
         description={
           <>
-            The Future is Present.. <span className="text-[#027864]"> Now</span>
+            The Future is Present.. <span className="text-[#4447A9]"> Now</span>
           </>
         }
       />

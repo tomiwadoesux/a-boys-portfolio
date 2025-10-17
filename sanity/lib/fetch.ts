@@ -21,7 +21,7 @@ export interface ProjectData {
   featured: boolean
   figcaption: string
   description: string
-  order: number
+  date: number
 }
 
 export interface GuestbookData {

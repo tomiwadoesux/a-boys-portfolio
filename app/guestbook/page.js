@@ -8,10 +8,11 @@ export default async function GuestbookPage() {
   return (
     <div>
       <Body
+        activePage="/guestbook"
         description={
           <>
             Leave your mark in my digital{" "}
-            <span className="text-[#027864]">Guestbook</span>
+            <span className="text-[#4447A9]">Guestbook</span>
           </>
         }
       />

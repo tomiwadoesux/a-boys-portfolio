@@ -11,6 +11,7 @@ import SvgHover from "./SvgHover";
 
 export default function Body({
   description = "A Design Engineer Now in Abuja, Nigeria",
+  activePage = "",
 }) {
   const [isScrambled, setIsScrambled] = useState(false);
 
@@ -22,13 +23,14 @@ export default function Body({
     <section>
       <Headd />
       <div className=" px-16 lg:px-56 pt-36">
-        <div>
-        </div>
+        <div></div>
         <div className="flex flex-row ">
           <div className=" w-full ">
             <div className=" flex flex-row justify-between">
               <div className=" flex flex-row gap-3">
-                <h1 className="text-3xl uppercase font-bold">Ayotomcs</h1>
+                <Link href="/" className="">
+                  <h1 className="text-3xl uppercase font-bold">Ayotomcs</h1>
+                </Link>
                 <div className="self-center">
                   <Logo />
                 </div>
@@ -62,36 +64,24 @@ export default function Body({
                 <div className="flex py-3">
                   {isScrambled ? (
                     <>
-                      <Link href="/guestbook" className="pl-4 ">
-                        <ScrambleText
-                          originalText=""
-                          targetText="GuestBook"
-                          isScrambled={isScrambled}
-                          className="text-[13px] underline underline-offset-2 "
-                        />
-                      </Link>
-                      <Link href="/playground" className="pl-4 ">
-                        <ScrambleText
-                          originalText=""
-                          targetText="Playground"
-                          isScrambled={isScrambled}
-                          className="text-[13px] underline underline-offset-2 "
-                        />
-                      </Link>
                       <Link href="/list" className="pl-4 ">
                         <ScrambleText
-                          originalText="Resumé"
+                          originalText="Projects"
                           targetText="List ∞"
                           isScrambled={isScrambled}
-                          className="text-[13px] underline underline-offset-2 "
+                          className={`text-[13px] underline underline-offset-2 ${
+                            activePage === "/list" ? "text-[#4447A9]" : ""
+                          }`}
                         />
                       </Link>
                       <Link href="/screens" className="pl-4 ">
                         <ScrambleText
-                          originalText="Projects"
+                          originalText="Resumé"
                           targetText="Screens"
                           isScrambled={isScrambled}
-                          className="text-[13px] underline underline-offset-2 "
+                          className={`text-[13px] underline underline-offset-2 ${
+                            activePage === "/screens" ? "text-[#4447A9]" : ""
+                          }`}
                         />
                       </Link>
                       <Link href="/now" className="pl-4">
@@ -99,7 +89,19 @@ export default function Body({
                           originalText="Contact"
                           targetText="Now"
                           isScrambled={isScrambled}
-                          className="text-[13px] underline underline-offset-2 "
+                          className={`text-[13px] underline underline-offset-2 ${
+                            activePage === "/now" ? "text-[#4447A9]" : ""
+                          }`}
+                        />
+                      </Link>
+                      <Link href="/guestbook" className="pl-4 ">
+                        <ScrambleText
+                          originalText="Playground"
+                          targetText="GuestBook"
+                          isScrambled={isScrambled}
+                          className={`text-[13px] underline underline-offset-2 ${
+                            activePage === "/guestbook" ? "text-[#4447A9]" : ""
+                          }`}
                         />
                       </Link>
                     </>
@@ -118,16 +120,24 @@ export default function Body({
                           className="text-[13px] underline underline-offset-2 "
                         />
                       </a>
-                      <Link
-                        href="/projects"
-                        scroll={true}
-                        className="pl-4 "
-                      >
+                      <Link href="/playground" className="pl-4">
+                        <ScrambleText
+                          originalText="Playground"
+                          targetText="Guestbook"
+                          isScrambled={isScrambled}
+                          className={`text-[13px] underline underline-offset-2 ${
+                            activePage === "/playground" ? "text-[#4447A9]" : ""
+                          }`}
+                        />
+                      </Link>
+                      <Link href="/projects" scroll={true} className="pl-4 ">
                         <ScrambleText
                           originalText="Projects"
                           targetText="Lab"
                           isScrambled={isScrambled}
-                          className="text-[13px] underline underline-offset-2 "
+                          className={`text-[13px] underline underline-offset-2 ${
+                            activePage === "/projects" ? "text-[#4447A9]" : ""
+                          }`}
                         />
                       </Link>
                       <Link href="/contact" className="pl-4">
@@ -135,7 +145,9 @@ export default function Body({
                           originalText="Contact"
                           targetText="Now"
                           isScrambled={isScrambled}
-                          className="text-[13px] underline underline-offset-2 "
+                          className={`text-[13px] underline underline-offset-2 ${
+                            activePage === "/contact" ? "text-[#4447A9]" : ""
+                          }`}
                         />
                       </Link>
                     </>

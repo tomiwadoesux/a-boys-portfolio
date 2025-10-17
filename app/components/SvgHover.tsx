@@ -64,7 +64,7 @@ const SvgHover = () => {
 
           const el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
           el.setAttribute('r', (circleConfig.radius / 2).toString());
-          el.setAttribute('class', 'fill-[#027864]');
+          el.setAttribute('class', 'fill-[#4447A9]');
           svg.appendChild(el);
           
           // Initialize dot position with GSAP

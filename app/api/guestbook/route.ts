@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { client } from '../../../sanity/lib/client'
+import { writeClient } from '../../../sanity/lib/client'
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create the guestbook entry in Sanity
-    const newEntry = await client.create({
+    const newEntry = await writeClient.create({
       _type: 'guestbook',
       name,
       message,

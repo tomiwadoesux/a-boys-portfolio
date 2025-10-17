@@ -76,7 +76,7 @@ export default function GuestbookForm({ onSubmit }) {
             maxLength={50}
             value={formData.name}
             onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#027864] focus:border-transparent outline-none transition-all"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4447A9] focus:border-transparent outline-none transition-all"
           />
         </div>
 
@@ -91,7 +91,7 @@ export default function GuestbookForm({ onSubmit }) {
             placeholder="https://..."
             value={formData.link}
             onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#027864] focus:border-transparent outline-none transition-all"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4447A9] focus:border-transparent outline-none transition-all"
           />
         </div>
       </div>
@@ -106,7 +106,7 @@ export default function GuestbookForm({ onSubmit }) {
           required
           value={formData.country}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#027864] focus:border-transparent outline-none transition-all bg-white"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4447A9] focus:border-transparent outline-none transition-all bg-white"
         >
           <option value="" disabled>
             Select your country
@@ -132,7 +132,7 @@ export default function GuestbookForm({ onSubmit }) {
           placeholder="Write your message here..."
           value={formData.message}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#027864] focus:border-transparent outline-none transition-all resize-none"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4447A9] focus:border-transparent outline-none transition-all resize-none"
         />
         <div className="text-right text-sm text-gray-500 mt-1">
           {formData.message.length}/500
@@ -141,7 +141,7 @@ export default function GuestbookForm({ onSubmit }) {
 
       <button
         type="submit"
-        className="w-full bg-[#027864] text-white font-semibold py-3 px-6 rounded-lg hover:bg-[#025f51] transition-colors"
+        className="w-full bg-[#4447A9] text-white font-semibold py-3 px-6 rounded-lg hover:bg-[#025f51] transition-colors"
       >
         Post Entry
       </button>

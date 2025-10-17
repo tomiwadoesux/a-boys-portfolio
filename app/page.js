@@ -12,7 +12,7 @@ export default function Home() {
         description={
           <>
             A Design Engineer Now in{" "}
-            <span className="text-[#027864]">Abuja, Nigeria</span>
+            <span className="text-[#4447A9]">Abuja, Nigeria</span>
           </>
         }
       />

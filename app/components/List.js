@@ -5,7 +5,7 @@ export default function List() {
         <div className="flex flex-row gap-1">
           <h6 className="text-xs pb-3 ">
             {" "}
-            <span className="text-[#027864]"> [01] </span>
+            <span className="text-[#4447A9]"> [01] </span>
           </h6>
         </div>
         <div className="pb-3">
@@ -36,7 +36,7 @@ export default function List() {
         <div className="flex flex-row gap-1">
           <h6 className="text-xs pb-3 ">
             {" "}
-            <span className="text-[#027864]"> [01] </span>
+            <span className="text-[#4447A9]"> [01] </span>
           </h6>
         </div>
         <div className="pb-3">

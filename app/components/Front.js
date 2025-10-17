@@ -1,14 +1,15 @@
 import SvgHover from "./SvgHover";
-
+import Dock from "./Dock";
 export default function Front() {
   return (
     <section className="px-16 pt-20 lg:px-56">
       <div className="w-full h-44">
         <SvgHover />
       </div>
+      <Dock />
       <div className="flex pb-11 flex-col">
         <div className="flex flex-row gap-1">
-          <h6 className="text-xs text-[#027864] pb-3 ">
+          <h6 className="text-xs text-[#4447A9] pb-3 ">
             {" "}
             Wale-Durojaye Ayotomiwa..
           </h6>
@@ -59,7 +60,7 @@ export default function Front() {
 
           <h6 className="text-xs pb-3 ">
             {" "}
-            <span className="text-[#027864]"> More About Me?.. </span>
+            <span className="text-[#4447A9]"> More About Me?.. </span>
           </h6>
         </div>
 
@@ -90,7 +91,7 @@ export default function Front() {
         <div className="flex flex-row gap-1">
           <h6 className="text-xs pb-3 ">
             {" "}
-            <span className="text-[#027864]"> My Guestbook.. </span>
+            <span className="text-[#4447A9]"> My Guestbook.. </span>
           </h6>
         </div>
 

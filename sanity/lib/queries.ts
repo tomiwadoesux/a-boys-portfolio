@@ -8,36 +8,40 @@ export const nowQuery = groq`*[_type == "now"] | order(order asc) {
   order
 }`
 
-// Query to fetch all projects ordered by display order
-export const projectsQuery = groq`*[_type == "project"] | order(order asc) {
+// Query to fetch all projects ordered by date (newest first)
+export const projectsQuery = groq`*[_type == "project"] | order(date desc) {
   _id,
   title,
   subtitle,
   tech,
-  "image": image.asset->url,
+  "desktopImage": desktopImage.asset->url,
+  "mobileImage": mobileImage.asset->url,
   alt,
-  "video": video.asset->url,
+  "desktopVideo": desktopVideo.asset->url,
+  "mobileVideo": mobileVideo.asset->url,
   link,
   featured,
   figcaption,
   description,
-  order
+  date
 }`
 
 // Query to fetch only featured projects
-export const featuredProjectsQuery = groq`*[_type == "project" && featured == true] | order(order asc) {
+export const featuredProjectsQuery = groq`*[_type == "project" && featured == true] | order(date desc) {
   _id,
   title,
   subtitle,
   tech,
-  "image": image.asset->url,
+  "desktopImage": desktopImage.asset->url,
+  "mobileImage": mobileImage.asset->url,
   alt,
-  "video": video.asset->url,
+  "desktopVideo": desktopVideo.asset->url,
+  "mobileVideo": mobileVideo.asset->url,
   link,
   featured,
   figcaption,
   description,
-  order
+  date
 }`
 
 // Query to fetch all approved guestbook entries

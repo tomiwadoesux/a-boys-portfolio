@@ -28,7 +28,7 @@ export default function ProjectGrid({ projects: allProjects = [], filter = "all"
         </button>
       </div>
       <div className="  px-16 lg:px-56 flex flex-row justify-between ">
-        <h4 className="text-[11px] text-[#027864] "> Selected Projects.. </h4>
+        <h4 className="text-[11px] text-[#4447A9] "> Selected Projects.. </h4>
         <h4 className="text-[11px] "> [ See All Projects ] </h4>
       </div>
 
@@ -41,10 +41,14 @@ export default function ProjectGrid({ projects: allProjects = [], filter = "all"
                 title={project.title}
                 subtitle={project.subtitle}
                 tech={project.tech}
-                image={project.image}
+                desktopImage={project.desktopImage}
+                mobileImage={project.mobileImage}
+                desktopVideo={project.desktopVideo}
+                mobileVideo={project.mobileVideo}
                 alt={project.alt}
                 link={project.link}
                 showLivePreview={showLivePreview}
+                isMobile={true}
               />
             </div>
           ))}
@@ -59,10 +63,14 @@ export default function ProjectGrid({ projects: allProjects = [], filter = "all"
             title={project.title}
             subtitle={project.subtitle}
             tech={project.tech}
-            image={project.image}
+            desktopImage={project.desktopImage}
+            mobileImage={project.mobileImage}
+            desktopVideo={project.desktopVideo}
+            mobileVideo={project.mobileVideo}
             alt={project.alt}
             link={project.link}
             showLivePreview={showLivePreview}
+            isMobile={false}
           />
         ))}
       </div>

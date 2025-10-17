@@ -7,7 +7,7 @@ export const revalidate = 3600; // Revalidate every hour
 export default function ProjectsPage() {
   return (
     <div>
-      <Body />
+      <Body activePage="/projects" />
       <ProjectGridWrapper />
     </div>
   );

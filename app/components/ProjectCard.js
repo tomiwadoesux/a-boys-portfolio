@@ -7,14 +7,22 @@ export default function ProjectCard({
   title,
   subtitle,
   tech,
-  image,
+  desktopImage,
+  mobileImage,
+  desktopVideo,
+  mobileVideo,
   alt,
   link,
   showLivePreview = false,
+  isMobile = false,
 }) {
   const [isScrollable, setIsScrollable] = useState(false);
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const iframeRef = useRef(null);
+
+  // Use mobile or desktop image/video based on isMobile prop
+  const currentImage = isMobile ? mobileImage : desktopImage;
+  const currentVideo = isMobile ? mobileVideo : desktopVideo;
 
   const handleClick = () => {
     if (link && !showLivePreview) {
@@ -43,7 +51,7 @@ export default function ProjectCard({
       >
         <div
           className={`bg-[#E5E5E5] border-1 border-t-0 border-black/15 rounded-t-xl overflow-hidden relative ${
-            showLivePreview ? "h-[500px]" : "aspect-[16/9]"
+            isMobile ? (showLivePreview ? "h-[500px]" : "aspect-[9/16]") : (showLivePreview ? "h-[500px]" : "aspect-[16/9]")
           }`}
         >
           {/* Preloaded iframe - always in DOM but hidden when not in preview mode */}
@@ -63,21 +71,42 @@ export default function ProjectCard({
                 }`}
                 title={title}
                 scrolling="no"
-                style={{
-                  transform: "scale(0.5)",
-                  transformOrigin: "top left",
-                  width: "200%",
-                  height: "200%",
-                  overflow: "hidden"
-                }}
+                style={
+                  isMobile
+                    ? {
+                        transform: "scale(0.33)",
+                        transformOrigin: "top left",
+                        width: "300%",
+                        height: "300%",
+                        overflow: "hidden"
+                      }
+                    : {
+                        transform: "scale(0.5)",
+                        transformOrigin: "top left",
+                        width: "200%",
+                        height: "200%",
+                        overflow: "hidden"
+                      }
+                }
               />
             </div>
           )}
 
-          {/* Image layer */}
-          {image ? (
+          {/* Video layer - shows if video exists and no live preview */}
+          {currentVideo && !showLivePreview ? (
+            <video
+              src={currentVideo}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 ${
+                showLivePreview ? "opacity-0" : "opacity-100"
+              }`}
+            />
+          ) : currentImage ? (
             <Image
-              src={image}
+              src={currentImage}
               alt={alt || title}
               fill
               className={`object-cover transition-all duration-300 group-hover:scale-105 ${

@@ -28,7 +28,7 @@ export default function GuestbookEntry({
             href={link}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-lg font-semibold text-gray-900 hover:text-[#027864] transition-colors"
+            className="text-lg font-semibold text-gray-900 hover:text-[#4447A9] transition-colors"
           >
             {name}
           </a>

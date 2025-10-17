@@ -11,7 +11,7 @@ export default async function Now() {
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              fill="#027864"
+              fill="#4447A9"
               width="16"
               height="16"
               className="icon small"
@@ -23,7 +23,7 @@ export default async function Now() {
             <h6 className="text-xs pb-3 ">
               {" "}
               <span className="italic"> Planted On</span>{" "}
-              <span className="text-[#027864]"> {item.date} </span>
+              <span className="text-[#4447A9]"> {item.date} </span>
             </h6>
           </div>
 

@@ -111,7 +111,7 @@ To require manual approval:
 
 ## Color Scheme
 
-- Primary: `#027864` (green accent)
+- Primary: `#4447A9` (green accent)
 - Background: White cards
 - Borders: Gray-200
 - Text: Gray-700/900
@@ -155,7 +155,7 @@ Displayed as cards
 
 ### Files to Customize
 
-- **Colors**: Update `#027864` in components
+- **Colors**: Update `#4447A9` in components
 - **Card style**: Modify `GuestbookEntry.js`
 - **Form fields**: Update `GuestbookForm.js`
 - **Grid layout**: Adjust grid classes in `GuestbookClient.js`
