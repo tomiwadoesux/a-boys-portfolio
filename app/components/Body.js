@@ -60,87 +60,85 @@ export default function Body({
                 </div>
 
                 <div className="flex py-3">
-                  <Link href="/guestbook" className="pl-4 rotate-3">
-                    <ScrambleText
-                      originalText="GuestBook"
-                      targetText="GuestBook"
-                      isScrambled={isScrambled}
-                      className="text-[13px] underline underline-offset-2 "
-                    />
-                  </Link>
-                  <Link href="/playground" className="pl-4 rotate-3">
-                    <ScrambleText
-                      originalText="Playground"
-                      targetText="Playground"
-                      isScrambled={isScrambled}
-                      className="text-[13px] underline underline-offset-2 "
-                    />
-                  </Link>
                   {isScrambled ? (
-                    <Link href="/list" className="pl-4 rotate-3">
-                      <ScrambleText
-                        originalText="Resumé"
-                        targetText="List ∞"
-                        isScrambled={isScrambled}
-                        className="text-[13px] underline underline-offset-2 "
-                      />
-                    </Link>
+                    <>
+                      <Link href="/guestbook" className="pl-4 ">
+                        <ScrambleText
+                          originalText=""
+                          targetText="GuestBook"
+                          isScrambled={isScrambled}
+                          className="text-[13px] underline underline-offset-2 "
+                        />
+                      </Link>
+                      <Link href="/playground" className="pl-4 ">
+                        <ScrambleText
+                          originalText=""
+                          targetText="Playground"
+                          isScrambled={isScrambled}
+                          className="text-[13px] underline underline-offset-2 "
+                        />
+                      </Link>
+                      <Link href="/list" className="pl-4 ">
+                        <ScrambleText
+                          originalText="Resumé"
+                          targetText="List ∞"
+                          isScrambled={isScrambled}
+                          className="text-[13px] underline underline-offset-2 "
+                        />
+                      </Link>
+                      <Link href="/screens" className="pl-4 ">
+                        <ScrambleText
+                          originalText="Projects"
+                          targetText="Screens"
+                          isScrambled={isScrambled}
+                          className="text-[13px] underline underline-offset-2 "
+                        />
+                      </Link>
+                      <Link href="/now" className="pl-4">
+                        <ScrambleText
+                          originalText="Contact"
+                          targetText="Now"
+                          isScrambled={isScrambled}
+                          className="text-[13px] underline underline-offset-2 "
+                        />
+                      </Link>
+                    </>
                   ) : (
-                    <a
-                      href="https://drive.google.com/file/d/1MBEq0m1HuPqMKYSd1j8aJPeU3WUdnXkP/view?usp=sharing"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="pl-4"
-                    >
-                      <ScrambleText
-                        originalText="Resumé"
-                        targetText="List ∞"
-                        isScrambled={isScrambled}
-                        className="text-[13px] underline underline-offset-2 "
-                      />
-                    </a>
-                  )}
-                  {isScrambled ? (
-                    <Link href="/screens" className="pl-4 rotate-3">
-                      <ScrambleText
-                        originalText="Projects"
-                        targetText="Screens"
-                        isScrambled={isScrambled}
-                        className="text-[13px] underline underline-offset-2 "
-                      />
-                    </Link>
-                  ) : (
-                    <Link
-                      href="/projects"
-                      scroll={true}
-                      className="pl-4 rotate-3"
-                    >
-                      <ScrambleText
-                        originalText="Projects"
-                        targetText="Lab"
-                        isScrambled={isScrambled}
-                        className="text-[13px] underline underline-offset-2 "
-                      />
-                    </Link>
-                  )}
-                  {isScrambled ? (
-                    <Link href="/now" className="pl-4">
-                      <ScrambleText
-                        originalText="Contact"
-                        targetText="Now"
-                        isScrambled={isScrambled}
-                        className="text-[13px] underline underline-offset-2 "
-                      />
-                    </Link>
-                  ) : (
-                    <Link href="/contact" className="pl-4">
-                      <ScrambleText
-                        originalText="Contact"
-                        targetText="Now"
-                        isScrambled={isScrambled}
-                        className="text-[13px] underline underline-offset-2 "
-                      />
-                    </Link>
+                    <>
+                      <a
+                        href="https://drive.google.com/file/d/1MBEq0m1HuPqMKYSd1j8aJPeU3WUdnXkP/view?usp=sharing"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="pl-4"
+                      >
+                        <ScrambleText
+                          originalText="Resumé"
+                          targetText="List ∞"
+                          isScrambled={isScrambled}
+                          className="text-[13px] underline underline-offset-2 "
+                        />
+                      </a>
+                      <Link
+                        href="/projects"
+                        scroll={true}
+                        className="pl-4 "
+                      >
+                        <ScrambleText
+                          originalText="Projects"
+                          targetText="Lab"
+                          isScrambled={isScrambled}
+                          className="text-[13px] underline underline-offset-2 "
+                        />
+                      </Link>
+                      <Link href="/contact" className="pl-4">
+                        <ScrambleText
+                          originalText="Contact"
+                          targetText="Now"
+                          isScrambled={isScrambled}
+                          className="text-[13px] underline underline-offset-2 "
+                        />
+                      </Link>
+                    </>
                   )}
 
                   <div

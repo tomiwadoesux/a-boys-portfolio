@@ -26,11 +26,11 @@ const SvgHover = () => {
 
   // Configuration for the dots
   const circleConfig = {
-    radius: 1.5,
-    margin: 20,
-    repelStrength: 500,
-    repelRadius: 100,
-    returnDuration: 0.5, // How quickly dots return to their anchor
+    radius: 2,
+    margin: 30,
+    repelStrength: 300,
+    repelRadius: 70,
+    returnDuration: 0.3, // How quickly dots return to their anchor
     returnEase: 'power2.out', // The easing for the return motion
   };
 
@@ -64,7 +64,7 @@ const SvgHover = () => {
 
           const el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
           el.setAttribute('r', (circleConfig.radius / 2).toString());
-          el.setAttribute('class', 'fill-black');
+          el.setAttribute('class', 'fill-[#027864]');
           svg.appendChild(el);
           
           // Initialize dot position with GSAP
@@ -151,7 +151,7 @@ const SvgHover = () => {
 
   return (
     <div ref={containerRef} className="w-full h-full">
-      <svg ref={svgRef} className="overflow-visible" />
+      <svg ref={svgRef}  className="overflow-visible" />
     </div>
   );
 };
