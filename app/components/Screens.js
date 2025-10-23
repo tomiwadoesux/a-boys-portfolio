@@ -7,14 +7,23 @@ import VideoDisplay from "./VideoDisplay";
 export default function Screens({ screens = [] }) {
   const videoList = screens.length > 0 ? screens : [];
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const displayRef = useRef();
   const containerRef = useRef();
   const scrollAccumulator = useRef(0);
   const scrollThreshold = 50; // Pixels to scroll before changing video - lower for smoother feel
 
-  // Handle continuous smooth scroll to navigate through videos (infinite loop)
+  // Check if mobile on mount and on resize
   useEffect(() => {
-    if (videoList.length === 0) return;
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Handle continuous smooth scroll to navigate through videos (desktop only)
+  useEffect(() => {
+    if (videoList.length === 0 || isMobile) return;
 
     const handleWheel = (e) => {
       e.preventDefault();
@@ -34,17 +43,15 @@ export default function Screens({ screens = [] }) {
       }
     };
 
+    // Use a ref to the container directly, re-attach each time
     const container = containerRef.current;
     if (container) {
       container.addEventListener("wheel", handleWheel, { passive: false });
-    }
-
-    return () => {
-      if (container) {
+      return () => {
         container.removeEventListener("wheel", handleWheel);
-      }
-    };
-  }, [videoList.length]);
+      };
+    }
+  }, [videoList.length, isMobile, setActiveIndex]);
 
   if (videoList.length === 0) {
     return (
@@ -58,20 +65,47 @@ export default function Screens({ screens = [] }) {
   const actualVideoIndex = ((activeIndex % videoList.length) + videoList.length) % videoList.length;
 
   return (
-    <div>
-      <div className="fixed top-1/2 left-7 -translate-y-1/2 z-10">
+    <div className="w-full h-full overflow-hidden flex flex-col md:flex-row">
+      {/* Desktop: Fixed left sidebar */}
+      <div className="hidden md:block fixed top-1/2 left-7 -translate-y-1/2 z-10">
         <VideoSidebar
           videos={videoList}
           activeIndex={activeIndex}
           setActiveIndex={setActiveIndex}
+          isMobile={false}
         />
       </div>
+
+      {/* Desktop: Main content area */}
       <div
         ref={containerRef}
-        className="flex flex-1 overflow-hidden px-10 md:px-20 lg:px-56 items-start"
+        className="hidden md:flex flex-1 overflow-hidden px-10 md:px-20 lg:px-56 items-start md:pt-3"
       >
-        <div className="flex-1 pt-16 overflow-hidden" ref={displayRef}>
-          <VideoDisplay video={videoList[actualVideoIndex]} />
+        <div className="flex-1 overflow-hidden w-full" ref={displayRef}>
+          <VideoDisplay video={videoList[actualVideoIndex]} isMobile={isMobile} />
+        </div>
+      </div>
+
+      {/* Mobile/Tablet: Full screen layout with preview and carousel */}
+      <div className="md:hidden w-full h-full flex flex-col overflow-hidden">
+        {/* Video Preview - Top section */}
+        <div
+          ref={containerRef}
+          className="flex-1 overflow-hidden px-4 pt-4"
+        >
+          <div className="w-full h-full" ref={displayRef}>
+            <VideoDisplay video={videoList[actualVideoIndex]} isMobile={isMobile} />
+          </div>
+        </div>
+
+        {/* Horizontal Carousel - Bottom section */}
+        <div className="w-full px-4 py-4 border-t border-gray-200 flex-shrink-0">
+          <VideoSidebar
+            videos={videoList}
+            activeIndex={activeIndex}
+            setActiveIndex={setActiveIndex}
+            isMobile={true}
+          />
         </div>
       </div>
     </div>

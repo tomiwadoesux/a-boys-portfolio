@@ -1,12 +1,11 @@
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "./components/ThemeProvider";
 import { DescriptionProvider } from "./components/DescriptionProvider";
 import PersistentBody from "./components/PersistentBody";
 import Headd from "./components/Headd";
 import Socials from "./components/Socials";
-import Footer from "./components/Footer";
 import GsapInitializer from "./components/GsapInitializer";
+import NavigationPauseWrapper from "./components/NavigationPauseWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,43 +30,30 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                const theme = localStorage.getItem('theme');
-                if (theme === 'dark') {
-                  document.documentElement.classList.add('dark');
-                }
-              })()
-            `,
-          }}
-        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} antialiased`}
         style={{ backgroundColor: 'var(--foreground)' }}
       >
         <GsapInitializer />
-        <ThemeProvider>
-          <DescriptionProvider>
-            {/* Rounded border frame */}
-            <div className="fixed inset-2 border-2 rounded-2xl pointer-events-none z-[9999]" style={{ borderColor: 'var(--background)' }}></div>
+        <NavigationPauseWrapper />
+        <DescriptionProvider>
+          {/* Rounded border frame */}
+          <div className="fixed inset-2 border-2 rounded-2xl pointer-events-none z-[9999]" style={{ borderColor: 'var(--background)' }}></div>
 
-            {/* Website content inside the border */}
-            <div className="fixed inset-2 rounded-2xl overflow-hidden z-10" style={{ backgroundColor: 'var(--background)' }}>
-              <div id="main-scroll-container" className="h-full w-full overflow-y-auto overflow-x-hidden">
-                <Headd />
-                <PersistentBody />
-                {children}
-                {/* <Socials /> */}
-                <Footer />
-              </div>
+          {/* Website content inside the border */}
+          <div className="fixed inset-2 rounded-2xl overflow-hidden z-10" style={{ backgroundColor: 'var(--background)' }}>
+            <div id="main-scroll-container" className="h-full w-full overflow-y-auto overflow-x-hidden">
+              <Headd />
+              <PersistentBody />
+              {children}
+              {/* <Socials /> */}
+              <Socials />
             </div>
-          </DescriptionProvider>
-        </ThemeProvider>
+          </div>
+        </DescriptionProvider>
       </body>
     </html>
   );

@@ -93,3 +93,25 @@ export const screensQuery = groq`*[_type == "screen"] | order(order asc) {
   link,
   order
 }`
+
+// Query to fetch all cards ordered by display order
+export const cardsQuery = groq`*[_type == "card"] | order(order asc) {
+  _id,
+  title,
+  description,
+  image {
+    asset->{
+      url
+    }
+  },
+  size,
+  order
+}`
+
+// Query to fetch all lab cards ordered by display order
+export const labQuery = groq`*[_type == "lab"] | order(order asc) {
+  title,
+  description,
+  height,
+  order
+}`

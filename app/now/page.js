@@ -7,6 +7,9 @@ export const metadata = {
   description: "What I'm working on right now. The future is present.",
 };
 
+// Revalidate every hour
+export const revalidate = 3600;
+
 export default function page() {
   return (
     <section>

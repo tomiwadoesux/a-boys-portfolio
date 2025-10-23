@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack -p 3000",
-    "build": "next build",
+    "build": "node scripts/build-prerender.js && next build",
     "build:static": "./build-static.sh",
     "start": "next start",
     "lint": "eslint",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "prerender:videos": "node scripts/build-prerender.js"
   },
   "dependencies": {
     "@huggingface/inference": "^4.11.3",

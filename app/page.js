@@ -1,14 +1,18 @@
 import PageConfig from "./components/PageConfig";
 import Front from "./components/Front";
 import ProjectGridWrapper from "./components/ProjectGridWrapper";
-import MusicWidget from "./components/MusicWidget";
 import Socials from "./components/Socials";
 import Down from "./components/Down"
+import MusicWidgetWrapper from "./components/MusicWidgetWrapper";
+
 export const metadata = {
   title: "Home | Design Engineer Portfolio",
   description:
     "A Design Engineer based in Abuja, Nigeria. Explore my creative work and projects.",
 };
+
+// Revalidate every hour
+export const revalidate = 3600;
 
 export default function Home() {
   return (
@@ -23,10 +27,11 @@ export default function Home() {
         activePage="/"
       />
       <Front />
-      <MusicWidget />
+  
       <ProjectGridWrapper filter="featured" />
       <Down/>
-      <Socials />
+      <MusicWidgetWrapper />
+      {/* <Socials /> */}
     </div>
   );
 }

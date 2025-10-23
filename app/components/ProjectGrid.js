@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import ProjectCard from "./ProjectCard";
 
 export default function ProjectGrid({
@@ -12,7 +13,9 @@ export default function ProjectGrid({
   return (
     <section className="pt-14">
       <div className="  px-10 md:px-20 lg:px-56 flex flex-row justify-between ">
-        <h4 className="text-[11px] text-[#4447A9] "> Selected Projects.. </h4>
+        <h4 className="text-[11px] text-[#4447A9] ">
+          {filter === "featured" ? "Selected Projects.." : "All Projects.."}
+        </h4>
         <div className="mb-6  flex justify-end items-center gap-2">
           <span className="text-[11px] text-gray-600">Live Preview</span>
           <button
@@ -37,7 +40,7 @@ export default function ProjectGrid({
       {filter === "featured" ? (
         <>
           {/* Mobile: Horizontal Scroll */}
-          <div className="md:hidden overflow-x-auto scroll-smooth">
+          <div className="md:hidden overflow-x-auto scroll-smooth scrollbar-hide">
             <div className="flex gap-4 pb-4 px-10">
               {projects.map((project) => (
                 <div key={project._id} className="min-w-[250px] flex-shrink-0">
@@ -59,7 +62,7 @@ export default function ProjectGrid({
           </div>
 
           {/* Tablet: Horizontal Scroll with Desktop Images */}
-          <div className="hidden md:block lg:hidden overflow-x-auto scroll-smooth">
+          <div className="hidden md:block lg:hidden overflow-x-auto scroll-smooth scrollbar-hide">
             <div className="flex gap-6 pb-4 px-20">
               {projects.map((project) => (
                 <div key={project._id} className="min-w-[470px] flex-shrink-0">
@@ -121,6 +124,11 @@ export default function ProjectGrid({
             />
           ))}
         </div>
+      )}
+      {filter === "featured" && (
+        <Link href="/projects/">
+          <h4 className="text-[11px] text-right px-10 md:px-20 lg:px-56 underline underline-offset-2 pt-3 text-[#4447A9] hover:opacity-70 transition-opacity cursor-pointer">See All Projects </h4>
+        </Link>
       )}
     </section>
   );

@@ -759,35 +759,103 @@ export default function GuestbookEntry({
           right: calc(var(--perforation-size) + 4px);
         }
 
-        @media (max-width: 600px) {
-          .guestbook-stamp.entry-stamp {
-            --stamp-width: 300px;
-          }
-        }
-
-        @media (max-width: 400px) {
+        @media (max-width: 1024px) {
           .guestbook-stamp.entry-stamp {
             --stamp-width: 280px;
             --perforation-size: 10px;
             --inner-padding: 12px;
+            margin: 1rem;
           }
 
           .entry-name {
             font-size: 1.1rem;
           }
 
+          .entry-message {
+            font-size: 0.9rem;
+            -webkit-line-clamp: 7;
+          }
+
           .country {
             font-size: 1rem;
           }
 
-          .entry-message {
+          .stamp-image-small {
+            width: 70px;
+            height: 70px;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .guestbook-stamp.entry-stamp {
+            --stamp-width: 180px;
+            --perforation-size: 6px;
+            --inner-padding: 8px;
+            margin: 0.5rem;
+          }
+
+          .entry-name {
+            font-size: 0.95rem;
+          }
+
+          .country {
             font-size: 0.9rem;
-            -webkit-line-clamp: 8;
+          }
+
+          .country-label {
+            font-size: 0.55rem;
+          }
+
+          .entry-message {
+            font-size: 0.8rem;
+            -webkit-line-clamp: 6;
           }
 
           .stamp-image-small {
-            width: 75px;
-            height: 75px;
+            width: 60px;
+            height: 60px;
+          }
+
+          .first-badge {
+            font-size: 0.55rem;
+            padding: 3px 6px;
+          }
+
+          .badge-icon {
+            width: 8px;
+            height: 8px;
+          }
+        }
+
+        @media (max-width: 400px) {
+          .guestbook-stamp.entry-stamp {
+            --stamp-width: 200px;
+            --perforation-size: 6px;
+            --inner-padding: 8px;
+            margin: 0.5rem;
+            aspect-ratio: 3 / 4;
+          }
+
+          .entry-name {
+            font-size: 0.85rem;
+          }
+
+          .country {
+            font-size: 0.8rem;
+          }
+
+          .country-label {
+            font-size: 0.5rem;
+          }
+
+          .entry-message {
+            font-size: 0.7rem;
+            -webkit-line-clamp: 5;
+          }
+
+          .stamp-image-small {
+            width: 50px;
+            height: 50px;
           }
         }
       `}</style>

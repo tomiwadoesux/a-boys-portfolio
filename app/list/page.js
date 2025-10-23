@@ -1,6 +1,8 @@
 import PageConfig from "../components/PageConfig";
 import List from "../components/List";
 
+// Revalidate every hour
+export const revalidate = 3600;
 
 export default function page() {
   return (

@@ -5,8 +5,6 @@ import Link from "next/link";
 import Logo from "../svg/Logo";
 import NavIcon from "../svg/NavIcon";
 import ScrambleText from "./ScrambleText";
-import ThemeToggle from "./ThemeToggle";
-import Headd from "./Headd";
 
 export default function BodyScreens({
   description = "A Design Engineer Now in Abuja, Nigeria",
@@ -20,7 +18,7 @@ export default function BodyScreens({
   return (
     <section>
 
-      <div className=" px-10 md:px-20 lg:px-56 pt-28">
+      <div className=" px-10 md:px-20 lg:px-56 pt-4">
         <div className="flex flex-row ">
           <div className=" w-full ">
             <div className=" flex flex-row justify-between">
@@ -29,9 +27,7 @@ export default function BodyScreens({
                 <div className="self-center">
                   <Logo />
                 </div>
-                <div className="self-center">
-                  <ThemeToggle />
-                </div>
+                
               </div>
             </div>
 

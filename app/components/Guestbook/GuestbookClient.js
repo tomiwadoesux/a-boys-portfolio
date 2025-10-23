@@ -80,7 +80,7 @@ export default function GuestbookClient({ initialEntries = [] }) {
         )}
       </div>
       {currentEntries.length > 0 ? (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6">
           {currentEntries.map((entry) => (
             <GuestbookEntry
               key={entry._id}

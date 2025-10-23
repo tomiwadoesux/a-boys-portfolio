@@ -1,5 +1,5 @@
 import { client } from './client'
-import { nowQuery, projectsQuery, featuredProjectsQuery, guestbookQuery, lastVisitorQuery, lastVisitorLocationQuery, listQuery, screensQuery } from './queries'
+import { nowQuery, projectsQuery, featuredProjectsQuery, guestbookQuery, lastVisitorQuery, lastVisitorLocationQuery, listQuery, screensQuery, cardsQuery, labQuery } from './queries'
 
 // Type definitions for the data
 export interface NowData {
@@ -50,6 +50,26 @@ export interface GuestbookData {
   link?: string | null
   date: string
   approved: boolean
+}
+
+export interface CardData {
+  _id: string
+  title: string
+  description: string
+  image: {
+    asset: {
+      url: string
+    }
+  }
+  size: 'small' | 'medium' | 'large'
+  order: number
+}
+
+export interface LabData {
+  title: string
+  description?: string
+  height: string
+  order: number
 }
 
 // Fetch all "Now" entries
@@ -152,6 +172,32 @@ export async function getScreens(): Promise<ScreenData[]> {
     return data
   } catch (error) {
     console.error('Error fetching screens:', error)
+    return []
+  }
+}
+
+// Fetch all cards
+export async function getCards(): Promise<CardData[]> {
+  try {
+    const data = await client.fetch<CardData[]>(cardsQuery, {}, {
+      next: { revalidate: 3600 } // Revalidate every hour
+    })
+    return data
+  } catch (error) {
+    console.error('Error fetching cards:', error)
+    return []
+  }
+}
+
+// Fetch all lab cards
+export async function getLabCards(): Promise<LabData[]> {
+  try {
+    const data = await client.fetch<LabData[]>(labQuery, {}, {
+      next: { revalidate: 3600 } // Revalidate every hour
+    })
+    return data
+  } catch (error) {
+    console.error('Error fetching lab cards:', error)
     return []
   }
 }

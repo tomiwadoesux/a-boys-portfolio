@@ -5,7 +5,6 @@ import Link from "next/link";
 import Logo from "../svg/Logo";
 import NavIcon from "../svg/NavIcon";
 import ScrambleText from "./ScrambleText";
-import ThemeToggle from "./ThemeToggle";
 import SvgHover from "./SvgHover";
 
 const Body = memo(function Body({
@@ -23,7 +22,7 @@ const Body = memo(function Body({
   return (
     <section>
 
-      <div className=" px-10 pt-24 md:pt-20 md:px-20 lg:px-56 ">
+      <div className=" px-10 pt-36 md:pt-20 md:px-20 lg:px-56 ">
         <div className="flex flex-row ">
           <div className=" w-full ">
             <div className=" flex flex-row justify-between">
@@ -60,7 +59,7 @@ const Body = memo(function Body({
                 <div className="flex self-end justify-between ml-auto">
                   {isScrambled ? (
                     <>
-                      <Link href="/list" className="pl-2 ">
+                      <Link href="/list" className="pl-3 ">
                         <ScrambleText
                           originalText="Projects"
                           targetText="List ∞"
@@ -71,7 +70,7 @@ const Body = memo(function Body({
                           }`}
                         />
                       </Link>
-                      <Link href="/screens" className="pl-2 ">
+                      <Link href="/screens" className="pl-3 ">
                         <ScrambleText
                           originalText="Resumé"
                           targetText="Screens"
@@ -82,7 +81,7 @@ const Body = memo(function Body({
                           }`}
                         />
                       </Link>
-                      <Link href="/now" className="pl-2">
+                      <Link href="/now" className="pl-3">
                         <ScrambleText
                           originalText="Contact"
                           targetText="Now"
@@ -94,7 +93,7 @@ const Body = memo(function Body({
                         />
                       </Link>
 
-                      <Link href="/guestbook" className="pl-2 ">
+                      <Link href="/guestbook" className="pl-3 ">
                         <ScrambleText
                           originalText="Lab"
                           targetText="GuestBook"
@@ -112,7 +111,7 @@ const Body = memo(function Body({
                         href="https://drive.google.com/file/d/1UcuH-oolA0c_vMYflzil6Dl1_EnEnOxd/view"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="pl-2"
+                        className="pl-3"
                       >
                         <ScrambleText
                           originalText="Resumé"
@@ -122,7 +121,7 @@ const Body = memo(function Body({
                           className="text-sm md:text-[12px]  underline px- underline-offset-2 "
                         />
                       </a>
-                      <Link href="/lab" className="pl-2">
+                      <Link href="/lab" className="pl-3">
                         <ScrambleText
                           originalText="Lab"
                           targetText="Guestbook"
@@ -134,7 +133,7 @@ const Body = memo(function Body({
                         />
                       </Link>
 
-                      <Link href="/projects" scroll={true} className="pl-2">
+                      <Link href="/projects" scroll={true} className="pl-3">
                         <ScrambleText
                           originalText="Projects"
                           targetText="Lab"
@@ -145,7 +144,7 @@ const Body = memo(function Body({
                           }`}
                         />
                       </Link>
-                      <Link href="mailto:hello@ayotomcs.me" className="pl-2">
+                      <Link href="mailto:hello@ayotomcs.me" className="pl-3">
                         <ScrambleText
                           originalText="Contact"
                           targetText="Now"

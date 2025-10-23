@@ -101,7 +101,7 @@ const AudioVisualization = () => {
 
 const MusicWidgetSkeleton = () => (
   <div className=" px-10 md:px-20 lg:px-56 rounded-xl p-1.5 overflow-x-auto">
-    <div className="flex w-full items-center gap-x-2 sm:gap-x-4 rounded-lg border border-gray-200 bg-white p-2 sm:p-3">
+    <div className="flex w-full items-center gap-x-2 sm:gap-x-4 rounded-lg border border-black bg-white p-2 sm:p-3">
       <div className="h-16 w-16 sm:h-20 sm:w-20 flex-shrink-0 rounded-md  animate-pulse"></div>
       <div className="min-w-0 flex-1 space-y-2">
         <div className="h-4 sm:h-5 w-3/4 rounded animate-pulse"></div>
@@ -153,7 +153,7 @@ const AlbumArt = ({ src, alt }) => {
 
 const MusicWidgetContent = ({ song }) => (
   <div className="group px-10 md:px-20 lg:px-56 rounded-xl  p-1.5 overflow-x-auto">
-    <div className="flex w-full items-center gap-x-2 sm:gap-x-4 rounded-lg border border-gray-200 bg-white p-2 sm:p-3">
+    <div className="flex w-full items-center gap-x-2 sm:gap-x-4 rounded-lg border border-black/15 bg-white/20 p-2 sm:p-3">
       <AlbumArt
         src={song.albumArtUrl}
         alt={`Album artwork for ${song.title} by ${song.artists}`}

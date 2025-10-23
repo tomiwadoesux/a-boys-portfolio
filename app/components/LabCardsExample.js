@@ -10,7 +10,7 @@ export default function LabCardsExample() {
       size: 'large',
       title: 'Large Card',
       description: 'This is a large card that spans 2 columns',
-      image: null, // Add your image URL
+      image: null,
     },
     {
       id: 2,

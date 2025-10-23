@@ -4,7 +4,7 @@ export default async function List() {
   const listData = await getListData();
 
   return (
-    <section className="px-10 pt-20 md:px-20 lg:px-56">
+    <section className="px-10 pt-16 md:pt-20 md:px-20 lg:px-56">
       {listData.map((item, index) => (
         <div key={item._id} className="flex pb-9 flex-col">
           <div className="flex flex-row gap-1">

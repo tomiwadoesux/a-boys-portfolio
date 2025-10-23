@@ -4,12 +4,12 @@ import Socials from "./Socials";
 
 export default function Front() {
   return (
-    <section className="px-10 pt-20 md:px-20 lg:px-56">
+    <section className="px-10 pt-16 md:pt-20 md:px-20 lg:px-56">
       {/* <div className="w-full h-44">
         <SvgHover />
       </div> */}
       {/* <Dock /> */}
-      <div className="flex  pb-11 flex-col">
+      <div className="flex  pb-8 md:pb-11 flex-col">
         <div className="flex flex-row gap-1">
           <h6 className="text-xs text-[#4447A9] pb-3 ">
             {" "}
@@ -134,7 +134,7 @@ export default function Front() {
           </svg>
         </div>
       </div>
-      <div className="flex pb-11 flex-col">
+      <div className="flex pb-8 md:pb-11 flex-col">
         <div className="flex flex-row justify-between">
           <h6 className="text-xs pb-3 ">
             {" "}
@@ -146,7 +146,7 @@ export default function Front() {
           <h4 className="text-base text-justify ">
             A collection of side-quests I explore from time to time to learn,
             experiment with new technologies, and just build anything.{" "}
-            <span className="underline text-sm underline-offset-2">
+            <span className="underline text-[#4447A9] text-sm underline-offset-2">
               Visit Lab
             </span>
           </h4>

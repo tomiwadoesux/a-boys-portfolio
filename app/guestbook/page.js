@@ -8,6 +8,10 @@ export const metadata = {
   description: "Leave your mark in my digital guestbook. Share your thoughts and connect.",
 };
 
+// Prerender at build time and revalidate every minute for fresh entries
+export const revalidate = 60;
+export const dynamic = 'force-static';
+
 export default async function GuestbookPage() {
   const entries = await getGuestbookEntries();
 

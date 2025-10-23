@@ -1,11 +1,18 @@
 "use client";
 
 import { useState, useEffect, useRef, memo } from "react";
+import { usePathname } from "next/navigation";
 import TypewriterEffect from "./TypewriterEffect";
 import { getLastVisitorLocation } from "../../sanity/lib/fetch";
 import { useVisitorTracking } from "../hooks/useVisitorTracking";
 
 const Headd = memo(function Headd() {
+  const pathname = usePathname();
+
+  // Hide Headd on screens page
+  if (pathname === "/screens" || pathname.startsWith("/screens/")) {
+    return null;
+  }
   const [lastVisitor, setLastVisitor] = useState("Loading...");
   const hasFetched = useRef(false);
 

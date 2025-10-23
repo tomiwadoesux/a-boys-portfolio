@@ -69,9 +69,7 @@ export default function Pagination({ currentPage, hasNextPage, hasPrevPage }) {
 
       <style jsx>{`
         .pagination-simple {
-          --indicator-text-light: hsl(0, 0%, 55%);
-          --indicator-text-dark: hsl(0, 0%, 65%);
-          --indicator-text: var(--indicator-text-light);
+          --indicator-text: hsl(0, 0%, 55%);
 
           display: flex;
           justify-content: space-between;
@@ -80,12 +78,6 @@ export default function Pagination({ currentPage, hasNextPage, hasPrevPage }) {
           max-width: 300px;
           gap: 1rem;
           font-size: 0.9rem;
-        }
-
-        @media (prefers-color-scheme: dark) {
-          .pagination-simple {
-            --indicator-text: var(--indicator-text-dark);
-          }
         }
 
         .pagination-arrow {
@@ -102,33 +94,14 @@ export default function Pagination({ currentPage, hasNextPage, hasPrevPage }) {
           box-sizing: border-box;
         }
 
-        @media (prefers-color-scheme: dark) {
-          .pagination-arrow {
-            color: #e5e5e5;
-          }
-        }
-
         .pagination-arrow:hover,
         .pagination-arrow:focus-visible {
           color: #404040;
         }
 
-        @media (prefers-color-scheme: dark) {
-          .pagination-arrow:hover,
-          .pagination-arrow:focus-visible {
-            color: #a3a3a3;
-          }
-        }
-
         .pagination-arrow:focus-visible {
           outline: 2px solid #404040;
           outline-offset: 2px;
-        }
-
-        @media (prefers-color-scheme: dark) {
-          .pagination-arrow:focus-visible {
-            outline-color: #a3a3a3;
-          }
         }
 
         .page-indicator {

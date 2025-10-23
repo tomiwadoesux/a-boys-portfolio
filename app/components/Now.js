@@ -5,7 +5,7 @@ export default async function Now() {
   const nowData = await getNowData();
 
   return (
-    <section className="px-10 pt-20 md:px-20 lg:px-56">
+    <section className="px-10 pt-16 md:pt-20 md:px-20 lg:px-56">
       {/* Spotify Music Widget */}
  
       {nowData.map((item, index) => (

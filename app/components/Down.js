@@ -1,27 +1,23 @@
-import SvgHover from "./SvgHover";
-import Dock from "./Dock";
-import Socials from "./Socials";
+
 
 export default function Down() {
   return (
-    <section className="px-10 pt-20 md:px-20 lg:px-56">
-
-    
-      <div className="flex pb-11 flex-col">
+    <section className="px-10 pt-16 md:pt-20 md:px-20 lg:px-56">
+   
+      <div className="flex pb-8 md:pb-11 flex-col">
         <div className="flex flex-row justify-between">
           <h6 className="text-xs pb-3 ">
             {" "}
-            <span className="text-[#4447A9]"> Lab.. </span>
+            <span className="text-[#4447A9]"> GuestBook.. </span>
           </h6>
         </div>
 
         <div className="flex flex-row">
           <h4 className="text-base text-justify ">
-            A collection of side-quests I explore from time to time to learn,
-            experiment with new technologies, and just build anything.{" "}
-            <span className="underline text-sm underline-offset-2">
-              Visit Lab
-            </span>
+        Is Where Visitors Sign and leave their Mark on my website, Everyone has a unique stamp :) 
+           {}  <span className="underline text-[#4447A9] text-sm underline-offset-2">
+               sign my guestbook
+             </span>
           </h4>
         </div>
 

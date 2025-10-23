@@ -1,58 +1,22 @@
-"use client";
-
 import PageConfig from "../components/PageConfig";
 import LabCards from "../components/LabCards";
+import { getLabCards } from "../../sanity/lib/fetch";
 
-// Note: metadata export doesn't work in client components
-// Consider moving this to a server component wrapper if needed
+export const metadata = {
+  title: "Lab | Design Engineer Portfolio",
+  description: "Experimental projects and creative explorations.",
+};
 
-export default function page() {
-  const cards = [
-    {
-      id: 1,
-      height: '320px',
-      title: 'Large Project',
-      description: 'This is a large featured project',
-    },
-    {
-      id: 2,
-      height: '220px',
-      title: 'Quick Design',
-    },
-    {
-      id: 3,
-      height: '280px',
-      title: 'Medium Project',
-      description: 'A medium-sized showcase',
-    },
-    {
-      id: 4,
-      height: '400px',
-      title: 'Tall Feature',
-      description: 'This card is extra tall for detailed content',
-    },
-    {
-      id: 5,
-      height: '250px',
-      title: 'Wide Banner',
-    },
-    {
-      id: 6,
-      height: '300px',
-      title: 'Creative Work',
-    },
-    {
-      id: 7,
-      height: '180px',
-      title: 'Mini Project',
-    },
-    {
-      id: 8,
-      height: '350px',
-      title: 'Featured Work',
-      description: 'Another large showcase piece',
-    },
-  ];
+// Revalidate every hour
+export const revalidate = 3600;
+
+export default async function page() {
+  const cards = await getLabCards();
+
+  // Only render if there are cards, otherwise return empty
+  if (!cards || cards.length === 0) {
+    return null;
+  }
 
   return (
     <div>
