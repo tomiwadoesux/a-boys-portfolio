@@ -9,11 +9,11 @@ export const client = createClient({
   useCdn: true, // Set to false if statically generating pages, using ISR or tag-based revalidation
 })
 
-// Write client for API routes (requires SANITY_API_TOKEN)
+// Write client for API routes (requires SANITY_WRITE_TOKEN)
 export const writeClient = createClient({
   projectId,
   dataset,
   apiVersion,
   useCdn: false,
-  token: process.env.SANITY_API_TOKEN,
+  token: process.env.SANITY_WRITE_TOKEN,
 })

@@ -20,7 +20,7 @@ export default function BodyScreens({
   return (
     <section>
 
-      <div className=" px-16 lg:px-56 pt-28">
+      <div className=" px-10 md:px-20 lg:px-56 pt-28">
         <div className="flex flex-row ">
           <div className=" w-full ">
             <div className=" flex flex-row justify-between">
@@ -65,10 +65,10 @@ export default function BodyScreens({
                       className="text-[13px] underline underline-offset-2 "
                     />
                   </Link>
-                  <Link href="/playground" className="pl-4">
+                  <Link href="/lab" className="pl-4">
                     <ScrambleText
                       originalText=""
-                      targetText="Playground"
+                      targetText="Lab"
                       isScrambled={isScrambled}
                       className="text-[13px] underline underline-offset-2 "
                     />

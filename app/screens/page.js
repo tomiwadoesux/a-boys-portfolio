@@ -1,21 +1,17 @@
 import BodyScreens from "../components/BodyScreens";
 import Screens from "../components/Screens";
+import { getScreens } from "../../sanity/lib/fetch";
 
-// Enable static generation with revalidation
-export const revalidate = 3600; // Revalidate every hour
+// Force static generation at build time
+export const dynamic = 'force-static';
+export const revalidate = 3600; // Revalidate every hour in production
 
-export default function ScreensPage() {
+export default async function ScreensPage() {
+  const screens = await getScreens();
+
   return (
     <section className="h-screen overflow-hidden flex flex-col">
-      <BodyScreens
-        description={
-          <>
-            Everything you can imagine is real..{" "}
-            <span className="text-[#4447A9]"> Playground :0</span>
-          </>
-        }
-      />
-      <Screens />
+      <Screens screens={screens} />
     </section>
   );
 }

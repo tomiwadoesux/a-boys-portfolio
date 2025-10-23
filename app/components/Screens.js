@@ -4,17 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import VideoSidebar from "./VideoSidebar";
 import VideoDisplay from "./VideoDisplay";
 
-const videoList = [
-  { id: 1, title: "Video 1", src: "vid1.mp4" },
-  { id: 2, title: "Video 2", src: "vid2.mp4" },
-  { id: 3, title: "Video 3", src: "vid3.mp4" },
-  { id: 4, title: "Video 4", src: "vid4.mp4" },
-  { id: 5, title: "Video 5", src: "vid5.mp4" },
-  { id: 6, title: "Video 6", src: "vid6.mp4" },
-  { id: 7, title: "Video 7", src: "vid7.mp4" },
-];
-
-export default function Screens() {
+export default function Screens({ screens = [] }) {
+  const videoList = screens.length > 0 ? screens : [];
   const [activeIndex, setActiveIndex] = useState(0);
   const displayRef = useRef();
   const containerRef = useRef();
@@ -23,6 +14,8 @@ export default function Screens() {
 
   // Handle continuous smooth scroll to navigate through videos (infinite loop)
   useEffect(() => {
+    if (videoList.length === 0) return;
+
     const handleWheel = (e) => {
       e.preventDefault();
 
@@ -31,12 +24,12 @@ export default function Screens() {
 
       // Check if we've scrolled enough to change video
       if (scrollAccumulator.current >= scrollThreshold) {
-        // Scroll down to next video (loop back to start if at end)
-        setActiveIndex((prev) => (prev + 1) % videoList.length);
+        // Scroll down to next video - use raw increment for infinite scroll
+        setActiveIndex((prev) => prev + 1);
         scrollAccumulator.current = 0;
       } else if (scrollAccumulator.current <= -scrollThreshold) {
-        // Scroll up to previous video (loop to end if at start)
-        setActiveIndex((prev) => (prev - 1 + videoList.length) % videoList.length);
+        // Scroll up to previous video - use raw decrement for infinite scroll
+        setActiveIndex((prev) => prev - 1);
         scrollAccumulator.current = 0;
       }
     };
@@ -51,11 +44,22 @@ export default function Screens() {
         container.removeEventListener("wheel", handleWheel);
       }
     };
-  }, [activeIndex]);
+  }, [videoList.length]);
+
+  if (videoList.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p className="text-gray-500">No screens available yet. Add some screens in Sanity Studio.</p>
+      </div>
+    );
+  }
+
+  // Get actual video using modulo for display
+  const actualVideoIndex = ((activeIndex % videoList.length) + videoList.length) % videoList.length;
 
   return (
     <div>
-      <div className="absolute top-0 left-7 h-full">
+      <div className="fixed top-1/2 left-7 -translate-y-1/2 z-10">
         <VideoSidebar
           videos={videoList}
           activeIndex={activeIndex}
@@ -64,10 +68,10 @@ export default function Screens() {
       </div>
       <div
         ref={containerRef}
-        className="flex flex-1 overflow-hidden px-16 lg:px-56 items-start"
+        className="flex flex-1 overflow-hidden px-10 md:px-20 lg:px-56 items-start"
       >
         <div className="flex-1 pt-16 overflow-hidden" ref={displayRef}>
-          <VideoDisplay video={videoList[activeIndex]} />
+          <VideoDisplay video={videoList[actualVideoIndex]} />
         </div>
       </div>
     </div>

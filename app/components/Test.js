@@ -58,7 +58,7 @@ export default function Test() {
   return (
     <section className="pt-16">
       {/* Mobile: Horizontal Scroll */}
-      <div className="md:hidden px-16 overflow-x-auto scrollbar-hide">
+      <div className="md:hidden px-10 overflow-x-auto scrollbar-hide">
         <div className="flex gap-4 pb-4">
           {sites.map((site) => (
             <div key={site.id} className="min-w-[280px] flex-shrink-0">
@@ -73,7 +73,7 @@ export default function Test() {
       </div>
 
       {/* Desktop: 2-Column Grid */}
-      <div className="hidden md:grid md:grid-cols-2 gap-8 md:gap-12 px-16 lg:px-56">
+      <div className="hidden md:grid md:grid-cols-2 gap-8 md:gap-12 px-10 md:px-20 lg:px-56">
         {sites.map((site) => (
           <IframeCard
             key={site.id}

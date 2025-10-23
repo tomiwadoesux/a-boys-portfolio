@@ -1,12 +1,15 @@
 import { getNowData } from "../../sanity/lib/fetch";
 
+
 export default async function Now() {
   const nowData = await getNowData();
 
   return (
-    <section className="px-16 pt-20 lg:px-56">
+    <section className="px-10 pt-20 md:px-20 lg:px-56">
+      {/* Spotify Music Widget */}
+ 
       {nowData.map((item, index) => (
-        <div key={index} className="flex pb-11 flex-col">
+        <div key={index} className="flex pb-9 flex-col">
           <div className="flex flex-row gap-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"

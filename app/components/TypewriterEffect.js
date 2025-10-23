@@ -77,6 +77,17 @@ export default function TypewriterEffect() {
   ];
 
   useEffect(() => {
+    // Check if this is the initial load
+    const hasLoadedBefore = sessionStorage.getItem("has_loaded");
+
+    if (!hasLoadedBefore) {
+      // First load - show a static message without animation
+      setText("Loading... almost ready");
+      sessionStorage.setItem("has_loaded", "true");
+      return;
+    }
+
+    // Subsequent loads - run the typewriter effect
     let usedMessages = [];
     let allLines = []; // Keep track of all lines ever typed
     const maxCharsPerLine = 45; // Character limit per line
@@ -112,8 +123,8 @@ export default function TypewriterEffect() {
         currentText += message[charIdx];
         setText(currentText);
 
-        // Wait between characters (50ms for typing speed)
-        await new Promise(resolve => setTimeout(resolve, 50));
+        // Wait between characters (120ms for typing speed)
+        await new Promise(resolve => setTimeout(resolve, 120));
       }
 
       // Wait 2 seconds before next message

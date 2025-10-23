@@ -31,7 +31,33 @@ h2 {
   letter-spacing: normal;
 }
 
-/* Hide scrollbar for horizontal scroll */
+/* Custom scrollbar styling */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 8px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #4447A9;
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #333688;
+}
+
+/* Firefox scrollbar styling */
+.overflow-x-auto {
+  scrollbar-width: thin;
+  scrollbar-color: #4447A9 #f1f1f1;
+}
+
+/* Hide scrollbar for classes that need it hidden */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }

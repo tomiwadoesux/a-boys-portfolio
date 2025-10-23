@@ -9,8 +9,6 @@ export default function ProjectCard({
   tech,
   desktopImage,
   mobileImage,
-  desktopVideo,
-  mobileVideo,
   alt,
   link,
   showLivePreview = false,
@@ -20,9 +18,8 @@ export default function ProjectCard({
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const iframeRef = useRef(null);
 
-  // Use mobile or desktop image/video based on isMobile prop
+  // Use mobile or desktop image based on isMobile prop
   const currentImage = isMobile ? mobileImage : desktopImage;
-  const currentVideo = isMobile ? mobileVideo : desktopVideo;
 
   const handleClick = () => {
     if (link && !showLivePreview) {
@@ -67,10 +64,10 @@ export default function ProjectCard({
                 ref={iframeRef}
                 src={link}
                 className={`border-none w-full h-full ${
-                  isScrollable && showLivePreview ? "pointer-events-auto" : "pointer-events-none"
+                  showLivePreview ? "pointer-events-auto" : "pointer-events-none"
                 }`}
                 title={title}
-                scrolling="no"
+                scrolling="yes"
                 style={
                   isMobile
                     ? {
@@ -78,38 +75,25 @@ export default function ProjectCard({
                         transformOrigin: "top left",
                         width: "300%",
                         height: "300%",
-                        overflow: "hidden"
                       }
                     : {
                         transform: "scale(0.5)",
                         transformOrigin: "top left",
                         width: "200%",
                         height: "200%",
-                        overflow: "hidden"
                       }
                 }
               />
             </div>
           )}
 
-          {/* Video layer - shows if video exists and no live preview */}
-          {currentVideo && !showLivePreview ? (
-            <video
-              src={currentVideo}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 ${
-                showLivePreview ? "opacity-0" : "opacity-100"
-              }`}
-            />
-          ) : currentImage ? (
+          {currentImage ? (
             <Image
               src={currentImage}
               alt={alt || title}
               fill
-              className={`object-cover transition-all duration-300 group-hover:scale-105 ${
+              loading="lazy"
+              className={`object-cover transition-all duration-300  ${
                 showLivePreview ? "opacity-0" : "opacity-100"
               }`}
             />

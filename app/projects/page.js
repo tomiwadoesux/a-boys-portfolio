@@ -1,14 +1,18 @@
-import Body from "../components/Body";
+import PageConfig from "../components/PageConfig";
 import ProjectGridWrapper from "../components/ProjectGridWrapper";
-
-// Enable static generation with revalidation
-export const revalidate = 3600; // Revalidate every hour
+import SvgHover from "../components/SvgHover";
+// Metadata for SEO
+export const metadata = {
+  title: "Projects | Design Engineer Portfolio",
+  description: "Explore my collection of design and engineering projects.",
+};
 
 export default function ProjectsPage() {
   return (
     <div>
-      <Body activePage="/projects" />
-      <ProjectGridWrapper />
+      <PageConfig activePage="/projects" />
+     
+      <ProjectGridWrapper filter="all" />
     </div>
   );
 }

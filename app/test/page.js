@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Body from "../components/Body";
+import PageConfig from "../components/PageConfig";
 import Headd from "../components/Headd";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -57,12 +57,12 @@ export default function Page() {
 
   return (
     <div>
+      <PageConfig activePage="/test" />
       <div className="fixed top-0 left-0 right-0 z-50 bg-white">
-        <Body />
       </div>
 
       {/* Main container with px-56 */}
-      <div className="px-16 lg:px-56 pt-[200px]">
+      <div className="px-10 md:px-20 lg:px-56 pt-[200px]">
         {/* Scrollable boxes on the left - within px boundary */}
         <div className="fixed flex flex-col w-20 gap-6 top-[250px] bottom-8 pointer-events-none z-40">
           {videos.map((video, index) => (

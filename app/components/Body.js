@@ -1,48 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useState, memo } from "react";
 import Link from "next/link";
 import Logo from "../svg/Logo";
 import NavIcon from "../svg/NavIcon";
 import ScrambleText from "./ScrambleText";
 import ThemeToggle from "./ThemeToggle";
-import Headd from "./Headd";
 import SvgHover from "./SvgHover";
 
-export default function Body({
+const Body = memo(function Body({
   description = "A Design Engineer Now in Abuja, Nigeria",
   activePage = "",
 }) {
   const [isScrambled, setIsScrambled] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   const handleToggle = () => {
+    setHasInteracted(true);
     setIsScrambled((prev) => !prev);
   };
 
   return (
     <section>
-      <Headd />
-      <div className=" px-16 lg:px-56 pt-36">
-        <div></div>
+
+      <div className=" px-10 pt-24 md:pt-20 md:px-20 lg:px-56 ">
         <div className="flex flex-row ">
           <div className=" w-full ">
             <div className=" flex flex-row justify-between">
               <div className=" flex flex-row gap-3">
                 <Link href="/" className="">
-                  <h1 className="text-3xl uppercase font-bold">Ayotomcs</h1>
+                  <h1 className="text-2xl md:text-3xl uppercase font-bold">
+                    Ayotomcs
+                  </h1>
                 </Link>
                 <div className="self-center">
                   <Logo />
-                </div>
-                <div className="self-center">
-                  <ThemeToggle />
                 </div>
               </div>
             </div>
 
             <div className="pt-2">
               <svg
-                className="w-full h-px"
+                className="w-full md:hidden h-px"
                 viewBox="0 0 100 1"
                 preserveAspectRatio="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -56,50 +55,52 @@ export default function Body({
                   strokeWidth="1"
                 />
               </svg>
-              <div className=" flex flex-row justify-between">
-                <div>
-                  <h4 className="text-[13px] py-3">{description}</h4>
-                </div>
-
-                <div className="flex py-3">
+              <div className="md:hidden py-3 w-full flex">
+                
+                <div className="flex self-end justify-between ml-auto">
                   {isScrambled ? (
                     <>
-                      <Link href="/list" className="pl-4 ">
+                      <Link href="/list" className="pl-2 ">
                         <ScrambleText
                           originalText="Projects"
                           targetText="List ∞"
                           isScrambled={isScrambled}
-                          className={`text-[13px] underline underline-offset-2 ${
+                          hasInteracted={hasInteracted}
+                          className={`text-sm md:text-[12px] underline underline-offset-2 ${
                             activePage === "/list" ? "text-[#4447A9]" : ""
                           }`}
                         />
                       </Link>
-                      <Link href="/screens" className="pl-4 ">
+                      <Link href="/screens" className="pl-2 ">
                         <ScrambleText
                           originalText="Resumé"
                           targetText="Screens"
                           isScrambled={isScrambled}
-                          className={`text-[13px] underline underline-offset-2 ${
+                          hasInteracted={hasInteracted}
+                          className={`text-sm md:text-[12px] underline underline-offset-2 ${
                             activePage === "/screens" ? "text-[#4447A9]" : ""
                           }`}
                         />
                       </Link>
-                      <Link href="/now" className="pl-4">
+                      <Link href="/now" className="pl-2">
                         <ScrambleText
                           originalText="Contact"
                           targetText="Now"
                           isScrambled={isScrambled}
-                          className={`text-[13px] underline underline-offset-2 ${
+                          hasInteracted={hasInteracted}
+                          className={`text-sm md:text-[12px] underline underline-offset-2 ${
                             activePage === "/now" ? "text-[#4447A9]" : ""
                           }`}
                         />
                       </Link>
-                      <Link href="/guestbook" className="pl-4 ">
+
+                      <Link href="/guestbook" className="pl-2 ">
                         <ScrambleText
-                          originalText="Playground"
+                          originalText="Lab"
                           targetText="GuestBook"
                           isScrambled={isScrambled}
-                          className={`text-[13px] underline underline-offset-2 ${
+                          hasInteracted={hasInteracted}
+                          className={`text-sm md:text-[12px] underline underline-offset-2 ${
                             activePage === "/guestbook" ? "text-[#4447A9]" : ""
                           }`}
                         />
@@ -108,44 +109,49 @@ export default function Body({
                   ) : (
                     <>
                       <a
-                        href="https://drive.google.com/file/d/1MBEq0m1HuPqMKYSd1j8aJPeU3WUdnXkP/view?usp=sharing"
+                        href="https://drive.google.com/file/d/1UcuH-oolA0c_vMYflzil6Dl1_EnEnOxd/view"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="pl-4"
+                        className="pl-2"
                       >
                         <ScrambleText
                           originalText="Resumé"
                           targetText="List ∞"
                           isScrambled={isScrambled}
-                          className="text-[13px] underline underline-offset-2 "
+                          hasInteracted={hasInteracted}
+                          className="text-sm md:text-[12px]  underline px- underline-offset-2 "
                         />
                       </a>
-                      <Link href="/playground" className="pl-4">
+                      <Link href="/lab" className="pl-2">
                         <ScrambleText
-                          originalText="Playground"
+                          originalText="Lab"
                           targetText="Guestbook"
                           isScrambled={isScrambled}
-                          className={`text-[13px] underline underline-offset-2 ${
-                            activePage === "/playground" ? "text-[#4447A9]" : ""
+                          hasInteracted={hasInteracted}
+                          className={`text-sm md:text-[12px] px- underline underline-offset-2 ${
+                            activePage === "/lab" ? "text-[#4447A9]" : ""
                           }`}
                         />
                       </Link>
-                      <Link href="/projects" scroll={true} className="pl-4 ">
+
+                      <Link href="/projects" scroll={true} className="pl-2">
                         <ScrambleText
                           originalText="Projects"
                           targetText="Lab"
                           isScrambled={isScrambled}
-                          className={`text-[13px] underline underline-offset-2 ${
+                          hasInteracted={hasInteracted}
+                          className={`text-sm md:text-[12px] underline underline-offset-2 ${
                             activePage === "/projects" ? "text-[#4447A9]" : ""
                           }`}
                         />
                       </Link>
-                      <Link href="/contact" className="pl-4">
+                      <Link href="mailto:hello@ayotomcs.me" className="pl-2">
                         <ScrambleText
                           originalText="Contact"
                           targetText="Now"
                           isScrambled={isScrambled}
-                          className={`text-[13px] underline underline-offset-2 ${
+                          hasInteracted={hasInteracted}
+                          className={`text-sm md:text-[12px] underline underline-offset-2 ${
                             activePage === "/contact" ? "text-[#4447A9]" : ""
                           }`}
                         />
@@ -163,7 +169,144 @@ export default function Body({
                   </div>
                 </div>
               </div>
+              <svg
+                className="w-full h-px"
+                viewBox="0 0 100 1"
+                preserveAspectRatio="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  x1="0"
+                  y1="0.5"
+                  x2="100"
+                  y2="0.5"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                />
+              </svg>
+              <div className=" flex flex-row justify-between">
+                <div>
+                  <h4 className="text-sm md:text-[13px] py-3">{description}</h4>
+                </div>
+                
+                <div className="hidden md:block self-center">
+                  <div className="flex ">
+                    {isScrambled ? (
+                      <>
+                        <Link href="/list" className="pl-4 ">
+                          <ScrambleText
+                            originalText="Projects"
+                            targetText="List∞"
+                            isScrambled={isScrambled}
+                            hasInteracted={hasInteracted}
+                            className={`text-sm md:text-[13px] underline underline-offset-2 ${
+                              activePage === "/list" ? "text-[#4447A9]" : ""
+                            }`}
+                          />
+                        </Link>
+                        <Link href="/screens" className="pl-4 ">
+                          <ScrambleText
+                            originalText="Resumé"
+                            targetText="Screens"
+                            isScrambled={isScrambled}
+                            hasInteracted={hasInteracted}
+                            className={`text-sm md:text-[13px] underline underline-offset-2 ${
+                              activePage === "/screens" ? "text-[#4447A9]" : ""
+                            }`}
+                          />
+                        </Link>
+                        <Link href="/now" className="pl-4">
+                          <ScrambleText
+                            originalText="Contact"
+                            targetText="Now"
+                            isScrambled={isScrambled}
+                            hasInteracted={hasInteracted}
+                            className={`text-sm md:text-[13px] underline underline-offset-2 ${
+                              activePage === "/now" ? "text-[#4447A9]" : ""
+                            }`}
+                          />
+                        </Link>
 
+                        <Link href="/guestbook" className="pl-4 ">
+                          <ScrambleText
+                            originalText="Lab"
+                            targetText="GuestBook"
+                            isScrambled={isScrambled}
+                            hasInteracted={hasInteracted}
+                            className={`text-sm md:text-[13px] underline underline-offset-2 ${
+                              activePage === "/guestbook"
+                                ? "text-[#4447A9]"
+                                : ""
+                            }`}
+                          />
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <a
+                          href="https://drive.google.com/file/d/1UcuH-oolA0c_vMYflzil6Dl1_EnEnOxd/view"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="pl-4"
+                        >
+                          <ScrambleText
+                            originalText="Resumé"
+                            targetText="List ∞"
+                            isScrambled={isScrambled}
+                            hasInteracted={hasInteracted}
+                            className="text-sm md:text-[13px]  underline px- underline-offset-2 "
+                          />
+                        </a>
+                        <Link href="/lab" className="pl-4">
+                          <ScrambleText
+                            originalText="Lab"
+                            targetText="Guestbook"
+                            isScrambled={isScrambled}
+                            hasInteracted={hasInteracted}
+                            className={`text-sm md:text-[13px] px- underline underline-offset-2 ${
+                              activePage === "/lab"
+                                ? "text-[#4447A9]"
+                                : ""
+                            }`}
+                          />
+                        </Link>
+
+                        <Link href="/projects" scroll={true} className="pl-4 ">
+                          <ScrambleText
+                            originalText="Projects"
+                            targetText="Lab"
+                            isScrambled={isScrambled}
+                            hasInteracted={hasInteracted}
+                            className={`text-sm md:text-[13px] underline underline-offset-2 ${
+                              activePage === "/projects" ? "text-[#4447A9]" : ""
+                            }`}
+                          />
+                        </Link>
+                        <Link href="mailto:hello@ayotomcs.me" className="pl-4">
+                          <ScrambleText
+                            originalText="Contact"
+                            targetText="Now"
+                            isScrambled={isScrambled}
+                            hasInteracted={hasInteracted}
+                            className={`text-sm md:text-[13px] underline underline-offset-2 ${
+                              activePage === "/contact" ? "text-[#4447A9]" : ""
+                            }`}
+                          />
+                        </Link>
+                      </>
+                    )}
+
+                    <div
+                      className="pl-4 self-center cursor-pointer"
+                      onClick={handleToggle}
+                      role="button"
+                      aria-label="Toggle navigation style"
+                    >
+                      <NavIcon isOpen={isScrambled} />
+                    </div>
+                  </div>
+                </div>
+              </div>
               <svg
                 className="w-full h-px"
                 viewBox="0 0 100 1"
@@ -185,4 +328,6 @@ export default function Body({
       </div>
     </section>
   );
-}
+});
+
+export default Body;

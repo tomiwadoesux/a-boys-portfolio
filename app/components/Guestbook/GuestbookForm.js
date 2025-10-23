@@ -2,34 +2,10 @@
 
 import { useState } from "react";
 
-const countries = [
-  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
-  "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia",
-  "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon",
-  "Canada", "Cape Verde", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo",
-  "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic",
-  "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Fiji", "Finland", "France",
-  "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana",
-  "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica",
-  "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho",
-  "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali",
-  "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia",
-  "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua",
-  "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea",
-  "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis",
-  "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia",
-  "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia",
-  "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria",
-  "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan",
-  "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan",
-  "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
-];
-
-export default function GuestbookForm({ onSubmit }) {
+export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
   const [formData, setFormData] = useState({
     name: "",
     link: "",
-    country: "",
     message: "",
   });
 
@@ -50,101 +26,562 @@ export default function GuestbookForm({ onSubmit }) {
     setFormData({
       name: "",
       link: "",
-      country: "",
       message: "",
     });
   };
 
+  const formHue = 243; // #4447a9 is approximately hsl(243, 43%, 47%)
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-2xl mx-auto bg-white border border-gray-200 rounded-lg p-8 shadow-sm mb-12"
-    >
-      <h3 className="text-2xl font-bold text-gray-900 mb-6">Leave Your Mark</h3>
-
-      <div className="grid md:grid-cols-2 gap-4 mb-4">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-            Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            required
-            placeholder="Your Name"
-            maxLength={50}
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4447A9] focus:border-transparent outline-none transition-all"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="link" className="block text-sm font-medium text-gray-700 mb-2">
-            Website (optional)
-          </label>
-          <input
-            type="url"
-            name="link"
-            id="link"
-            placeholder="https://..."
-            value={formData.link}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4447A9] focus:border-transparent outline-none transition-all"
-          />
-        </div>
-      </div>
-
-      <div className="mb-4">
-        <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-2">
-          Country <span className="text-red-500">*</span>
-        </label>
-        <select
-          name="country"
-          id="country"
-          required
-          value={formData.country}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4447A9] focus:border-transparent outline-none transition-all bg-white"
-        >
-          <option value="" disabled>
-            Select your country
-          </option>
-          {countries.map((country) => (
-            <option key={country} value={country}>
-              {country}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="mb-6">
-        <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-          Message (max 500 chars) <span className="text-red-500">*</span>
-        </label>
-        <textarea
-          name="message"
-          id="message"
-          required
-          maxLength={500}
-          rows={4}
-          placeholder="Write your message here..."
-          value={formData.message}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4447A9] focus:border-transparent outline-none transition-all resize-none"
-        />
-        <div className="text-right text-sm text-gray-500 mt-1">
-          {formData.message.length}/500
-        </div>
-      </div>
-
-      <button
-        type="submit"
-        className="w-full bg-[#4447A9] text-white font-semibold py-3 px-6 rounded-lg hover:bg-[#025f51] transition-colors"
+    <>
+      <form
+        onSubmit={handleSubmit}
+        className="guestbook-stamp form-stamp"
+        style={{
+          '--hue': formHue,
+          '--primary-stamp-color': '#4447a9',
+          '--light-stamp-bg': `hsl(${formHue}, 85%, 97%)`,
+          '--text-bg-overlay': `hsla(${formHue}, 95%, 98%, 0.82)`,
+          '--dark-text-fixed': `hsl(${formHue}, 60%, 20%)`,
+          '--mid-grey-fixed': `hsl(${formHue}, 20%, 35%)`,
+          '--gold-accent': `hsl(45, 80%, 60%)`,
+          '--postmark-color-fixed': `hsla(${formHue}, 40%, 30%, 0.8)`,
+          '--border-accent': '#4447a9',
+          '--input-bg': `hsla(0, 0%, 100%, 0.7) or hsla(220, 80%, 100%, 0.7)`,
+          '--rotate': '-1deg',
+        }}
       >
-        Post Entry
-      </button>
-    </form>
+        <div className="stamp-frame">
+          <div className="stamp-bg-solid"></div>
+        </div>
+        <div className="content-overlay">
+          <div className="corner top-left"></div>
+          <div className="corner top-right"></div>
+          <div className="corner bottom-left"></div>
+          <div className="corner bottom-right"></div>
+        </div>
+        <div className="form-content">
+          <h3 className="form-title">Leave Your Mark</h3>
+          <div className="form-row">
+            <div className="form-group half-width">
+              <label htmlFor="name" className="label">Name</label>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                required
+                className="input"
+                placeholder="Your Name"
+                maxLength={50}
+                value={formData.name}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group half-width">
+              <label htmlFor="link" className="label">Link (optional)</label>
+              <input
+                type="url"
+                name="link"
+                id="link"
+                className="input"
+                placeholder="https://..."
+                value={formData.link}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <label htmlFor="message" className="label">Message (max 500 chars)</label>
+            <textarea
+              name="message"
+              id="message"
+              required
+              maxLength={500}
+              rows={3}
+              className="textarea"
+              placeholder="Write your message here..."
+              value={formData.message}
+              onChange={handleChange}
+            />
+            <div className="char-count">
+              {formData.message.length}/500
+            </div>
+          </div>
+          <div className="form-footer">
+                <button type="submit" disabled={isSubmitting} className="submit-button">
+              {isSubmitting ? "Posting..." : "Post Stamp"}
+            </button>
+          </div>
+        </div>
+        <div className="postmark">
+          <div className="postmark-outer">
+            <div className="postmark-inner">
+              <span className="postmark-text">NEW</span>
+              <span className="postmark-date">STAMP</span>
+            </div>
+          </div>
+          <div className="postmark-lines"></div>
+        </div>
+        <div className="stamp-decorative-line left"></div>
+        <div className="stamp-decorative-line right"></div>
+      </form>
+      <style jsx>{`
+        .guestbook-stamp.form-stamp {
+          --stamp-width: clamp(300px, 90vw, 480px);
+          --perforation-size: 12px;
+          --inner-padding: 16px;
+          position: relative;
+          width: var(--stamp-width);
+          aspect-ratio: auto;
+          min-height: 480px;
+          height: auto;
+          background-color: var(--light-stamp-bg);
+          padding: var(--perforation-size);
+          box-sizing: border-box;
+          overflow: visible;
+          margin: 2rem auto;
+          display: block;
+          box-shadow:
+            2px 3px 12px rgba(0, 0, 0, 0.15),
+            0 0 1px rgba(0, 0, 0, 0.1),
+            inset 0 0 20px rgba(255, 255, 255, 0.5);
+          transform: rotate(var(--rotate));
+          transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+          border-radius: 2px;
+        }
+        .guestbook-stamp.form-stamp::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-image: radial-gradient(
+              circle at 12.5% 12.5%,
+              transparent 12px,
+              var(--border-accent) 12px,
+              var(--border-accent) 13px,
+              transparent 13px
+            ),
+            radial-gradient(
+              circle at 37.5% 12.5%,
+              transparent 12px,
+              var(--border-accent) 12px,
+              var(--border-accent) 13px,
+              transparent 13px
+            ),
+            radial-gradient(
+              circle at 62.5% 12.5%,
+              transparent 12px,
+              var(--border-accent) 12px,
+              var(--border-accent) 13px,
+              transparent 13px
+            ),
+            radial-gradient(
+              circle at 87.5% 12.5%,
+              transparent 12px,
+              var(--border-accent) 12px,
+              var(--border-accent) 13px,
+              transparent 13px
+            ),
+            radial-gradient(
+              circle at 12.5% 87.5%,
+              transparent 12px,
+              var(--border-accent) 12px,
+              var(--border-accent) 13px,
+              transparent 13px
+            ),
+            radial-gradient(
+              circle at 37.5% 87.5%,
+              transparent 12px,
+              var(--border-accent) 12px,
+              var(--border-accent) 13px,
+              transparent 13px
+            ),
+            radial-gradient(
+              circle at 62.5% 87.5%,
+              transparent 12px,
+              var(--border-accent) 12px,
+              var(--border-accent) 13px,
+              transparent 13px
+            ),
+            radial-gradient(
+              circle at 87.5% 87.5%,
+              transparent 12px,
+              var(--border-accent) 12px,
+              var(--border-accent) 13px,
+              transparent 13px
+            ),
+            radial-gradient(
+              circle at 12.5% 37.5%,
+              transparent 12px,
+              var(--border-accent) 12px,
+              var(--border-accent) 13px,
+              transparent 13px
+            ),
+            radial-gradient(
+              circle at 12.5% 62.5%,
+              transparent 12px,
+              var(--border-accent) 12px,
+              var(--border-accent) 13px,
+              transparent 13px
+            ),
+            radial-gradient(
+              circle at 87.5% 37.5%,
+              transparent 12px,
+              var(--border-accent) 12px,
+              var(--border-accent) 13px,
+              transparent 13px
+            ),
+            radial-gradient(
+              circle at 87.5% 62.5%,
+              transparent 12px,
+              var(--border-accent) 12px,
+              var(--border-accent) 13px,
+              transparent 13px
+            );
+          background-size: 25% 25%;
+          background-repeat: no-repeat;
+          opacity: 0.7;
+          z-index: 4;
+          pointer-events: none;
+        }
+        .stamp-frame {
+          position: absolute;
+          top: var(--perforation-size);
+          left: var(--perforation-size);
+          right: var(--perforation-size);
+          bottom: var(--perforation-size);
+          overflow: hidden;
+          border-radius: 2px;
+          z-index: 1;
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+        }
+        .stamp-bg-solid {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            135deg,
+            hsla(var(--hue), 85%, 97%, 0.9),
+            hsla(var(--hue), 85%, 90%, 0.7)
+          );
+          opacity: 0.3;
+        }
+        .content-overlay {
+          position: absolute;
+          top: calc(var(--perforation-size) + 4px);
+          left: calc(var(--perforation-size) + 4px);
+          right: calc(var(--perforation-size) + 4px);
+          bottom: calc(var(--perforation-size) + 4px);
+          background-color: var(--text-bg-overlay);
+          z-index: 2;
+          border-radius: 3px;
+          box-shadow:
+            0 0 15px rgba(255, 255, 255, 0.8),
+            inset 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+        .corner {
+          position: absolute;
+          width: 12px;
+          height: 12px;
+          border-style: solid;
+          border-color: var(--primary-stamp-color);
+          opacity: 0.7;
+        }
+        .top-left {
+          top: 4px;
+          left: 4px;
+          border-width: 2px 0 0 2px;
+        }
+        .top-right {
+          top: 4px;
+          right: 4px;
+          border-width: 2px 2px 0 0;
+        }
+        .bottom-left {
+          bottom: 4px;
+          left: 4px;
+          border-width: 0 0 2px 2px;
+        }
+        .bottom-right {
+          bottom: 4px;
+          right: 4px;
+          border-width: 0 2px 2px 0;
+        }
+        .form-content {
+          position: relative;
+          top: auto;
+          left: auto;
+          right: auto;
+          bottom: auto;
+          margin: calc(var(--perforation-size) + 16px);
+          z-index: 4;
+          display: flex;
+          flex-direction: column;
+          padding-bottom: 10px;
+        }
+        .form-title {
+          text-align: center;
+          margin-top: 0;
+          margin-bottom: 1.5rem;
+          color: var(--primary-stamp-color);
+          font-size: 1.4rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          text-shadow: 0 0 1px rgba(255, 255, 255, 0.8);
+        }
+        .form-row {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 1rem;
+        }
+        .form-group {
+          margin-bottom: 1rem;
+          flex-grow: 1;
+        }
+        .form-group.half-width {
+          flex-basis: calc(50% - 0.5rem);
+          min-width: 120px;
+        }
+        .label {
+          display: block;
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: var(--mid-grey-fixed);
+          margin-bottom: 0.4rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .input,
+        .textarea {
+          width: 100%;
+          padding: 0.7rem 0.9rem;
+          background-color: var(--input-bg);
+          color: var(--dark-text-fixed);
+          border: 1px solid rgba(0, 0, 0, 0.05);
+          border-radius: 3px;
+          box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.7);
+          transition: all 0.2s ease;
+          font-size: 0.95rem;
+          box-sizing: border-box;
+          font-family: inherit;
+        }
+        .input::placeholder,
+        .textarea::placeholder {
+          color: var(--mid-grey-fixed);
+          opacity: 0.8;
+        }
+        .input:focus,
+        .textarea:focus {
+          outline: none;
+          border-color: var(--primary-stamp-color);
+          box-shadow:
+            inset 0 0 0 1px var(--primary-stamp-color),
+            inset 0 0 5px rgba(255, 255, 255, 0.7);
+          background-color: hsla(var(--hue), 90%, 99%, 0.8);
+        }
+        .textarea {
+          resize: vertical;
+        }
+        .char-count {
+          text-align: right;
+          font-size: 0.7rem;
+          color: var(--mid-grey-fixed);
+          margin-top: 0.3rem;
+        }
+        .form-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: auto;
+          padding-top: 1rem;
+        }
+        .submit-button {
+          padding: 0.7rem 1.5rem;
+          background-color: var(--primary-stamp-color);
+          color: white;
+          border-radius: 4px;
+          transition: all 0.2s ease;
+          border: 1px solid hsla(var(--hue), 70%, 40%, 0.5);
+          cursor: pointer;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          box-shadow:
+            1px 1px 3px hsla(var(--hue), 50%, 20%, 0.3),
+            inset 0 0 0 1px hsla(var(--hue), 70%, 60%, 0.5);
+        }
+        .submit-button:hover:not(:disabled) {
+          background-color: hsl(var(--hue), 65%, 50%);
+          transform: translateY(-1px);
+          box-shadow:
+            2px 2px 5px hsla(var(--hue), 50%, 20%, 0.3),
+            inset 0 0 0 1px hsla(var(--hue), 70%, 60%, 0.5);
+        }
+        .submit-button:active:not(:disabled) {
+          transform: translateY(1px);
+          box-shadow:
+            0 0 2px hsla(var(--hue), 50%, 20%, 0.4),
+            inset 0 0 0 1px hsla(var(--hue), 70%, 60%, 0.5);
+        }
+        .submit-button:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+        .postmark {
+          position: absolute;
+          top: 10%;
+          right: 10%;
+          width: 60px;
+          height: 60px;
+          z-index: 3;
+          transform: rotate(12deg);
+        }
+        .postmark-outer {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border: 2px double var(--postmark-color-fixed);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .postmark-inner {
+          width: 80%;
+          height: 80%;
+          border: 1px dashed var(--postmark-color-fixed);
+          border-radius: 50%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 2px;
+          color: var(--postmark-color-fixed);
+          font-weight: bold;
+          text-align: center;
+          line-height: 1;
+        }
+        .postmark-text {
+          font-size: 0.55rem;
+          letter-spacing: 0.5px;
+          margin-bottom: 2px;
+        }
+        .postmark-date {
+          font-size: 0.5rem;
+        }
+        .postmark-lines {
+          position: absolute;
+          top: 50%;
+          left: -20px;
+          right: -20px;
+          height: 20px;
+          background-image: repeating-linear-gradient(
+            0deg,
+            var(--postmark-color-fixed),
+            var(--postmark-color-fixed) 1px,
+            transparent 1px,
+            transparent 3px
+          );
+          transform: translateY(-50%);
+          z-index: -1;
+        }
+        .stamp-value {
+          font-size: 1.2rem;
+          color: var(--gold-accent);
+          text-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
+          font-weight: bold;
+        }
+        .stamp-decorative-line {
+          position: absolute;
+          height: 85%;
+          width: 2px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: linear-gradient(
+            to bottom,
+            transparent,
+            var(--border-accent),
+            var(--gold-accent),
+            var(--border-accent),
+            transparent
+          );
+          opacity: 0.3;
+          z-index: 3;
+        }
+        .stamp-decorative-line.left {
+          left: calc(var(--perforation-size) + 4px);
+        }
+        .stamp-decorative-line.right {
+          right: calc(var(--perforation-size) + 4px);
+        }
+        @media (max-width: 600px) {
+          .form-row {
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+          }
+          .form-group {
+            margin-bottom: 0.75rem;
+          }
+          .form-group.half-width {
+            flex-basis: 100%;
+            width: 100%;
+          }
+          .postmark {
+            width: 50px;
+            height: 50px;
+          }
+        }
+        @media (max-width: 400px) {
+          .guestbook-stamp.form-stamp {
+            --perforation-size: 10px;
+            --inner-padding: 12px;
+            width: 95vw;
+            min-height: auto;
+            margin: 1rem auto;
+          }
+          .form-content {
+            margin: calc(var(--perforation-size) + 10px);
+          }
+          .form-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+          }
+          .label {
+            font-size: 0.7rem;
+            margin-bottom: 0.2rem;
+          }
+          .input,
+          .textarea {
+            padding: 0.5rem 0.7rem;
+            font-size: 0.85rem;
+          }
+          .submit-button {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            white-space: nowrap;
+          }
+          .form-footer {
+            padding-top: 0.5rem;
+          }
+          .stamp-value {
+            font-size: 1rem;
+          }
+          .postmark {
+            width: 45px;
+            height: 45px;
+            top: 8%;
+            right: 8%;
+          }
+        }
+      `}</style>
+    </>
   );
 }

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import PlaygroundCards from "./PlaygroundCards";
+import LabCards from "./LabCards";
 
-export default function PlaygroundCardsExample() {
+export default function LabCardsExample() {
   const [cards] = useState([
     {
       id: 1,
@@ -63,9 +63,9 @@ export default function PlaygroundCardsExample() {
     <div className="min-h-screen bg-gray-100">
       <div className="container mx-auto py-8">
         <h1 className="text-3xl font-bold text-center mb-8">
-          Playground Cards - Masonry Layout
+          Lab Cards - Masonry Layout
         </h1>
-        <PlaygroundCards cards={cards} />
+        <LabCards cards={cards} />
       </div>
     </div>
   );

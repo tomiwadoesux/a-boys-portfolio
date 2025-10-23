@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import GuestbookForm from "./GuestbookForm";
 import GuestbookEntry from "./GuestbookEntry";
 import Pagination from "./Pagination";
@@ -9,13 +10,13 @@ export default function GuestbookClient({ initialEntries = [] }) {
   const [entries, setEntries] = useState(initialEntries);
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
   const entriesPerPage = 9;
 
   const handleFormSubmit = async (formData) => {
     setIsSubmitting(true);
 
     try {
-      // Submit to Sanity
       const response = await fetch("/api/guestbook", {
         method: "POST",
         headers: {
@@ -24,18 +25,28 @@ export default function GuestbookClient({ initialEntries = [] }) {
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        const newEntry = await response.json();
-
-        // Add to local state (will show after approval if you set approved: false in API)
-        setEntries([newEntry, ...entries]);
-
-        alert("Thank you for signing the guestbook! Your entry is pending approval.");
-      } else {
-        alert("Failed to submit entry. Please try again.");
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Server error response:", errorData);
+        throw new Error(
+          errorData.error || errorData.message || "Failed to submit entry"
+        );
       }
+
+      const newEntry = await response.json();
+      console.log("Entry submitted successfully:", newEntry);
+
+      // Add to local state
+      setEntries([newEntry, ...entries]);
+
+      // Refresh the page to show the new entry
+      router.refresh();
+
+      alert(
+        "Thank you for signing! Your signature will be added shortly with a custom stamp."
+      );
     } catch (error) {
-      console.error("Error submitting guestbook entry:", error);
+      console.error("Error submitting guestbook:", error);
       alert("An error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -49,32 +60,16 @@ export default function GuestbookClient({ initialEntries = [] }) {
   const currentEntries = entries.slice(startIndex, endIndex);
 
   return (
-    <div className="px-16 lg:px-56 py-12">
-      <GuestbookForm onSubmit={handleFormSubmit} />
+    <div className="px-10 md:px-20 lg:px-20 pt-10">
+      <GuestbookForm onSubmit={handleFormSubmit} isSubmitting={isSubmitting} />
 
-      <div className="mt-16">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">
-          Recent Entries ({entries.length})
-        </h2>
-
-        {currentEntries.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {currentEntries.map((entry) => (
-              <GuestbookEntry
-                key={entry._id}
-                name={entry.name}
-                message={entry.message}
-                country={entry.country}
-                link={entry.link}
-                date={entry.date}
-              />
-            ))}
-          </div>
-        ) : (
-          <p className="text-center text-gray-500 py-12">
-            No entries yet. Be the first to sign the guestbook!
-          </p>
-        )}
+      <div className="mt-12">
+        <div className="text-sm text-left font-bold text-gray-500">
+          RECENT ENTRIES ({entries.length})
+        </div>
+        <svg width="100%" height="1" className="mb-4 mt-2">
+          <line x1="0" y1="0" x2="100%" y2="0" stroke="black" strokeWidth="1" />
+        </svg>
 
         {totalPages > 1 && (
           <Pagination
@@ -84,6 +79,30 @@ export default function GuestbookClient({ initialEntries = [] }) {
           />
         )}
       </div>
+      {currentEntries.length > 0 ? (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {currentEntries.map((entry) => (
+            <GuestbookEntry
+              key={entry._id}
+              entryId={entry._id}
+              name={entry.name}
+              message={entry.message}
+              city={entry.city}
+              country={entry.country}
+              link={entry.link}
+              date={entry.date}
+              stampImage={entry.stampImage}
+              stampGenerating={entry.stampGenerating}
+              reactions={entry.reactions}
+              isFirstFromCountry={entry.isFirstFromCountry}
+            />
+          ))}
+        </div>
+      ) : (
+        <p className="text-center text-gray-500 py-12">
+          No entries yet. Be the first to sign the guestbook!
+        </p>
+      )}
     </div>
   );
 }

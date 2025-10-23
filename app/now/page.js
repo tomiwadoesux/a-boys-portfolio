@@ -1,9 +1,16 @@
-import Body from "../components/Body";
+import PageConfig from "../components/PageConfig";
 import Now from "../components/Now";
+
+// Metadata for SEO
+export const metadata = {
+  title: "Now | Design Engineer Portfolio",
+  description: "What I'm working on right now. The future is present.",
+};
+
 export default function page() {
   return (
     <section>
-      <Body
+      <PageConfig
         activePage="/now"
         description={
           <>

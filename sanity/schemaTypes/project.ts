@@ -101,25 +101,26 @@ export const projectType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'date',
-      title: 'Project Date/Year',
+      name: 'order',
+      title: 'Display Order',
       type: 'number',
-      description: 'Year the project was completed (e.g., 2010, 2024). More recent dates appear first.',
-      validation: (Rule) => Rule.required().min(1900).max(2100),
+      description: 'Order in which projects appear (lower numbers appear first). E.g., 1, 2, 3...',
+      validation: (Rule) => Rule.required().min(0),
+      initialValue: 0,
     }),
   ],
   orderings: [
     {
-      title: 'Date, Newest First',
-      name: 'dateDesc',
-      by: [{ field: 'date', direction: 'desc' }],
+      title: 'Display Order',
+      name: 'orderAsc',
+      by: [{ field: 'order', direction: 'asc' }],
     },
     {
       title: 'Featured First',
       name: 'featuredFirst',
       by: [
         { field: 'featured', direction: 'desc' },
-        { field: 'date', direction: 'desc' },
+        { field: 'order', direction: 'asc' },
       ],
     },
   ],
@@ -129,11 +130,11 @@ export const projectType = defineType({
       subtitle: 'tech',
       media: 'desktopImage',
       featured: 'featured',
-      date: 'date',
+      order: 'order',
     },
-    prepare({ title, subtitle, media, featured, date }) {
+    prepare({ title, subtitle, media, featured, order }) {
       return {
-        title: `${title}${featured ? ' ⭐' : ''} (${date})`,
+        title: `${order}. ${title}${featured ? ' ⭐' : ''}`,
         subtitle,
         media,
       }

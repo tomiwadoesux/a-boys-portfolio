@@ -1,7 +1,10 @@
 "use client";
 
-import Body from "../components/Body";
-import PlaygroundCards from "../components/PlaygroundCards";
+import PageConfig from "../components/PageConfig";
+import LabCards from "../components/LabCards";
+
+// Note: metadata export doesn't work in client components
+// Consider moving this to a server component wrapper if needed
 
 export default function page() {
   const cards = [
@@ -53,16 +56,16 @@ export default function page() {
 
   return (
     <div>
-      <Body
-        activePage="/playground"
+      <PageConfig
+        activePage="/lab"
         description={
           <>
             Everything you can imagine is real..{" "}
-            <span className="text-[#4447A9]"> Playground :0</span>
+            <span className="text-[#4447A9]"> Lab :0</span>
           </>
         }
       />
-      <PlaygroundCards cards={cards} />
+      <LabCards cards={cards} />
     </div>
   );
 }
