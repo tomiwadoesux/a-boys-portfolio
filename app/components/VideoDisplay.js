@@ -102,16 +102,16 @@ export default function VideoDisplay({ video, isMobile = false }) {
           <div className="text-center text-gray-700 py-32">{video.name}</div>
         )}
       </div>
-      <div className="flex pt-2 flex-row justify-between">
-        <h6 className="text-xs">{video.title || video.name}</h6>
+      <div className="flex pt-2 flex-row justify-between items-center gap-2">
+        <h6 className="text-xs flex-1">{video.title || video.name}</h6>
         {video.link && (
           <a
             href={video.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline text-xs underline-offset-2 hover:opacity-70 transition-opacity"
+            className="whitespace-nowrap underline text-xs underline-offset-2 hover:opacity-70 transition-opacity"
           >
-            Visit Website
+            Visit
           </a>
         )}
       </div>

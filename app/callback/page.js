@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function SpotifyCallback() {
+function SpotifyCallbackContent() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState("processing");
   const [message, setMessage] = useState("Processing Spotify authorization...");
@@ -95,5 +95,17 @@ export default function SpotifyCallback() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SpotifyCallback() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    }>
+      <SpotifyCallbackContent />
+    </Suspense>
   );
 }

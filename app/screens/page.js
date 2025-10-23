@@ -1,5 +1,5 @@
 import Screens from "../components/Screens";
-import { getProjects } from "../../sanity/lib/fetch";
+import { getScreens } from "../../sanity/lib/fetch";
 
 // Force static generation at build time with prerendering
 export const dynamic = 'force-static';
@@ -11,14 +11,14 @@ export const metadata = {
 };
 
 export default async function ScreensPage() {
-  // Fetch all projects that have videos
-  const projects = await getProjects();
-  // Filter projects that have at least one video (desktop or mobile)
-  const projectsWithVideos = projects.filter(p => p.desktopVideo || p.mobileVideo);
+  // Fetch all screens that have videos
+  const screens = await getScreens();
+  // Filter screens that have at least one video (desktop or mobile)
+  const screensWithVideos = screens.filter(s => s.desktopVideo || s.mobileVideo);
 
   return (
     <section className="h-screen overflow-hidden flex flex-col">
-      <Screens screens={projectsWithVideos} />
+      <Screens screens={screensWithVideos} />
     </section>
   );
 }

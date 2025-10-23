@@ -19,6 +19,9 @@ export interface ListData {
 export interface ScreenData {
   _id: string
   name: string
+  title?: string
+  desktopImage?: string | null
+  mobileImage?: string | null
   desktopVideo?: string | null
   mobileVideo?: string | null
   link?: string | null

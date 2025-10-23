@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import gsap from 'gsap';
 
 /**
- * Wrapper component to pause all GSAP animations during navigation (not initial load)
- * This helps improve perceived navigation speed
+ * Inner component that uses useSearchParams
+ * Wrapped in Suspense to handle server-side rendering during builds
  */
-export default function NavigationPauseWrapper() {
+function NavigationPauseInner() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isInitialLoadRef = useRef(true);
@@ -32,4 +32,16 @@ export default function NavigationPauseWrapper() {
   }, [pathname, searchParams]);
 
   return null; // This component doesn't render anything
+}
+
+/**
+ * Wrapper component to pause all GSAP animations during navigation (not initial load)
+ * This helps improve perceived navigation speed
+ */
+export default function NavigationPauseWrapper() {
+  return (
+    <Suspense fallback={null}>
+      <NavigationPauseInner />
+    </Suspense>
+  );
 }

@@ -88,6 +88,9 @@ export const listQuery = groq`*[_type == "list"] {
 export const screensQuery = groq`*[_type == "screen"] | order(order asc) {
   _id,
   name,
+  title,
+  "desktopImage": desktopImage.asset->url,
+  "mobileImage": mobileImage.asset->url,
   "desktopVideo": desktopVideo.asset->url,
   "mobileVideo": mobileVideo.asset->url,
   link,

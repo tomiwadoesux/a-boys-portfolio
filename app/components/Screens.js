@@ -88,10 +88,11 @@ export default function Screens({ screens = [] }) {
 
       {/* Mobile/Tablet: Full screen layout with preview and carousel */}
       <div className="md:hidden w-full h-full flex flex-col overflow-hidden">
-        {/* Video Preview - Top section */}
+        {/* Video Preview - Top section (smaller height to show carousel) */}
         <div
           ref={containerRef}
-          className="flex-1 overflow-hidden px-4 pt-4"
+          className="flex-shrink-0 w-full overflow-hidden px-4 pt-4"
+          style={{ height: '60vh' }}
         >
           <div className="w-full h-full" ref={displayRef}>
             <VideoDisplay video={videoList[actualVideoIndex]} isMobile={isMobile} />
@@ -99,7 +100,7 @@ export default function Screens({ screens = [] }) {
         </div>
 
         {/* Horizontal Carousel - Bottom section */}
-        <div className="w-full px-4 py-4 border-t border-gray-200 flex-shrink-0">
+        <div className="w-full flex-1 px-4 py-4 border-t border-gray-200 overflow-hidden flex flex-col">
           <VideoSidebar
             videos={videoList}
             activeIndex={activeIndex}
