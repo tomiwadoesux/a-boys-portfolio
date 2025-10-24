@@ -52,6 +52,9 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
 
       // Update scroll position while dragging
       sidebar.scrollLeft = startScrollLeft + diff;
+
+      // Update display index in real-time while scrolling
+      updateDisplayFromScroll();
     };
 
     const handleMouseUp = () => {
@@ -61,6 +64,31 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
 
       // Snap to nearest item
       snapToNearestItem();
+    };
+
+    const updateDisplayFromScroll = () => {
+      const scrollLeft = sidebar.scrollLeft;
+      const sidebarWidth = sidebar.offsetWidth;
+      const centerX = scrollLeft + sidebarWidth / 2;
+
+      // Find which item is closest to center
+      let closestIndex = 0;
+      let closestDistance = Infinity;
+
+      itemRefs.current.forEach((item, idx) => {
+        if (!item) return;
+        const itemCenter = item.offsetLeft + item.offsetWidth / 2;
+        const distance = Math.abs(itemCenter - centerX);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = idx;
+        }
+      });
+
+      // Update active index immediately
+      const actualIndex = closestIndex % videos.length;
+      setActiveIndex(actualIndex);
     };
 
     const snapToNearestItem = () => {
@@ -114,6 +142,9 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
     sidebar.addEventListener('touchmove', handleMouseMove, { passive: true });
     sidebar.addEventListener('touchend', handleMouseUp, { passive: true });
 
+    // Scroll event for real-time display update
+    sidebar.addEventListener('scroll', updateDisplayFromScroll, { passive: true });
+
     return () => {
       sidebar.removeEventListener('mousedown', handleMouseDown);
       sidebar.removeEventListener('mousemove', handleMouseMove);
@@ -122,6 +153,7 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
       sidebar.removeEventListener('touchstart', handleMouseDown);
       sidebar.removeEventListener('touchmove', handleMouseMove);
       sidebar.removeEventListener('touchend', handleMouseUp);
+      sidebar.removeEventListener('scroll', updateDisplayFromScroll);
     };
   }, [useCarouselPicker, videos.length, setActiveIndex]);
 
@@ -180,7 +212,7 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
       <div
         ref={sidebarRef}
         className={useCarouselPicker
-          ? "flex flex-row gap-4 overflow-x-auto w-full scrollbar-hide scroll-smooth"
+          ? "flex flex-row gap-2 overflow-x-auto w-full scrollbar-hide scroll-smooth"
           : "flex flex-col gap-4 max-h-[450px] overflow-y-auto w-auto pr-4 scrollbar-hide"
         }
       >
