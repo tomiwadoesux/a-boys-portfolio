@@ -93,7 +93,7 @@ export default function Screens({ screens = [] }) {
             videos={videoList}
             activeIndex={activeIndex}
             setActiveIndex={setActiveIndex}
-            isMobile={true}
+            isMobile={true}flex-shrink-0 w-full overflow-hidden px-4 pt-4
           />
         </div> 
         <div
