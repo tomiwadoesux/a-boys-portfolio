@@ -54,7 +54,7 @@ const Body = memo(function Body({
                   strokeWidth="1"
                 />
               </svg>
-              <div className="md:hidden py-3 w-full flex">
+              <div className="md:hidden py-2 w-full flex">
                 
                 <div className="flex self-end justify-between ml-auto">
                   {isScrambled ? (
@@ -185,7 +185,7 @@ const Body = memo(function Body({
               </svg>
               <div className=" flex flex-row justify-between">
                 <div>
-                  <h4 className="text-sm md:text-[13px] py-3">{description}</h4>
+                  <h4 className="text-sm md:text-[13px] py-2 md:py-3">{description}</h4>
                 </div>
                 
                 <div className="hidden md:block self-center">

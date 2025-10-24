@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import VideoSidebar from "./VideoSidebar";
 import VideoDisplay from "./VideoDisplay";
+import { getCachedVideoUrl } from "../utils/videoCache";
 
 export default function Screens({ screens = [] }) {
   const videoList = screens.length > 0 ? screens : [];
@@ -20,6 +21,29 @@ export default function Screens({ screens = [] }) {
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
+
+  // Preload all videos on mount
+  useEffect(() => {
+    if (videoList.length === 0) return;
+
+    videoList.forEach((video) => {
+      // Preload desktop video
+      if (video.desktopVideo) {
+        const videoUrl = getCachedVideoUrl(video.desktopVideo, video._id, 'desktop') || video.desktopVideo;
+        const videoElement = new window.HTMLVideoElement();
+        videoElement.src = videoUrl;
+        videoElement.preload = 'auto';
+      }
+
+      // Preload mobile video
+      if (video.mobileVideo) {
+        const videoUrl = getCachedVideoUrl(video.mobileVideo, video._id, 'mobile') || video.mobileVideo;
+        const videoElement = new window.HTMLVideoElement();
+        videoElement.src = videoUrl;
+        videoElement.preload = 'auto';
+      }
+    });
+  }, [videoList]);
 
   // Handle continuous smooth scroll to navigate through videos (desktop only)
   useEffect(() => {
@@ -87,15 +111,8 @@ export default function Screens({ screens = [] }) {
       </div>
 
       {/* Mobile/Tablet: Full screen layout with preview and carousel */}
-      <div className="md:hidden w-full h-full overflow-hidden">
-      <div className="w-full  px-4 py-4 border-t border-gray-200 overflow-hidden flex flex-col">
-          <VideoSidebar
-            videos={videoList}
-            activeIndex={activeIndex}
-            setActiveIndex={setActiveIndex}
-            isMobile={true}flex-shrink-0 w-full overflow-hidden px-4 pt-4
-          />
-        </div> 
+      <div className="md:hidden w-full h-full flex flex-col overflow-hidden">
+        {/* Video Preview - Top section (60vh height) */}
         <div
           ref={containerRef}
           className="flex-shrink-0 w-full overflow-hidden px-4 pt-4"
@@ -107,7 +124,14 @@ export default function Screens({ screens = [] }) {
         </div>
 
         {/* Horizontal Carousel - Bottom section */}
-        
+        <div className="w-full flex-1 px-4 py-4 border-t border-gray-200 overflow-hidden flex flex-col">
+          <VideoSidebar
+            videos={videoList}
+            activeIndex={activeIndex}
+            setActiveIndex={setActiveIndex}
+            isMobile={true}
+          />
+        </div>
       </div>
     </div>
   );

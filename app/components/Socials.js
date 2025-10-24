@@ -4,9 +4,12 @@ import Ayotomcs from "./Ayotomcs";
 export default function Socials() {
   return (
     <div className="flex pb-8 px-0 pt-12 md:px-20 lg:px-56  flex-col items-center">
-      <div className="flex pb-2 flex-row">
+      <div className="hidden md:block ">
+            <div className="flex pb-2 flex-row">
       <Ayotomcs/>
       </div>
+      </div>
+  
       <svg
         className="w-full py-2 h-px"
         viewBox="0 0 100 1"
