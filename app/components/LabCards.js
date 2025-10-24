@@ -84,9 +84,15 @@ export default function LabCards({ cards = [] }) {
         {cards.map((card, idx) => (
           <div
             key={card.id || idx}
-            className="lab-card bg-[#D9D9D9] rounded-t-lg overflow-hidden cursor-pointer"
-            style={{ height: card.height || 'auto' }}
+            className="lab-card bg-[#D9D9D9] rounded-t-lg overflow-hidden cursor-not-allowed relative group pointer-events-none"
+            style={{ height: card.height || 'auto', opacity: 0.5 }}
           >
+            {/* Coming Soon Tooltip */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-auto cursor-pointer transition-opacity duration-300 z-10 bg-black/40 backdrop-blur-sm">
+              <div className="bg-black text-white px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap">
+                Coming Soon
+              </div>
+            </div>
             {/* Replace with your card content */}
             {card.image && (
               <div className="relative w-full h-full">
