@@ -30,7 +30,7 @@ export default function Screens({ screens = [] }) {
       // Preload desktop video
       if (video.desktopVideo) {
         const videoUrl = getCachedVideoUrl(video.desktopVideo, video._id, 'desktop') || video.desktopVideo;
-        const videoElement = new window.HTMLVideoElement();
+        const videoElement = document.createElement('video');
         videoElement.src = videoUrl;
         videoElement.preload = 'auto';
       }
@@ -38,7 +38,7 @@ export default function Screens({ screens = [] }) {
       // Preload mobile video
       if (video.mobileVideo) {
         const videoUrl = getCachedVideoUrl(video.mobileVideo, video._id, 'mobile') || video.mobileVideo;
-        const videoElement = new window.HTMLVideoElement();
+        const videoElement = document.createElement('video');
         videoElement.src = videoUrl;
         videoElement.preload = 'auto';
       }
