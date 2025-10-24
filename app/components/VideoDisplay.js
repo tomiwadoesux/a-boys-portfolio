@@ -62,9 +62,9 @@ export default function VideoDisplay({ video, isMobile = false }) {
 
   return (
     <div className="w-full h-full flex flex-col">
-      <div className="flex-1 w-full flex items-center justify-center bg-gray-200 relative overflow-hidden rounded">
+      <div className="flex-1 w-full flex items-center justify-center bg-gray-200 relative overflow-y-auto rounded">
         {videoSrc ? (
-          <>
+          <div className="relative w-full inline-flex items-center justify-center">
             {/* Low-quality placeholder image shown while video loads */}
             {isLoading && placeholderImage && (
               <div className="absolute inset-0 w-full h-full z-5">
@@ -87,17 +87,17 @@ export default function VideoDisplay({ video, isMobile = false }) {
               </div>
             )}
 
-            {/* Video player */}
+            {/* Video player - show at full height with natural aspect ratio */}
             <video
               ref={videoRef}
               src={videoSrc}
-              className="w-full h-auto object-contain relative z-0"
+              className="h-auto w-auto max-w-full relative z-0"
               loop
               muted
               playsInline
               preload="auto"
             />
-          </>
+          </div>
         ) : (
           <div className="text-center text-gray-700 py-32">{video.name}</div>
         )}

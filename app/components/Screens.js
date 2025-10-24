@@ -79,7 +79,7 @@ export default function Screens({ screens = [] }) {
       {/* Desktop: Main content area */}
       <div
         ref={containerRef}
-        className="hidden md:flex flex-1 overflow-hidden px-10 md:px-20 lg:px-56 items-start md:pt-3"
+        className="hidden md:flex overflow-hidden px-10 md:px-20 lg:px-56 items-start md:pt-3"
       >
         <div className="flex-1 overflow-hidden w-full" ref={displayRef}>
           <VideoDisplay video={videoList[actualVideoIndex]} isMobile={isMobile} />
@@ -87,8 +87,15 @@ export default function Screens({ screens = [] }) {
       </div>
 
       {/* Mobile/Tablet: Full screen layout with preview and carousel */}
-      <div className="md:hidden w-full h-full flex flex-col overflow-hidden">
-        {/* Video Preview - Top section (smaller height to show carousel) */}
+      <div className="md:hidden w-full h-full overflow-hidden">
+      <div className="w-full  px-4 py-4 border-t border-gray-200 overflow-hidden flex flex-col">
+          <VideoSidebar
+            videos={videoList}
+            activeIndex={activeIndex}
+            setActiveIndex={setActiveIndex}
+            isMobile={true}
+          />
+        </div> 
         <div
           ref={containerRef}
           className="flex-shrink-0 w-full overflow-hidden px-4 pt-4"
@@ -100,14 +107,7 @@ export default function Screens({ screens = [] }) {
         </div>
 
         {/* Horizontal Carousel - Bottom section */}
-        <div className="w-full flex-1 px-4 py-4 border-t border-gray-200 overflow-hidden flex flex-col">
-          <VideoSidebar
-            videos={videoList}
-            activeIndex={activeIndex}
-            setActiveIndex={setActiveIndex}
-            isMobile={true}
-          />
-        </div>
+        
       </div>
     </div>
   );
