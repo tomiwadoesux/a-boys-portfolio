@@ -50,6 +50,9 @@ export default function ScreensLayout({ children }) {
       }
     });
 
+    // Get the scroll container to restore its overflow
+    const scrollContainer = document.getElementById("main-scroll-container");
+
     // Cleanup - restore scrolling and padding when leaving screens page
     return () => {
       if (socials) {
@@ -58,6 +61,10 @@ export default function ScreensLayout({ children }) {
       if (screenBodySection) {
         screenBodySection.classList.remove('pt-4', 'md:pt-20');
         screenBodySection.classList.add('pt-36');
+      }
+      // Restore scroll behavior on other pages
+      if (scrollContainer) {
+        scrollContainer.style.overflow = 'auto';
       }
     };
   }, []);
