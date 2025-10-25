@@ -16,7 +16,7 @@ async function getVisitorLocation(request: NextRequest) {
 
     // If localhost or unknown, return default
     if (ip === 'unknown' || ip === '127.0.0.1' || ip.startsWith('192.168.') || ip.startsWith('10.')) {
-      return { city: 'Unknown', country: 'Unknown' };
+      return { city: 'Unknown', region: 'Unknown', country: 'Unknown' };
     }
 
     // Use ipapi.co for geolocation (free tier: 1000 requests/day)
@@ -24,18 +24,19 @@ async function getVisitorLocation(request: NextRequest) {
 
     if (!response.ok) {
       console.error('Failed to fetch location:', response.statusText);
-      return { city: 'Unknown', country: 'Unknown' };
+      return { city: 'Unknown', region: 'Unknown', country: 'Unknown' };
     }
 
     const data = await response.json();
 
     return {
       city: data.city || 'Unknown',
+      region: data.region || 'Unknown',
       country: data.country_name || 'Unknown',
     };
   } catch (error) {
     console.error('Error getting visitor location:', error);
-    return { city: 'Unknown', country: 'Unknown' };
+    return { city: 'Unknown', region: 'Unknown', country: 'Unknown' };
   }
 }
 
@@ -103,6 +104,7 @@ export async function POST(request: NextRequest) {
       name: body.name,
       message: body.message,
       city: location.city,
+      region: location.region,
       country: location.country,
       link: body.link || null,
       date: new Date().toISOString(),

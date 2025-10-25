@@ -119,6 +119,7 @@ export default function GuestbookClient({ initialEntries = [] }) {
                 message={entry.message}
                 city={entry.city}
                 country={entry.country}
+                region={entry.region}
                 link={entry.link}
                 date={entry.date}
                 stampImage={entry.stampImage}

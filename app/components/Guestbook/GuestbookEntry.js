@@ -20,6 +20,7 @@ export default function GuestbookEntry({
   message,
   city,
   country,
+  region,
   link = null,
   date,
   stampImage = null,
@@ -27,22 +28,8 @@ export default function GuestbookEntry({
   reactions = 0,
   isFirstFromCountry = false,
 }) {
-  const [currentReactions, setCurrentReactions] = useState(reactions);
-  const [hasReacted, setHasReacted] = useState(false);
   const [isStamping, setIsStamping] = useState(false);
   const [dominantColor, setDominantColor] = useState(null);
-
-  // Check if user has already liked this entry from this device and sync reaction count
-  useEffect(() => {
-    const deviceId = getOrCreateDeviceId();
-    const likedEntriesKey = `guestbook_liked_${deviceId}`;
-    const likedEntries = JSON.parse(localStorage.getItem(likedEntriesKey) || '[]');
-    if (likedEntries.includes(entryId)) {
-      setHasReacted(true);
-    }
-    // Initialize reactions from props
-    setCurrentReactions(reactions);
-  }, [entryId, reactions]);
 
   const displayDate =
     date instanceof Date
@@ -57,7 +44,8 @@ export default function GuestbookEntry({
           day: "numeric",
         });
 
-  const location = city && city !== "Unknown" ? `${city}, ${country}` : country;
+  // Show region and country, or just country
+  const location = region && region !== "Unknown" ? `${region}, ${country}` : country;
 
   // Generate random hue for each entry (but keep it consistent per entry)
   const hue = useMemo(() => {
@@ -83,83 +71,6 @@ export default function GuestbookEntry({
     ];
     return positions[hash % positions.length];
   }, [entryId]);
-
-  const handleReaction = async () => {
-    try {
-      const deviceId = getOrCreateDeviceId();
-      const likedEntriesKey = `guestbook_liked_${deviceId}`;
-      const likedEntries = JSON.parse(localStorage.getItem(likedEntriesKey) || '[]');
-
-      const isLiked = likedEntries.includes(entryId);
-
-      if (isLiked) {
-        // Unlike: remove the like
-        setHasReacted(false);
-        setCurrentReactions(prev => prev - 1);
-
-        // Remove from liked list
-        const updatedEntries = likedEntries.filter(id => id !== entryId);
-        localStorage.setItem(likedEntriesKey, JSON.stringify(updatedEntries));
-
-        // Send unlike to backend
-        const response = await fetch('/api/guestbook/react', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ entryId }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to remove reaction');
-        }
-
-        const updatedData = await response.json();
-        if (updatedData.reactions !== undefined) {
-          setCurrentReactions(updatedData.reactions);
-        }
-      } else {
-        // Like: add the like
-        setHasReacted(true);
-        setCurrentReactions(prev => prev + 1);
-
-        // Add to liked list
-        likedEntries.push(entryId);
-        localStorage.setItem(likedEntriesKey, JSON.stringify(likedEntries));
-
-        // Send reaction to backend
-        const response = await fetch('/api/guestbook/react', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ entryId }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to add reaction');
-        }
-
-        const updatedData = await response.json();
-        if (updatedData.reactions !== undefined) {
-          setCurrentReactions(updatedData.reactions);
-        }
-      }
-    } catch (error) {
-      console.error('Error toggling reaction:', error);
-      // Revert on error
-      const deviceId = getOrCreateDeviceId();
-      const likedEntriesKey = `guestbook_liked_${deviceId}`;
-      const likedEntries = JSON.parse(localStorage.getItem(likedEntriesKey) || '[]');
-      const isLiked = likedEntries.includes(entryId);
-
-      if (isLiked) {
-        // Was trying to unlike, revert to liked
-        setHasReacted(true);
-        setCurrentReactions(prev => prev + 1);
-      } else {
-        // Was trying to like, revert to not liked
-        setHasReacted(false);
-        setCurrentReactions(prev => prev - 1);
-      }
-    }
-  };
 
   const randomRotate = useMemo(() => {
     // Generate deterministic rotation based on entryId to avoid hydration mismatch
@@ -366,28 +277,6 @@ export default function GuestbookEntry({
           <div className="message-container">
             <p className="entry-message">{message}</p>
           </div>
-
-          {/* Reaction button */}
-          <button
-            onClick={handleReaction}
-            className={`reaction-button ${hasReacted ? 'reacted' : ''}`}
-            title={hasReacted ? 'Click to unlike' : 'Send some love!'}
-          >
-            <svg
-              className="heart-icon"
-              fill={hasReacted ? 'currentColor' : 'none'}
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              />
-            </svg>
-            <span className="reaction-count">{currentReactions}</span>
-          </button>
         </div>
 
         <div className="stamp-decorative-line left"></div>
@@ -618,11 +507,11 @@ export default function GuestbookEntry({
 
         .country {
           display: block;
-          font-size: 1.2rem;
+          font-size: 0.9rem;
           font-weight: 700;
           color: var(--primary-stamp-color);
           text-transform: uppercase;
-          letter-spacing: 1.5px;
+          letter-spacing: 1px;
           text-shadow: 0 0 1px rgba(255, 255, 255, 0.8);
           line-height: 1.2;
         }
@@ -740,7 +629,7 @@ export default function GuestbookEntry({
         }
 
         .entry-message {
-          font-size: 1rem;
+          font-size: 0.9rem;
           line-height: 1.5;
           color: var(--dark-text-fixed);
           font-weight: 400;
@@ -751,49 +640,6 @@ export default function GuestbookEntry({
           -webkit-box-orient: vertical;
           overflow-wrap: break-word;
           word-wrap: break-word;
-        }
-
-        .reaction-button {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          padding: 6px 12px;
-          border-radius: 20px;
-          border: none;
-          cursor: pointer;
-          font-size: 0.75rem;
-          font-weight: 600;
-          margin-top: 8px;
-          align-self: flex-end;
-          transition: all 0.2s ease;
-          background-color: rgba(255, 255, 255, 0.5);
-          color: var(--mid-grey-fixed);
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .reaction-button:hover {
-          background-color: rgba(239, 68, 68, 0.1);
-          color: #ef4444;
-          transform: scale(1.05);
-        }
-
-        .reaction-button.reacted {
-          background-color: rgba(239, 68, 68, 0.15);
-          color: #ef4444;
-        }
-
-        .reaction-button.reacted:hover {
-          background-color: rgba(239, 68, 68, 0.2);
-          transform: scale(1.05);
-        }
-
-        .heart-icon {
-          width: 14px;
-          height: 14px;
-        }
-
-        .reaction-count {
-          font-size: 0.75rem;
         }
 
         .stamp-value {
@@ -842,16 +688,16 @@ export default function GuestbookEntry({
           }
 
           .entry-name {
-            font-size: 1.1rem;
+            font-size: 1rem;
           }
 
           .entry-message {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             -webkit-line-clamp: 7;
           }
 
           .country {
-            font-size: 1rem;
+            font-size: 0.85rem;
           }
 
           .stamp-image-small {
@@ -870,19 +716,19 @@ export default function GuestbookEntry({
           }
 
           .entry-name {
-            font-size: 1.05rem;
+            font-size: 0.95rem;
           }
 
           .country {
-            font-size: 1rem;
+            font-size: 0.8rem;
           }
 
           .country-label {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
           }
 
           .entry-message {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             -webkit-line-clamp: 7;
           }
 
@@ -900,11 +746,6 @@ export default function GuestbookEntry({
             width: 9px;
             height: 9px;
           }
-
-          .reaction-button {
-            padding: 6px 10px;
-            font-size: 0.7rem;
-          }
         }
 
         @media (max-width: 480px) {
@@ -917,19 +758,19 @@ export default function GuestbookEntry({
           }
 
           .entry-name {
-            font-size: 0.95rem;
-          }
-
-          .country {
             font-size: 0.9rem;
           }
 
+          .country {
+            font-size: 0.75rem;
+          }
+
           .country-label {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
           }
 
           .entry-message {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             -webkit-line-clamp: 6;
           }
 

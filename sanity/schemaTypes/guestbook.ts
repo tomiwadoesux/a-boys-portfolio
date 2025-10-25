@@ -24,6 +24,12 @@ export const guestbookType = defineType({
       description: 'Auto-detected city of the visitor',
     }),
     defineField({
+      name: 'region',
+      title: 'Region',
+      type: 'string',
+      description: 'Auto-detected region/state of the visitor',
+    }),
+    defineField({
       name: 'country',
       title: 'Country',
       type: 'string',
