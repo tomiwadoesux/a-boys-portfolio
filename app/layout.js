@@ -6,6 +6,7 @@ import Headd from "./components/Headd";
 import Socials from "./components/Socials";
 import GsapInitializer from "./components/GsapInitializer";
 import NavigationPauseWrapper from "./components/NavigationPauseWrapper";
+import SmoothScroll from "./components/SmoothScroll";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,18 +39,17 @@ export default function RootLayout({ children }) {
         style={{ backgroundColor: 'var(--foreground)' }}
       >
         <GsapInitializer />
+        {/* <SmoothScroll /> */}
         <NavigationPauseWrapper />
         <DescriptionProvider>
           {/* Rounded border frame */}
-          <div className="fixed inset-2 border-2 rounded-2xl pointer-events-none z-[9999]" style={{ borderColor: 'var(--background)' }}></div>
+          {/* <div className="fixed inset-2 border-2 rounded-xl md:rounded-2xl  pointer-events-none z-[9999]" style={{ borderColor: 'var(--background)' }}></div> */}
 
-          {/* Website content inside the border */}
-          <div className="fixed inset-2 rounded-2xl overflow-hidden z-10" style={{ backgroundColor: 'var(--background)' }}>
+          <div className="fixed inset-1.5 rounded-xl md:rounded-2xl  overflow-hidden z-10" style={{ backgroundColor: 'var(--background)' }}>
             <div id="main-scroll-container" className="h-full w-full overflow-y-auto overflow-x-hidden">
               <Headd />
               <PersistentBody />
               {children}
-              {/* <Socials /> */}
               <Socials />
             </div>
           </div>

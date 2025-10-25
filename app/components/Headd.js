@@ -8,16 +8,14 @@ import { useVisitorTracking } from "../hooks/useVisitorTracking";
 
 const Headd = memo(function Headd() {
   const pathname = usePathname();
-
-  // Hide Headd on screens page
-  if (pathname === "/screens" || pathname.startsWith("/screens/")) {
-    return null;
-  }
   const [lastVisitor, setLastVisitor] = useState("Loading...");
   const hasFetched = useRef(false);
 
   // Track current visitor
   useVisitorTracking();
+
+  // Hide Headd on screens page
+  const shouldHide = pathname === "/screens" || pathname.startsWith("/screens/");
 
   useEffect(() => {
     // Only fetch once on mount, not on every render
@@ -48,9 +46,13 @@ const Headd = memo(function Headd() {
     return () => clearInterval(interval);
   }, []);
 
+  if (shouldHide) {
+    return null;
+  }
+
   return (
     <div className="hidden md:block">
-       <div className="flex  flex-row justify-between px-10 lg:px-8 w-full relative top-7">
+       <div className="flex  flex-row justify-between px-7 lg:px-8 w-full relative top-7">
       <TypewriterEffect />
       <div className="self-start text-xs ">
         <h4>
@@ -59,7 +61,7 @@ const Headd = memo(function Headd() {
       </div>
     </div>
     </div>
-   
+
   );
 });
 

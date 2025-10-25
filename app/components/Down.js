@@ -1,9 +1,8 @@
-
+import Link from "next/link";
 
 export default function Down() {
   return (
-    <section className="px-10 pt-16 md:pt-20 md:px-20 lg:px-56">
-   
+    <section className="px-7 pt-8 md:pt-11 md:px-20 lg:px-56">
       <div className="flex pb-8 md:pb-11 flex-col">
         <div className="flex flex-row justify-between">
           <h6 className="text-xs pb-3 ">
@@ -12,12 +11,17 @@ export default function Down() {
           </h6>
         </div>
 
-        <div className="flex flex-row">
-          <h4 className="text-base text-justify ">
-        Is Where Visitors Sign and leave their Mark on my website, Everyone has a unique stamp :) 
-           {}  <span className="underline text-[#4447A9] text-sm underline-offset-2">
-               sign my guestbook
-             </span>
+        <div className="flex ">
+          <h4 className="text-sm md:text-base text-justify ">
+            Is Where Visitors Sign and leave their Mark on my website, Everyone
+            has a unique stamp :)
+            <span>
+              <Link href="/guestbook">
+                <h4 className="underline text-[#4447A9] text-sm underline-offset-2">
+                  Sign my guestbook
+                </h4>
+              </Link>
+            </span>
           </h4>
         </div>
 

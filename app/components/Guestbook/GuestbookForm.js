@@ -521,22 +521,53 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
         .stamp-decorative-line.right {
           right: calc(var(--perforation-size) + 4px);
         }
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
+          .guestbook-stamp.form-stamp {
+            --stamp-width: clamp(280px, 85vw, 400px);
+            min-height: 420px;
+            margin: 1.5rem auto;
+          }
+          .form-content {
+            margin: calc(var(--perforation-size) + 12px);
+            padding-bottom: 5px;
+          }
+          .form-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+          }
           .form-row {
             flex-direction: column;
             gap: 0.5rem;
             margin-bottom: 0.5rem;
           }
           .form-group {
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.6rem;
           }
           .form-group.half-width {
             flex-basis: 100%;
             width: 100%;
           }
+          .label {
+            font-size: 0.7rem;
+            margin-bottom: 0.3rem;
+          }
+          .input,
+          .textarea {
+            padding: 0.6rem 0.8rem;
+            font-size: 0.9rem;
+          }
+          .textarea {
+            resize: none;
+          }
+          .submit-button {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.75rem;
+          }
           .postmark {
             width: 50px;
             height: 50px;
+            top: 8%;
+            right: 8%;
           }
         }
         @media (max-width: 400px) {

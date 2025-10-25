@@ -1,7 +1,18 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
+
+// Helper function to get or create a unique device ID
+const getOrCreateDeviceId = () => {
+  const deviceIdKey = 'guestbook_device_id';
+  let deviceId = localStorage.getItem(deviceIdKey);
+  if (!deviceId) {
+    deviceId = 'device_' + Math.random().toString(36).substring(2, 11);
+    localStorage.setItem(deviceIdKey, deviceId);
+  }
+  return deviceId;
+};
 
 export default function GuestbookEntry({
   entryId,
@@ -20,6 +31,18 @@ export default function GuestbookEntry({
   const [hasReacted, setHasReacted] = useState(false);
   const [isStamping, setIsStamping] = useState(false);
   const [dominantColor, setDominantColor] = useState(null);
+
+  // Check if user has already liked this entry from this device and sync reaction count
+  useEffect(() => {
+    const deviceId = getOrCreateDeviceId();
+    const likedEntriesKey = `guestbook_liked_${deviceId}`;
+    const likedEntries = JSON.parse(localStorage.getItem(likedEntriesKey) || '[]');
+    if (likedEntries.includes(entryId)) {
+      setHasReacted(true);
+    }
+    // Initialize reactions from props
+    setCurrentReactions(reactions);
+  }, [entryId, reactions]);
 
   const displayDate =
     date instanceof Date
@@ -62,30 +85,88 @@ export default function GuestbookEntry({
   }, [entryId]);
 
   const handleReaction = async () => {
-    if (hasReacted) return;
-
     try {
-      setHasReacted(true);
-      setCurrentReactions(prev => prev + 1);
+      const deviceId = getOrCreateDeviceId();
+      const likedEntriesKey = `guestbook_liked_${deviceId}`;
+      const likedEntries = JSON.parse(localStorage.getItem(likedEntriesKey) || '[]');
 
-      const response = await fetch('/api/guestbook/react', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ entryId }),
-      });
+      const isLiked = likedEntries.includes(entryId);
 
-      if (!response.ok) {
-        throw new Error('Failed to add reaction');
+      if (isLiked) {
+        // Unlike: remove the like
+        setHasReacted(false);
+        setCurrentReactions(prev => prev - 1);
+
+        // Remove from liked list
+        const updatedEntries = likedEntries.filter(id => id !== entryId);
+        localStorage.setItem(likedEntriesKey, JSON.stringify(updatedEntries));
+
+        // Send unlike to backend
+        const response = await fetch('/api/guestbook/react', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ entryId }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to remove reaction');
+        }
+
+        const updatedData = await response.json();
+        if (updatedData.reactions !== undefined) {
+          setCurrentReactions(updatedData.reactions);
+        }
+      } else {
+        // Like: add the like
+        setHasReacted(true);
+        setCurrentReactions(prev => prev + 1);
+
+        // Add to liked list
+        likedEntries.push(entryId);
+        localStorage.setItem(likedEntriesKey, JSON.stringify(likedEntries));
+
+        // Send reaction to backend
+        const response = await fetch('/api/guestbook/react', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ entryId }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add reaction');
+        }
+
+        const updatedData = await response.json();
+        if (updatedData.reactions !== undefined) {
+          setCurrentReactions(updatedData.reactions);
+        }
       }
     } catch (error) {
-      console.error('Error adding reaction:', error);
+      console.error('Error toggling reaction:', error);
       // Revert on error
-      setHasReacted(false);
-      setCurrentReactions(prev => prev - 1);
+      const deviceId = getOrCreateDeviceId();
+      const likedEntriesKey = `guestbook_liked_${deviceId}`;
+      const likedEntries = JSON.parse(localStorage.getItem(likedEntriesKey) || '[]');
+      const isLiked = likedEntries.includes(entryId);
+
+      if (isLiked) {
+        // Was trying to unlike, revert to liked
+        setHasReacted(true);
+        setCurrentReactions(prev => prev + 1);
+      } else {
+        // Was trying to like, revert to not liked
+        setHasReacted(false);
+        setCurrentReactions(prev => prev - 1);
+      }
     }
   };
 
-  const randomRotate = useMemo(() => Math.random() * 3 - 1.5, [entryId]);
+  const randomRotate = useMemo(() => {
+    // Generate deterministic rotation based on entryId to avoid hydration mismatch
+    if (!entryId) return 0;
+    const hash = entryId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return (hash % 30) / 10 - 1.5; // Returns value between -1.5 and 1.5
+  }, [entryId]);
 
   // Extract dominant color from image
   const extractDominantColor = (imgElement) => {
@@ -184,7 +265,7 @@ export default function GuestbookEntry({
       <div
         className="guestbook-stamp entry-stamp"
         style={{
-          '--hue': hue,
+          '--hue': `${hue}`,
           '--primary-stamp-color': '#4447a9',
           '--light-stamp-bg': dominantColor || 'hsl(0, 0%, 100%)',
           '--text-bg-overlay': dominantColor ? `${dominantColor.replace(')', ', 0.7)')}` : 'hsla(0, 0%, 100%, 0.7)',
@@ -193,18 +274,9 @@ export default function GuestbookEntry({
           '--gold-accent': `hsl(45, 80%, 60%)`,
           '--postmark-color-fixed': `hsla(${hue}, 40%, 30%, 0.8)`,
           '--border-accent': '#4447a9',
-          '--rotate': `${randomRotate}deg`,
+          '--rotate': `${randomRotate.toFixed(2)}deg`,
         }}
       >
-        {/* First from country badge */}
-        {isFirstFromCountry && (
-          <div className="first-badge">
-            <svg className="badge-icon" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <span>First!</span>
-          </div>
-        )}
 
         <div className="stamp-frame">
           <div className="stamp-bg-solid"></div>
@@ -298,9 +370,8 @@ export default function GuestbookEntry({
           {/* Reaction button */}
           <button
             onClick={handleReaction}
-            disabled={hasReacted}
             className={`reaction-button ${hasReacted ? 'reacted' : ''}`}
-            title={hasReacted ? 'Already reacted' : 'Send some love!'}
+            title={hasReacted ? 'Click to unlike' : 'Send some love!'}
           >
             <svg
               className="heart-icon"
@@ -355,13 +426,12 @@ export default function GuestbookEntry({
           position: absolute;
           top: 8px;
           left: 8px;
-          background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+          background: linear-gradient(45deg, #4447A9 0%, #000 100%);
           color: white;
           font-size: 0.65rem;
           font-weight: bold;
           padding: 4px 8px;
           border-radius: 12px;
-          box-shadow: 0 2px 8px rgba(251, 191, 36, 0.5);
           display: flex;
           align-items: center;
           gap: 4px;
@@ -701,7 +771,7 @@ export default function GuestbookEntry({
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .reaction-button:hover:not(:disabled) {
+        .reaction-button:hover {
           background-color: rgba(239, 68, 68, 0.1);
           color: #ef4444;
           transform: scale(1.05);
@@ -710,7 +780,11 @@ export default function GuestbookEntry({
         .reaction-button.reacted {
           background-color: rgba(239, 68, 68, 0.15);
           color: #ef4444;
-          cursor: not-allowed;
+        }
+
+        .reaction-button.reacted:hover {
+          background-color: rgba(239, 68, 68, 0.2);
+          transform: scale(1.05);
         }
 
         .heart-icon {
@@ -786,12 +860,60 @@ export default function GuestbookEntry({
           }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 640px) {
           .guestbook-stamp.entry-stamp {
-            --stamp-width: 180px;
-            --perforation-size: 6px;
-            --inner-padding: 8px;
+            --stamp-width: min(calc(50vw - 12px), 350px);
+            --perforation-size: 8px;
+            --inner-padding: 10px;
             margin: 0.5rem;
+            aspect-ratio: 4 / 5;
+          }
+
+          .entry-name {
+            font-size: 1.05rem;
+          }
+
+          .country {
+            font-size: 1rem;
+          }
+
+          .country-label {
+            font-size: 0.6rem;
+          }
+
+          .entry-message {
+            font-size: 0.85rem;
+            -webkit-line-clamp: 7;
+          }
+
+          .stamp-image-small {
+            width: 70px;
+            height: 70px;
+          }
+
+          .first-badge {
+            font-size: 0.6rem;
+            padding: 4px 7px;
+          }
+
+          .badge-icon {
+            width: 9px;
+            height: 9px;
+          }
+
+          .reaction-button {
+            padding: 6px 10px;
+            font-size: 0.7rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .guestbook-stamp.entry-stamp {
+            --stamp-width: 280px;
+            --perforation-size: 7px;
+            --inner-padding: 9px;
+            margin: 0.6rem;
+            aspect-ratio: 4 / 5;
           }
 
           .entry-name {
@@ -824,38 +946,6 @@ export default function GuestbookEntry({
           .badge-icon {
             width: 8px;
             height: 8px;
-          }
-        }
-
-        @media (max-width: 400px) {
-          .guestbook-stamp.entry-stamp {
-            --stamp-width: 200px;
-            --perforation-size: 6px;
-            --inner-padding: 8px;
-            margin: 0.5rem;
-            aspect-ratio: 3 / 4;
-          }
-
-          .entry-name {
-            font-size: 0.85rem;
-          }
-
-          .country {
-            font-size: 0.8rem;
-          }
-
-          .country-label {
-            font-size: 0.5rem;
-          }
-
-          .entry-message {
-            font-size: 0.7rem;
-            -webkit-line-clamp: 5;
-          }
-
-          .stamp-image-small {
-            width: 50px;
-            height: 50px;
           }
         }
       `}</style>

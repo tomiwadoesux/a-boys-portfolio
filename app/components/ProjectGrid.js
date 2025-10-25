@@ -11,8 +11,8 @@ export default function ProjectGrid({
   const [showLivePreview, setShowLivePreview] = useState(false);
 
   return (
-    <section className="pt-14">
-      <div className="  px-10 md:px-20 lg:px-56 flex flex-row justify-between ">
+    <section className="pt-16">
+      <div className="  px-7 md:px-20 lg:px-56 flex flex-row justify-between ">
         <h4 className="text-[11px] text-[#4447A9] ">
           {filter === "featured" ? "Selected Projects.." : "All Projects.."}
         </h4>
@@ -41,7 +41,7 @@ export default function ProjectGrid({
         <>
           {/* Mobile: Horizontal Scroll */}
           <div className="md:hidden overflow-x-auto scroll-smooth scrollbar-hide">
-            <div className="flex gap-4 pb-4 px-10">
+            <div className="flex gap-4 pb-4 px-7">
               {projects.map((project) => (
                 <div key={project._id} className="min-w-[250px] flex-shrink-0">
                   <ProjectCard
@@ -85,7 +85,7 @@ export default function ProjectGrid({
           </div>
 
           {/* Desktop: 2-Column Grid */}
-          <div className="hidden lg:grid lg:grid-cols-2 gap-8 md:gap-12 px-10 md:px-20 lg:px-56">
+          <div className="hidden lg:grid lg:grid-cols-2 gap-8 md:gap-12 px-7 md:px-20 lg:px-56">
             {projects.map((project) => (
               <ProjectCard
                 key={project._id}
@@ -106,7 +106,7 @@ export default function ProjectGrid({
         </>
       ) : (
         /* Projects Page: Normal Grid Layout */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 md:gap-12 px-10 md:px-20 lg:px-56">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 md:gap-12 px-7 md:px-20 lg:px-56">
           {projects.map((project) => (
             <ProjectCard
               key={project._id}
@@ -127,7 +127,7 @@ export default function ProjectGrid({
       )}
       {filter === "featured" && (
         <Link href="/projects/">
-          <h4 className="text-[11px] text-right px-10 md:px-20 lg:px-56 underline underline-offset-2 pt-3 text-[#4447A9] hover:opacity-70 transition-opacity cursor-pointer">See All Projects </h4>
+          <h4 className="text-[11px] text-right px-7 md:px-20 lg:px-56 underline underline-offset-2 pt-3 text-[#4447A9] hover:opacity-70 transition-opacity cursor-pointer">See All Projects </h4>
         </Link>
       )}
     </section>

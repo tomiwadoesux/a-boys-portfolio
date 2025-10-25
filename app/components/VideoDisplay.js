@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { getCachedVideoUrl } from "../utils/videoCache";
 
-export default function VideoDisplay({ video, isMobile = false }) {
+export default function VideoDisplay({ video, isMobile = false, savedTimestamp = 0, onTimeUpdate = null }) {
   const videoRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -16,6 +16,10 @@ export default function VideoDisplay({ video, isMobile = false }) {
 
       const handleCanPlay = () => {
         setIsLoading(false);
+        // Restore saved playback position if available
+        if (savedTimestamp > 0) {
+          videoElement.currentTime = savedTimestamp;
+        }
         videoElement.play().catch((err) => {
           console.log("Autoplay prevented:", err);
         });
@@ -25,20 +29,29 @@ export default function VideoDisplay({ video, isMobile = false }) {
         setIsLoading(false);
       };
 
+      const handleTimeUpdate = () => {
+        // Save current playback time if callback provided
+        if (onTimeUpdate) {
+          onTimeUpdate(video._id, videoElement.currentTime);
+        }
+      };
+
       videoElement.addEventListener('canplay', handleCanPlay, { once: true });
       videoElement.addEventListener('loadeddata', handleLoadedData, { once: true });
+      videoElement.addEventListener('timeupdate', handleTimeUpdate);
       videoElement.load(); // Trigger load immediately
 
       return () => {
         videoElement.removeEventListener('canplay', handleCanPlay);
         videoElement.removeEventListener('loadeddata', handleLoadedData);
+        videoElement.removeEventListener('timeupdate', handleTimeUpdate);
       };
     }
-  }, [video?._id, isMobile]); // Only depend on video ID and isMobile
+  }, [video?._id, video, isMobile, savedTimestamp, onTimeUpdate]); // Depend on video ID, isMobile, savedTimestamp, and callbacks
 
   if (!video) {
     return (
-      <div className="w-full h-full flex items-center justify-center bg-gray-200">
+      <div className="w-full  flex items-center justify-center bg-gray-200">
         <p className="text-gray-500">No screen selected</p>
       </div>
     );
@@ -61,29 +74,29 @@ export default function VideoDisplay({ video, isMobile = false }) {
     : (video.desktopImage || video.mobileImage);
 
   return (
-    <div className="w-full h-full flex flex-col">
-      <div className="flex-1 w-full flex items-center justify-center bg-gray-200 relative overflow-hidden rounded">
+    <div className="w-full flex flex-col">
+      <div className="w-full flex items-center justify-center bg-gray-200 relative overflow-hidden rounded">
         {videoSrc ? (
           <>
-            {/* Low-quality placeholder image shown while video loads */}
-            {isLoading && placeholderImage && (
-              <div className="absolute inset-0 w-full h-full z-5">
+            {/* High-quality placeholder image shown while video loads */}
+            {placeholderImage && (
+              <div className="absolute inset-0 w-full h-full z-0">
                 <Image
                   src={placeholderImage}
                   alt={video.alt || video.title || "Video preview"}
                   fill
-                  className="object-cover blur-sm"
-                  quality={20}
+                  className={`object-cover transition-opacity duration-300 ${isLoading ? 'opacity-100' : 'opacity-0'}`}
+                  quality={75}
                   priority
                   sizes="100vw"
                 />
               </div>
             )}
 
-            {/* Loading spinner */}
+            {/* Loading spinner - only show if still loading after 500ms */}
             {isLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/20 z-10">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+              <div className="absolute inset-0 flex items-center justify-center bg-black/10 z-10">
+                <div className="animate-spin rounded-full h-10 w-10 border-2 border-white border-t-transparent"></div>
               </div>
             )}
 
@@ -91,11 +104,11 @@ export default function VideoDisplay({ video, isMobile = false }) {
             <video
               ref={videoRef}
               src={videoSrc}
-              className="w-full h-full object-contain relative z-0"
+              className={`w-full h-full object-cover relative z-5 transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
               loop
               muted
               playsInline
-              preload="auto"
+              preload="yes"
             />
           </>
         ) : (

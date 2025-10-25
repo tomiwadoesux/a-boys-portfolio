@@ -3,7 +3,7 @@ import LabCards from "../components/LabCards";
 import { getLabCards } from "../../sanity/lib/fetch";
 
 export const metadata = {
-  title: "Lab | Design Engineer Portfolio",
+  title: "Lab | Ayotomcs",
   description: "Experimental projects and creative explorations.",
 };
 

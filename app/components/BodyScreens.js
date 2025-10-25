@@ -18,7 +18,7 @@ export default function BodyScreens({
   return (
     <section>
 
-      <div className=" px-10 md:px-20 lg:px-56 pt-4">
+      <div className=" px-7 md:px-20 lg:px-56 pt-4">
         <div className="flex flex-row ">
           <div className=" w-full ">
             <div className=" flex flex-row justify-between">

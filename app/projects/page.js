@@ -4,7 +4,7 @@ import SvgHover from "../components/SvgHover";
 
 // Metadata for SEO
 export const metadata = {
-  title: "Projects | Design Engineer Portfolio",
+  title: "Projects | Ayotomcs",
   description: "Explore my collection of design and engineering projects.",
 };
 
@@ -15,7 +15,11 @@ export const dynamic = 'force-static';
 export default function ProjectsPage() {
   return (
     <div>
-      <PageConfig activePage="/projects" />
+      <PageConfig activePage="/projects"  description={
+          <>
+            My.. <span className="text-[#4447A9]">Projects</span>
+          </>
+        } />
      
       <ProjectGridWrapper filter="all" />
     </div>

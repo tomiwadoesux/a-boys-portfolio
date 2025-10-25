@@ -5,9 +5,14 @@ const nextConfig = {
   // For development (npm run dev), leave undefined to use studio and api routes
   // The build:static script temporarily removes /studio and /api before building
 
-  // Image optimization
+  // Image optimization - Advanced Next.js 16 settings
   images: {
     unoptimized: false,
+    // Cache optimized images for 1 year
+    minimumCacheTTL: 31536000,
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    formats: ['image/webp', 'image/avif'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -31,14 +36,11 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
 
   // Exclude patterns from build
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
 
-  // ========== Next.js 15 Performance Optimizations ==========
+  // ========== Next.js 16 with Turbopack ==========
 
   // Experimental features for better performance
   experimental: {
@@ -47,50 +49,70 @@ const nextConfig = {
 
     // Enable partial prerendering for faster initial loads
     ppr: false, // Set to true when ready for production
-
-    // Optimize font loading
-    optimizeFonts: true,
   },
 
-  // Webpack optimizations
-  webpack: (config, { isServer }) => {
-    // Optimize GSAP tree-shaking
-    config.resolve.alias = {
-      ...config.resolve.alias,
+  // Turbopack configuration for Next.js 16
+  turbopack: {
+    resolveAlias: {
       'gsap/all': 'gsap/index.js',
-    };
+    },
+  },
 
-    // Split chunks for better caching
-    if (!isServer) {
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: {
-          chunks: 'all',
-          cacheGroups: {
-            // Separate vendor code
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              priority: 10,
-            },
-            // Separate GSAP into its own chunk
-            gsap: {
-              test: /[\\/]node_modules[\\/]gsap[\\/]/,
-              name: 'gsap',
-              priority: 20,
-            },
-            // Separate Sanity into its own chunk
-            sanity: {
-              test: /[\\/]node_modules[\\/](@sanity|next-sanity)[\\/]/,
-              name: 'sanity',
-              priority: 15,
-            },
+  // Custom HTTP headers for caching strategy
+  headers: async () => {
+    return [
+      {
+        // Cache static assets for 1 year
+        source: '/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
-        },
-      };
-    }
+        ],
+      },
+      {
+        // Cache images for 1 year
+        source: '/:path*.png|jpg|jpeg|gif|webp|ico|svg',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // Cache fonts for 1 year
+        source: '/fonts/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // Cache HTML pages based on revalidation time
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=3600, stale-while-revalidate=86400',
+          },
+        ],
+      },
+    ];
+  },
 
-    return config;
+  // Redirects for better navigation
+  redirects: async () => {
+    return [
+      {
+        source: '/home',
+        destination: '/',
+        permanent: true,
+      },
+    ];
   },
 };
 

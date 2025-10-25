@@ -3,13 +3,14 @@ import Ayotomcs from "./Ayotomcs";
 
 export default function Socials() {
   return (
-    <div className="flex pb-8 px-0 pt-12 md:px-20 lg:px-56  flex-col items-center">
-      <div className="hidden md:block ">
-            <div className="flex pb-2 flex-row">
-      <Ayotomcs/>
+    <div className="flex pb-8 px-0 pt-8 md:px-20 lg:px-56  flex-col items-center">
+      <div className="hidden w-[30%] md:block ">
+        <div className="flex justify-center">
+          <Ayotomcs />
+        </div>
+     
       </div>
-      </div>
-  
+
       <svg
         className="w-full py-2 h-px"
         viewBox="0 0 100 1"
@@ -22,11 +23,11 @@ export default function Socials() {
           x2="100"
           y2="0.5"
           stroke="black"
-          stroke-width="1"
+          strokeWidth="1"
         />
       </svg>
 
-      <div className="flex gap-3 justify-center flex-row flex-wrap">
+      <div className="flex gap-3 px-3 justify-center flex-row flex-wrap">
         <a
           href="mailto:hello@ayotomcs.me"
           className="no-underline hover:opacity-70 transition-opacity"

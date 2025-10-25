@@ -1,7 +1,10 @@
 import PageConfig from "../components/PageConfig";
 import List from "../components/List";
 
-// Revalidate every hour
+export const metadata = {
+  title: "List | Ayotomcs",
+  description: "A list of things I want to do.",
+};
 export const revalidate = 3600;
 
 export default function page() {

@@ -21,25 +21,28 @@ const Body = memo(function Body({
 
   return (
     <section>
-
-      <div className=" px-10 pt-36 md:pt-20 md:px-20 lg:px-56 ">
+      <div className=" px-7 pt-5 md:pt-20 md:px-20 lg:px-56 ">
         <div className="flex flex-row ">
           <div className=" w-full ">
-            <div className=" flex flex-row justify-between">
-              <div className=" flex flex-row gap-3">
-                <Link href="/" className="">
-                  <h1 className="text-2xl md:text-3xl uppercase font-bold">
-                    Ayotomcs
-                  </h1>
-                </Link>
-                <div className="self-center">
-                  <Logo />
+            <div className="hidden md:block">
+              <div className=" flex flex-row justify-between">
+                <div className=" flex flex-row gap-3">
+                  <Link href="/" className=" ">
+                    <h4 className="text-2xl md:text-3xl uppercase font-bold">
+                      Ayotomcs
+                    </h4>
+                  </Link>
+                  <Link href="/" className=" self-center">
+                    <div className="">
+                      <Logo />
+                    </div>
+                  </Link>
                 </div>
               </div>
             </div>
 
             <div className="pt-2">
-              <svg
+              {/* <svg
                 className="w-full md:hidden h-px"
                 viewBox="0 0 100 1"
                 preserveAspectRatio="none"
@@ -53,16 +56,24 @@ const Body = memo(function Body({
                   stroke="currentColor"
                   strokeWidth="1"
                 />
-              </svg>
+              </svg> */}
+              <Link href="/" className=" md:hidden self-center ">
+                    <div className="">
+                      <Logo />
+                    </div>
+                  </Link>
               <div className="md:hidden py-2 w-full flex">
                 
-                <div className="flex self-end justify-between ml-auto">
+                <div className=" flex flex-row gap-3">
+                  
+                </div>
+                <div className="flex text-nowrap self-end justify-between ml-auto">
                   {isScrambled ? (
                     <>
-                      <Link href="/list" className="pl-3 ">
+                      <Link href="/list" className="">
                         <ScrambleText
                           originalText="Projects"
-                          targetText="List ∞"
+                          targetText="List∞"
                           isScrambled={isScrambled}
                           hasInteracted={hasInteracted}
                           className={`text-sm md:text-[12px] underline underline-offset-2 ${
@@ -111,11 +122,11 @@ const Body = memo(function Body({
                         href="https://drive.google.com/file/d/1UcuH-oolA0c_vMYflzil6Dl1_EnEnOxd/view"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="pl-3"
+                        className=""
                       >
                         <ScrambleText
                           originalText="Resumé"
-                          targetText="List ∞"
+                          targetText="List∞"
                           isScrambled={isScrambled}
                           hasInteracted={hasInteracted}
                           className="text-sm md:text-[12px]  underline px- underline-offset-2 "
@@ -185,9 +196,11 @@ const Body = memo(function Body({
               </svg>
               <div className=" flex flex-row justify-between">
                 <div>
-                  <h4 className="text-sm md:text-[13px] py-2 md:py-3">{description}</h4>
+                  <h4 className="text-sm md:text-[13px] py-2 md:py-3">
+                    {description}
+                  </h4>
                 </div>
-                
+
                 <div className="hidden md:block self-center">
                   <div className="flex ">
                     {isScrambled ? (
@@ -263,9 +276,7 @@ const Body = memo(function Body({
                             isScrambled={isScrambled}
                             hasInteracted={hasInteracted}
                             className={`text-sm md:text-[13px] px- underline underline-offset-2 ${
-                              activePage === "/lab"
-                                ? "text-[#4447A9]"
-                                : ""
+                              activePage === "/lab" ? "text-[#4447A9]" : ""
                             }`}
                           />
                         </Link>

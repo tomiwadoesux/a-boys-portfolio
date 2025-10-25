@@ -74,7 +74,7 @@ const AudioVisualization = () => {
     >
       <svg
         viewBox="0 0 240 100"
-        className="px-10 md:px-20 lg:px-56 h-full"
+        className="px-7 md:px-20 lg:px-56 h-full"
         style={{ display: "block", maxWidth: "100%" }}
       >
         <defs>
@@ -100,7 +100,7 @@ const AudioVisualization = () => {
 };
 
 const MusicWidgetSkeleton = () => (
-  <div className=" px-10 md:px-20 lg:px-56 rounded-xl p-1.5 overflow-x-auto">
+  <div className=" px-7 md:px-20 lg:px-56 rounded-xl p-1.5 overflow-x-auto">
     <div className="flex w-full items-center gap-x-2 sm:gap-x-4 rounded-lg border border-black bg-white p-2 sm:p-3">
       <div className="h-16 w-16 sm:h-20 sm:w-20 flex-shrink-0 rounded-md  animate-pulse"></div>
       <div className="min-w-0 flex-1 space-y-2">
@@ -117,7 +117,7 @@ const MusicWidgetSkeleton = () => (
 );
 
 const MusicWidgetError = ({ message }) => (
-  <div className="px-10 md:px-20 lg:px-56 rounded-xl border border-red-300 bg-red-50 p-4 text-sm text-red-800 overflow-x-auto">
+  <div className="px-7 md:px-20 lg:px-56 rounded-xl border border-red-300 bg-red-50 p-4 text-sm text-red-800 overflow-x-auto">
     <div className="flex items-center gap-x-3">
       <ErrorIcon className="h-5 w-5 flex-shrink-0" />
       <div>
@@ -152,8 +152,8 @@ const AlbumArt = ({ src, alt }) => {
 };
 
 const MusicWidgetContent = ({ song }) => (
-  <div className="group px-10 md:px-20 lg:px-56 rounded-xl  p-1.5 overflow-x-auto">
-    <div className="flex w-full items-center gap-x-2 sm:gap-x-4 rounded-lg border border-black/15 bg-white/20 p-2 sm:p-3">
+  <div className="group px-7 md:px-20 lg:px-56 rounded-xl  p-1.5 overflow-x-auto">
+    <div className="flex w-full items-center gap-x-2 sm:gap-x-4 rounded-lg border border-black/15 bg-white/20">
       <AlbumArt
         src={song.albumArtUrl}
         alt={`Album artwork for ${song.title} by ${song.artists}`}
@@ -165,11 +165,11 @@ const MusicWidgetContent = ({ song }) => (
           rel="noopener noreferrer"
           className="hover:underline"
         >
-          <p className="truncate text-sm font-semibold text-gray-900 leading-tight">
+          <p className="truncate p-2 sm:p-3 text-sm font-semibold text-gray-900 leading-tight">
             {song.title}
           </p>
         </a>
-        <p className="truncate text-xs pt-1 text-gray-600">
+        <p className="truncate  p-2 sm:p-3 text-xs pt-1 text-gray-600">
           {song.artists}
         </p>
       </div>
@@ -177,7 +177,7 @@ const MusicWidgetContent = ({ song }) => (
         {song.isPlaying && <AudioVisualization />}
       </div> */}
     </div>
-    <div className="flex items-center gap-x-2 px-3 py-1.5 text-sm text-gray-600">
+    <div className="flex items-center gap-x-2 px-3 py-1 text-sm text-gray-600">
       <div
         className={`h-2 w-2 flex-shrink-0 rounded-full ${
           song.isPlaying ? "bg-[#4447A9]" : "bg-gray-400"

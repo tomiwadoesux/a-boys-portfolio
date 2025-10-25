@@ -6,9 +6,9 @@ import Down from "./components/Down"
 import MusicWidgetWrapper from "./components/MusicWidgetWrapper";
 
 export const metadata = {
-  title: "Home | Design Engineer Portfolio",
+  title: "Home | Ayotomcs",
   description:
-    "A Design Engineer based in Abuja, Nigeria. Explore my creative work and projects.",
+    "A Design Engineer. Explore my creative work and projects.",
 };
 
 // Revalidate every hour

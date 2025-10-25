@@ -1,10 +1,11 @@
 import SvgHover from "./SvgHover";
 import Dock from "./Dock";
 import Socials from "./Socials";
+import Link from "next/link";
 
 export default function Front() {
   return (
-    <section className="px-10 pt-16 md:pt-20 md:px-20 lg:px-56">
+    <section className="px-7 pt-16 md:pt-20 md:px-20 lg:px-56">
       {/* <div className="w-full h-44">
         <SvgHover />
       </div> */}
@@ -17,7 +18,7 @@ export default function Front() {
           </h6>
         </div>
 
-        <h4 className="text-justify text-base ">
+        <h4 className="text-justify text-sm md:text-base ">
           {" "}
           I am a Design engineer who prototypes and ships designs you can feel,
           comfortable moving from Figma
@@ -134,20 +135,24 @@ export default function Front() {
           </svg>
         </div>
       </div>
-      <div className="flex pb-8 md:pb-11 flex-col">
+      <div className="flex pb-0  flex-col">
         <div className="flex flex-row justify-between">
           <h6 className="text-xs pb-3 ">
             {" "}
-            <span className="text-[#4447A9]"> Lab.. </span>
+            <span className=" text-[#4447A9]"> Lab.. </span>
           </h6>
         </div>
 
         <div className="flex flex-row">
-          <h4 className="text-base text-justify ">
+          <h4 className=" text-sm md:text-base ">
             A collection of side-quests I explore from time to time to learn,
-            experiment with new technologies, and just build anything.{" "}
-            <span className="underline text-[#4447A9] text-sm underline-offset-2">
-              Visit Lab
+            experiment with new technologies, and just build anything.
+            <span>
+              <Link href="/lab" className=" self-center">
+                <h4 className="underline text-[#4447A9] text-sm underline-offset-2">
+                  Visit lab
+                </h4>
+              </Link>
             </span>
           </h4>
         </div>

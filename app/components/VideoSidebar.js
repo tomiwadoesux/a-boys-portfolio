@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import Image from "next/image";
 import { getCachedVideoUrl } from "../utils/videoCache";
 
 export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMobile = false }) {
@@ -12,14 +13,38 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
   const startXRef = useRef(0);
   const lastXRef = useRef(0);
   const lastTimeRef = useRef(0);
+  const [sortedVideos, setSortedVideos] = useState([]);
 
   // Use carousel picker for mobile/tablet, vertical scroll for desktop
   const useCarouselPicker = isMobile;
 
+  // Sort videos by file size (smallest first)
+  useEffect(() => {
+    if (videos.length === 0) {
+      setSortedVideos([]);
+      return;
+    }
+
+    // Create a copy and sort by file size (smallest first)
+    const sorted = [...videos].sort((a, b) => {
+      const sizeA = Math.min(
+        a.desktopVideoSize || Infinity,
+        a.mobileVideoSize || Infinity
+      );
+      const sizeB = Math.min(
+        b.desktopVideoSize || Infinity,
+        b.mobileVideoSize || Infinity
+      );
+      return sizeA - sizeB;
+    });
+
+    setSortedVideos(sorted);
+  }, [videos]);
+
   // Create extended array for infinite scroll effect
   const repetitions = 20;
   const extendedVideos = Array(repetitions)
-    .fill(videos)
+    .fill(sortedVideos)
     .flat();
 
   const displayIndex = activeIndex;
@@ -87,7 +112,7 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
       });
 
       // Update active index immediately
-      const actualIndex = closestIndex % videos.length;
+      const actualIndex = closestIndex % sortedVideos.length;
       setActiveIndex(actualIndex);
     };
 
@@ -125,7 +150,7 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
           onComplete: () => {
             isScrollingRef.current = false;
             // Update active index to the snapped item
-            const actualIndex = closestIndex % videos.length;
+            const actualIndex = closestIndex % sortedVideos.length;
             setActiveIndex(actualIndex);
           }
         });
@@ -155,11 +180,11 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
       sidebar.removeEventListener('touchend', handleMouseUp);
       sidebar.removeEventListener('scroll', updateDisplayFromScroll);
     };
-  }, [useCarouselPicker, videos.length, setActiveIndex]);
+  }, [useCarouselPicker, sortedVideos.length, setActiveIndex]);
 
   // Auto-scroll to active video in sidebar
   useEffect(() => {
-    if (sidebarRef.current && videos.length > 0) {
+    if (sidebarRef.current && sortedVideos.length > 0) {
       const wrappedIndex = displayIndex % extendedVideos.length;
       const activeItem = itemRefs.current[wrappedIndex];
 
@@ -205,7 +230,7 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
         }
       }
     }
-  }, [displayIndex, videos.length, extendedVideos.length, useCarouselPicker]);
+  }, [displayIndex, sortedVideos.length, extendedVideos.length, useCarouselPicker]);
 
   return (
     <>
@@ -221,8 +246,11 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
           const rawVideoUrl = vid.desktopVideo || vid.mobileVideo;
           const videoType = vid.desktopVideo ? 'desktop' : 'mobile';
           const videoSrc = getCachedVideoUrl(rawVideoUrl, vid._id, videoType) || rawVideoUrl;
-          const originalIndex = idx % videos.length;
+          const originalIndex = idx % sortedVideos.length;
           const isActive = (displayIndex % extendedVideos.length) === idx;
+
+          // Get placeholder image (desktop screenshot preferred for sidebar)
+          const placeholderImage = vid.desktopImage || vid.mobileImage;
 
           return (
             <div
@@ -244,14 +272,32 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
               onClick={() => setActiveIndex(originalIndex)}
             >
               {videoSrc ? (
-                <video
-                  src={videoSrc}
-                  className="w-full h-full object-cover"
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                />
+                <>
+                  {/* Desktop screenshot placeholder - shown while video loads */}
+                  {placeholderImage && (
+                    <div className="absolute inset-0 w-full h-full z-5">
+                      <Image
+                        src={placeholderImage}
+                        alt={vid.alt || vid.title || "Video preview"}
+                        fill
+                        className="object-cover"
+                        quality={75}
+                        priority={isActive}
+                        sizes="(max-width: 768px) 96px, 160px"
+                      />
+                    </div>
+                  )}
+
+                  {/* Video element - loads after placeholder */}
+                  <video
+                    src={videoSrc}
+                    className="w-full h-full object-cover relative z-10"
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                  />
+                </>
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-xs text-gray-500">
                   {vid.title || vid.name || "No preview"}

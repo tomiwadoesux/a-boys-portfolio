@@ -62,7 +62,7 @@ export default function Page() {
       </div>
 
       {/* Main container with px-56 */}
-      <div className="px-10 md:px-20 lg:px-56 pt-[200px]">
+      <div className="px-7 md:px-20 lg:px-56 pt-[200px]">
         {/* Scrollable boxes on the left - within px boundary */}
         <div className="fixed flex flex-col w-20 gap-6 top-[250px] bottom-8 pointer-events-none z-40">
           {videos.map((video, index) => (

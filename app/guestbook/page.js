@@ -4,8 +4,8 @@ import { getGuestbookEntries } from "../../sanity/lib/fetch";
 
 // Metadata for SEO
 export const metadata = {
-  title: "Guestbook | Design Engineer Portfolio",
-  description: "Leave your mark in my digital guestbook. Share your thoughts and connect.",
+  title: "Guestbook | Ayotomcs",
+  description: "Sign in my digital guestbook.",
 };
 
 // Prerender at build time and revalidate every minute for fresh entries
@@ -21,7 +21,7 @@ export default async function GuestbookPage() {
         activePage="/guestbook"
         description={
           <>
-            Leave your mark in my digital{" "}
+            Sign in my digital{" "}
             <span className="text-[#4447A9]">Guestbook</span>
           </>
         }

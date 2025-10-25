@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import GuestbookForm from "./GuestbookForm";
 import GuestbookEntry from "./GuestbookEntry";
@@ -10,8 +10,35 @@ export default function GuestbookClient({ initialEntries = [] }) {
   const [entries, setEntries] = useState(initialEntries);
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [screenSize, setScreenSize] = useState("desktop");
   const router = useRouter();
-  const entriesPerPage = 9;
+
+  // Determine entries per page based on screen size
+  const getEntriesPerPage = () => {
+    if (screenSize === "phone") return 12; // phone: show more cards
+    if (screenSize === "tablet") return 9; // tablet
+    return 8; // desktop
+  };
+
+  const entriesPerPage = getEntriesPerPage();
+
+  // Track screen size changes
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 640) {
+        setScreenSize("phone");
+      } else if (width < 1024) {
+        setScreenSize("tablet");
+      } else {
+        setScreenSize("desktop");
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleFormSubmit = async (formData) => {
     setIsSubmitting(true);
@@ -60,7 +87,7 @@ export default function GuestbookClient({ initialEntries = [] }) {
   const currentEntries = entries.slice(startIndex, endIndex);
 
   return (
-    <div className="px-10 md:px-20 lg:px-20 pt-10">
+    <div className="px-7 md:px-20 lg:px-20 pt-10">
       <GuestbookForm onSubmit={handleFormSubmit} isSubmitting={isSubmitting} />
 
       <div className="mt-12">
@@ -80,22 +107,26 @@ export default function GuestbookClient({ initialEntries = [] }) {
         )}
       </div>
       {currentEntries.length > 0 ? (
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6">
-          {currentEntries.map((entry) => (
-            <GuestbookEntry
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6">
+          {currentEntries.map((entry, index) => (
+            <div
               key={entry._id}
-              entryId={entry._id}
-              name={entry.name}
-              message={entry.message}
-              city={entry.city}
-              country={entry.country}
-              link={entry.link}
-              date={entry.date}
-              stampImage={entry.stampImage}
-              stampGenerating={entry.stampGenerating}
-              reactions={entry.reactions}
-              isFirstFromCountry={entry.isFirstFromCountry}
-            />
+              className={`flex ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}
+            >
+              <GuestbookEntry
+                entryId={entry._id}
+                name={entry.name}
+                message={entry.message}
+                city={entry.city}
+                country={entry.country}
+                link={entry.link}
+                date={entry.date}
+                stampImage={entry.stampImage}
+                stampGenerating={entry.stampGenerating}
+                reactions={entry.reactions}
+                isFirstFromCountry={entry.isFirstFromCountry}
+              />
+            </div>
           ))}
         </div>
       ) : (

@@ -3,8 +3,8 @@ import Now from "../components/Now";
 
 // Metadata for SEO
 export const metadata = {
-  title: "Now | Design Engineer Portfolio",
-  description: "What I'm working on right now. The future is present.",
+  title: "Now | Ayotomcs",
+  description: "What I'm up to. The future is present.",
 };
 
 // Revalidate every hour
