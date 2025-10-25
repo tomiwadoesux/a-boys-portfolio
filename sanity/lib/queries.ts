@@ -50,6 +50,7 @@ export const guestbookQuery = groq`*[_type == "guestbook" && approved == true] |
   name,
   message,
   city,
+  region,
   country,
   link,
   date,
