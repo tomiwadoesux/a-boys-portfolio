@@ -49,10 +49,20 @@ export interface GuestbookData {
   _id: string
   name: string
   message: string
+  city?: string
+  region?: string
   country: string
   link?: string | null
   date: string
   approved: boolean
+  stampImage?: {
+    asset: {
+      url: string
+    }
+  }
+  stampGenerating?: boolean
+  reactions?: number
+  isFirstFromCountry?: boolean
 }
 
 export interface CardData {
