@@ -142,7 +142,7 @@ export default function Screens({ screens = [] }) {
       {/* Desktop (lg and up): Main content area */}
       <div
         ref={containerRef}
-        className="hidden lg:flex overflow-hidden px-7 lg:px-20 xl:px-56 items-start lg:pt-3 w-full"
+        className="hidden lg:flex overflow-hidden px-7 md:px-20 lg:px-56 items-start lg:pt-3 w-full"
       >
         <div className="flex-1 overflow-hidden w-full h-full" ref={displayRef}>
           <VideoDisplay
@@ -159,7 +159,7 @@ export default function Screens({ screens = [] }) {
         {/* Video Preview - Top section (60vh height) */}
         <div
           ref={containerRef}
-          className="flex-shrink-0 w-full overflow-hidden px-4 pt-4"
+          className="flex-shrink-0 w-full overflow-hidden px-7 md:px-20 lg:px-56 pt-4"
           style={{ height: 'auto' }}
         >
           <div className="w-full" ref={displayRef}>
@@ -173,7 +173,7 @@ export default function Screens({ screens = [] }) {
         </div>
 
         {/* Horizontal Carousel - Bottom section */}
-        <div className="w-full flex-1 px-4 py-4 border-t border-gray-200 overflow-hidden flex flex-col">
+        <div className="w-full flex-1 px-4 py-4 border-t border-gray-200 overflow-hidden flex">
           <VideoSidebar
             videos={videoList}
             activeIndex={activeIndex}

@@ -48,7 +48,13 @@ export default function ProjectCard({
       >
         <div
           className={`bg-[#E5E5E5] border-1 border-t-0 border-black/15 rounded-t-xl overflow-hidden relative ${
-            isMobile ? (showLivePreview ? "h-[500px]" : "aspect-[9/16]") : (showLivePreview ? "h-[500px]" : "aspect-[16/9]")
+            isMobile
+              ? showLivePreview
+                ? "h-[500px]"
+                : "aspect-[9/16]"
+              : showLivePreview
+                ? "h-[500px]"
+                : "aspect-[16/9]"
           }`}
         >
           {/* Preloaded iframe - always in DOM but hidden when not in preview mode */}
@@ -64,7 +70,9 @@ export default function ProjectCard({
                 ref={iframeRef}
                 src={link}
                 className={`border-none w-full h-full ${
-                  showLivePreview ? "pointer-events-auto" : "pointer-events-none"
+                  showLivePreview
+                    ? "pointer-events-auto"
+                    : "pointer-events-none"
                 }`}
                 title={title}
                 scrolling="yes"
@@ -105,14 +113,25 @@ export default function ProjectCard({
         </div>
 
         {/* Card Footer */}
-        <div className="flex border-1 border-black/15 border-t-0 py-2 bg-[#F7F7F7] px-3 justify-between items-center">
-          <div className="flex items-center gap-2">
-            <h4 className="text-xs underline underline-offset-2">{title}</h4>
-            <h4 className="text-[11px] opacity-50">| {subtitle}</h4>
-          </div>
-          <h4 className="text-[11px]">
-            {tech}
-          </h4>
+        <div className=" flex  border-1 border-black/15 border-t-0 py-2 bg-[#F7F7F7] px-3 justify-between items-center flex-row">
+          <a
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full"
+          >
+            <div className="flex flex-row justify-between items-center w-full">
+              <div className="flex items-center gap-2">
+                <h4 className="text-xs underline underline-offset-2">
+                  {title}
+                </h4>
+                <h4 className="text-[11px] opacity-50">| {subtitle}</h4>
+              </div>
+              <div>
+                <h4 className="text-[11px]">{tech}</h4>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </figure>

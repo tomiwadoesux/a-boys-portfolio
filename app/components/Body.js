@@ -58,15 +58,12 @@ const Body = memo(function Body({
                 />
               </svg> */}
               <Link href="/" className=" md:hidden self-center ">
-                    <div className="">
-                      <Logo />
-                    </div>
-                  </Link>
-              <div className="md:hidden py-2 w-full flex">
-                
-                <div className=" flex flex-row gap-3">
-                  
+                <div className="">
+                  <Logo />
                 </div>
+              </Link>
+              <div className="md:hidden py-2 w-full flex">
+                <div className=" flex flex-row gap-3"></div>
                 <div className="flex text-nowrap self-end justify-between ml-auto">
                   {isScrambled ? (
                     <>
@@ -179,6 +176,7 @@ const Body = memo(function Body({
                   </div>
                 </div>
               </div>
+              
               <svg
                 className="w-full h-px"
                 viewBox="0 0 100 1"
@@ -334,6 +332,7 @@ const Body = memo(function Body({
               </svg>
             </div>
           </div>
+          
         </div>
       </div>
     </section>

@@ -19,23 +19,9 @@ export default function SvgHover({ className = "", style = {} }) {
     x: 0,
     y: 0
   });
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-
-  // Check if this is the initial load
-  useEffect(() => {
-    const hasLoadedBefore = sessionStorage.getItem("svg_hover_has_loaded");
-    if (!hasLoadedBefore) {
-      sessionStorage.setItem("svg_hover_has_loaded", "true");
-      setIsInitialLoad(true);
-      return;
-    }
-    setIsInitialLoad(false);
-  }, []);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // Skip animation on initial load
-    if (isInitialLoad) return;
-
     const svg = svgRef.current;
     if (!svg) return;
 
@@ -44,7 +30,7 @@ export default function SvgHover({ className = "", style = {} }) {
     const svgData = svgDataRef.current;
 
     const circle = {
-      radius: 3,
+      radius: 2,
       margin: 20
     };
 
@@ -104,11 +90,15 @@ export default function SvgHover({ className = "", style = {} }) {
           dot.el.setAttribute('cx', dot.anchor.x);
           dot.el.setAttribute('cy', dot.anchor.y);
           dot.el.setAttribute('r', circle.radius / 2);
+          dot.el.setAttribute('opacity', '1');
+          dot.el.setAttribute('fill', '#4447a9');
 
           svg.appendChild(dot.el);
           dots.push(dot);
         }
       }
+
+      setIsLoaded(true);
     }
 
     // Mouse handler
@@ -123,8 +113,8 @@ export default function SvgHover({ className = "", style = {} }) {
       const distY = mouse.prevY - mouse.y;
       const dist = Math.hypot(distX, distY);
 
-      mouse.speed += (dist - mouse.speed) * 0.5;
-      if (mouse.speed < 0.001) {
+      mouse.speed += (dist - mouse.speed) * 0.9;
+      if (mouse.speed < 0.005) {
         mouse.speed = 0;
       }
 
@@ -140,21 +130,25 @@ export default function SvgHover({ className = "", style = {} }) {
         const dist = Math.max(Math.hypot(distX, distY), 1);
 
         const angle = Math.atan2(distY, distX);
-        const move = (500 / dist) * (mouse.speed * 0.1);
+        // Reduced movement speed from 0.1 to 0.04 (60% slower)
+        const move = (500 / dist) * (mouse.speed * 0.04);
 
-        if (dist < 100) {
+        // Increased interaction distance from 100 to 120
+        if (dist < 90) {
           dot.velocity.x += Math.cos(angle) * -move;
           dot.velocity.y += Math.sin(angle) * -move;
         }
 
-        dot.velocity.x *= 0.9;
-        dot.velocity.y *= 0.9;
+        // Increased friction from 0.9 to 0.92 (slower deceleration)
+        dot.velocity.x *= 0.72;
+        dot.velocity.y *= 0.72;
 
         dot.position.x = dot.anchor.x + dot.velocity.x;
         dot.position.y = dot.anchor.y + dot.velocity.y;
 
-        dot.smooth.x += (dot.position.x - dot.smooth.x) * 0.1;
-        dot.smooth.y += (dot.position.y - dot.smooth.y) * 0.1;
+        // Reduced smoothing from 0.1 to 0.06 (more gradual movement)
+        dot.smooth.x += (dot.position.x - dot.smooth.x) * 0.08;
+        dot.smooth.y += (dot.position.y - dot.smooth.y) * 0.08;
 
         // Use GSAP to animate the dots
         gsap.set(dot.el, {
@@ -174,7 +168,7 @@ export default function SvgHover({ className = "", style = {} }) {
     window.addEventListener('mousemove', mouseHandler);
 
     // Start speed tracking
-    speedInterval = setInterval(mouseSpeed, 20);
+    speedInterval = setInterval(mouseSpeed, 10);
 
     // Start animation
     tick();
@@ -186,7 +180,7 @@ export default function SvgHover({ className = "", style = {} }) {
       clearInterval(speedInterval);
       cancelAnimationFrame(animationFrame);
     };
-  }, [isInitialLoad]);
+  }, []);
 
   return (
     <svg

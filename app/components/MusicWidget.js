@@ -131,7 +131,7 @@ const MusicWidgetError = ({ message }) => (
 const AlbumArt = ({ src, alt }) => {
   const [loaded, setLoaded] = useState(false);
   return (
-    <div className="relative h-16 w-16 sm:h-20 sm:w-20 flex-shrink-0">
+    <div className="relative h-24 w-24 sm:h-25 sm:w-25 flex-shrink-0">
       {!loaded && (
         <div className="absolute inset-0 rounded-md  animate-pulse" />
       )}
@@ -152,39 +152,49 @@ const AlbumArt = ({ src, alt }) => {
 };
 
 const MusicWidgetContent = ({ song }) => (
-  <div className="group px-7 md:px-20 lg:px-56 rounded-xl  p-1.5 overflow-x-auto">
-    <div className="flex w-full items-center gap-x-2 sm:gap-x-4 rounded-lg border border-black/15 bg-white/20">
-      <AlbumArt
-        src={song.albumArtUrl}
-        alt={`Album artwork for ${song.title} by ${song.artists}`}
-      />
-      <div className="min-w-0 flex-1 space-y-1">
-        <a
-          href={song.songUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:underline"
-        >
-          <p className="truncate p-2 sm:p-3 text-sm font-semibold text-gray-900 leading-tight">
+  <div className="px-7 md:px-20 lg:px-56">
+    <a
+      href={song.songUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group flex items-center gap-4 p-4 rounded-lg border border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all duration-200 hover:bg-black/2 dark:hover:bg-white/5"
+    >
+      {/* Album Art */}
+      <div className="flex-shrink-0">
+        <div className="relative rounded-md overflow-hidden">
+          <AlbumArt
+            src={song.albumArtUrl}
+            alt={`Album artwork for ${song.title} by ${song.artists}`}
+          />
+        </div>
+      </div>
+
+      {/* Song Info */}
+      <div className="flex-1 min-w-0">
+        <div className="space-y-1">
+          <p className="truncate text-sm font-medium text-gray-900 group-hover:text-gray-800 transition-colors">
             {song.title}
           </p>
-        </a>
-        <p className="truncate  p-2 sm:p-3 text-xs pt-1 text-gray-600">
-          {song.artists}
-        </p>
+          <p className="truncate text-xs text-gray-600">
+            {song.artists}
+          </p>
+          <p className="truncate text-xs text-gray-500 pt-1">
+            {song.lastPlayed}
+          </p>
+        </div>
       </div>
-      {/* <div className="flex items-center ml-2 min-w-0 h-16 sm:h-20 justify-end w-full max-w-[8rem]">
-        {song.isPlaying && <AudioVisualization />}
-      </div> */}
-    </div>
-    <div className="flex items-center gap-x-2 px-3 py-1 text-sm text-gray-600">
-      <div
-        className={`h-2 w-2 flex-shrink-0 rounded-full ${
-          song.isPlaying ? "bg-[#4447A9]" : "bg-gray-400"
-        }`}
-      ></div>
-      <div className="truncate">{song.lastPlayed}</div>
-    </div>
+
+      {/* Status Indicator */}
+      <div className="flex-shrink-0 flex items-center gap-2">
+        <div
+          className={`h-2 w-2 rounded-full transition-all ${
+            song.isPlaying
+              ? "bg-[#4447A9] animate-pulse"
+              : "bg-gray-300"
+          }`}
+        ></div>
+      </div>
+    </a>
   </div>
 );
 

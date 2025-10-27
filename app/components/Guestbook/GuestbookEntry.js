@@ -5,10 +5,10 @@ import Image from "next/image";
 
 // Helper function to get or create a unique device ID
 const getOrCreateDeviceId = () => {
-  const deviceIdKey = 'guestbook_device_id';
+  const deviceIdKey = "guestbook_device_id";
   let deviceId = localStorage.getItem(deviceIdKey);
   if (!deviceId) {
-    deviceId = 'device_' + Math.random().toString(36).substring(2, 11);
+    deviceId = "device_" + Math.random().toString(36).substring(2, 11);
     localStorage.setItem(deviceIdKey, deviceId);
   }
   return deviceId;
@@ -24,12 +24,12 @@ export default function GuestbookEntry({
   link = null,
   date,
   stampImage = null,
-  stampGenerating = false,
   reactions = 0,
   isFirstFromCountry = false,
 }) {
   const [isStamping, setIsStamping] = useState(false);
   const [dominantColor, setDominantColor] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const displayDate =
     date instanceof Date
@@ -45,29 +45,34 @@ export default function GuestbookEntry({
         });
 
   // Show region and country, or just country
-  const location = region && region !== "Unknown" ? `${region}, ${country}` : country;
+  const location =
+    region && region !== "Unknown" ? `${region}, ${country}` : country;
 
   // Generate random hue for each entry (but keep it consistent per entry)
   const hue = useMemo(() => {
     // Use entryId to generate consistent hue for each entry
-    const hash = entryId?.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) || 0;
+    const hash =
+      entryId?.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) ||
+      0;
     return 243; // Using #4447a9 hue
   }, [entryId]);
 
   // Random position for the stamp image
   const imagePosition = useMemo(() => {
-    if (!entryId) return { top: '15%', left: '10%', rotate: 5 };
-    const hash = entryId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    if (!entryId) return { top: "15%", left: "10%", rotate: 5 };
+    const hash = entryId
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
     // Random position anywhere on the card
     const positions = [
-      { top: '12%', left: '8%', rotate: -8 },
-      { top: '15%', right: '10%', rotate: 12 },
-      { top: '45%', left: '5%', rotate: -15 },
-      { top: '50%', right: '8%', rotate: 10 },
-      { bottom: '40%', left: '12%', rotate: -12 },
-      { bottom: '35%', right: '15%', rotate: 8 },
-      { top: '25%', left: '50%', rotate: -5 },
-      { top: '60%', left: '55%', rotate: 15 },
+      { top: "12%", left: "8%", rotate: -8 },
+      { top: "15%", right: "10%", rotate: 12 },
+      { top: "45%", left: "5%", rotate: -15 },
+      { top: "50%", right: "8%", rotate: 10 },
+      { bottom: "40%", left: "12%", rotate: -12 },
+      { bottom: "35%", right: "15%", rotate: 8 },
+      { top: "25%", left: "50%", rotate: -5 },
+      { top: "60%", left: "55%", rotate: 15 },
     ];
     return positions[hash % positions.length];
   }, [entryId]);
@@ -75,15 +80,17 @@ export default function GuestbookEntry({
   const randomRotate = useMemo(() => {
     // Generate deterministic rotation based on entryId to avoid hydration mismatch
     if (!entryId) return 0;
-    const hash = entryId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const hash = entryId
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
     return (hash % 30) / 10 - 1.5; // Returns value between -1.5 and 1.5
   }, [entryId]);
 
   // Extract dominant color from image
   const extractDominantColor = (imgElement) => {
     try {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
 
       canvas.width = imgElement.width;
       canvas.height = imgElement.height;
@@ -103,7 +110,12 @@ export default function GuestbookEntry({
         const a = data[i + 3];
 
         // Skip transparent and very light/dark pixels
-        if (a < 125 || (r > 240 && g > 240 && b > 240) || (r < 15 && g < 15 && b < 15)) continue;
+        if (
+          a < 125 ||
+          (r > 240 && g > 240 && b > 240) ||
+          (r < 15 && g < 15 && b < 15)
+        )
+          continue;
 
         // Round to reduce similar colors
         const roundedR = Math.round(r / 10) * 10;
@@ -126,7 +138,7 @@ export default function GuestbookEntry({
       }
 
       if (dominantColor) {
-        const [r, g, b] = dominantColor.split(',').map(Number);
+        const [r, g, b] = dominantColor.split(",").map(Number);
 
         // Convert to HSL for better color manipulation
         const hsl = rgbToHsl(r, g, b);
@@ -137,7 +149,7 @@ export default function GuestbookEntry({
         setDominantColor(lightHsl);
       }
     } catch (error) {
-      console.error('Error extracting color:', error);
+      console.error("Error extracting color:", error);
     }
   };
 
@@ -149,7 +161,9 @@ export default function GuestbookEntry({
 
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
-    let h, s, l = (max + min) / 2;
+    let h,
+      s,
+      l = (max + min) / 2;
 
     if (max === min) {
       h = s = 0;
@@ -158,16 +172,22 @@ export default function GuestbookEntry({
       s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
 
       switch (max) {
-        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
-        case g: h = ((b - r) / d + 2) / 6; break;
-        case b: h = ((r - g) / d + 4) / 6; break;
+        case r:
+          h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+          break;
+        case g:
+          h = ((b - r) / d + 2) / 6;
+          break;
+        case b:
+          h = ((r - g) / d + 4) / 6;
+          break;
       }
     }
 
     return {
       h: Math.round(h * 360),
       s: Math.round(s * 100),
-      l: Math.round(l * 100)
+      l: Math.round(l * 100),
     };
   };
 
@@ -176,19 +196,20 @@ export default function GuestbookEntry({
       <div
         className="guestbook-stamp entry-stamp"
         style={{
-          '--hue': `${hue}`,
-          '--primary-stamp-color': '#4447a9',
-          '--light-stamp-bg': dominantColor || 'hsl(0, 0%, 100%)',
-          '--text-bg-overlay': dominantColor ? `${dominantColor.replace(')', ', 0.7)')}` : 'hsla(0, 0%, 100%, 0.7)',
-          '--dark-text-fixed': `hsl(${hue}, 60%, 20%)`,
-          '--mid-grey-fixed': `hsl(${hue}, 15%, 45%)`,
-          '--gold-accent': `hsl(45, 80%, 60%)`,
-          '--postmark-color-fixed': `hsla(${hue}, 40%, 30%, 0.8)`,
-          '--border-accent': '#4447a9',
-          '--rotate': `${randomRotate.toFixed(2)}deg`,
+          "--hue": `${hue}`,
+          "--primary-stamp-color": "#4447a9",
+          "--light-stamp-bg": dominantColor || "hsl(0, 0%, 100%)",
+          "--text-bg-overlay": dominantColor
+            ? `${dominantColor.replace(")", ", 0.7)")}`
+            : "hsla(0, 0%, 100%, 0.7)",
+          "--dark-text-fixed": `hsl(${hue}, 60%, 20%)`,
+          "--mid-grey-fixed": `hsl(${hue}, 15%, 45%)`,
+          "--gold-accent": `hsl(45, 80%, 60%)`,
+          "--postmark-color-fixed": `hsla(${hue}, 40%, 30%, 0.8)`,
+          "--border-accent": "#4447a9",
+          "--rotate": `${randomRotate.toFixed(2)}deg`,
         }}
       >
-
         <div className="stamp-frame">
           <div className="stamp-bg-solid"></div>
         </div>
@@ -201,29 +222,17 @@ export default function GuestbookEntry({
         </div>
 
         {/* Generated stamp image - smaller and randomly positioned */}
-        {stampGenerating && !stampImage ? (
+        {stampImage?.asset ? (
           <div
-            className="stamp-image-small generating"
+            className={`stamp-image-small ${isStamping ? "animate-stamp" : ""}`}
             style={{
               top: imagePosition.top,
               left: imagePosition.left,
               right: imagePosition.right,
               bottom: imagePosition.bottom,
-              transform: `rotate(${imagePosition.rotate}deg)`
+              transform: `rotate(${imagePosition.rotate}deg)`,
             }}
-          >
-            <div className="spinner"></div>
-          </div>
-        ) : stampImage?.asset ? (
-          <div
-            className={`stamp-image-small ${isStamping ? 'animate-stamp' : ''}`}
-            style={{
-              top: imagePosition.top,
-              left: imagePosition.left,
-              right: imagePosition.right,
-              bottom: imagePosition.bottom,
-              transform: `rotate(${imagePosition.rotate}deg)`
-            }}
+            onClick={() => setIsModalOpen(true)}
           >
             <Image
               src={stampImage.asset.url}
@@ -247,9 +256,44 @@ export default function GuestbookEntry({
           </div>
         ) : null}
 
+        {/* Stamp Modal */}
+        {isModalOpen && stampImage?.asset && (
+          <div
+            className="stamp-modal-overlay"
+            onClick={() => setIsModalOpen(false)}
+          >
+            <div
+              className="stamp-modal-content"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                className="stamp-modal-close"
+                onClick={() => setIsModalOpen(false)}
+                aria-label="Close modal"
+              >
+                ×
+              </button>
+              <Image
+                src={stampImage.asset.url}
+                alt={`Stamp from ${location}`}
+                width={400}
+                height={400}
+                className="stamp-modal-img"
+                crossOrigin="anonymous"
+              />
+              <div className="stamp-modal-info">
+                <h3>{country}</h3>
+                {region && region !== "Unknown" && <p>{region}</p>}
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="stamp-location-text">
           <span className="country-label">VISIT FROM</span>
-          <span className="country">{country}</span>
+          <span className="country">
+            {region}, {country}
+          </span>
           <div className="country-underline"></div>
         </div>
 
@@ -269,7 +313,10 @@ export default function GuestbookEntry({
             )}
 
             {displayDate && (
-              <time className="entry-date" dateTime={date instanceof Date ? date.toISOString() : date}>
+              <time
+                className="entry-date"
+                dateTime={date instanceof Date ? date.toISOString() : date}
+              >
                 {displayDate}
               </time>
             )}
@@ -309,13 +356,11 @@ export default function GuestbookEntry({
           border-radius: 2px;
         }
 
-       
-
         .first-badge {
           position: absolute;
           top: 8px;
           left: 8px;
-          background: linear-gradient(45deg, #4447A9 0%, #000 100%);
+          background: linear-gradient(45deg, #4447a9 0%, #000 100%);
           color: white;
           font-size: 0.65rem;
           font-weight: bold;
@@ -334,7 +379,8 @@ export default function GuestbookEntry({
         }
 
         @keyframes pulse {
-          0%, 100% {
+          0%,
+          100% {
             opacity: 1;
           }
           50% {
@@ -427,8 +473,11 @@ export default function GuestbookEntry({
             0 1px 3px rgba(0, 0, 0, 0.15),
             inset 0 0 0 3px rgba(255, 255, 255, 0.8);
           background: rgba(255, 255, 255, 0.9);
-          transition: transform 0.3s ease, opacity 0.3s ease;
-          opacity: 0.85;
+          transition:
+            transform 0.3s ease,
+            opacity 0.3s ease;
+          opacity: 0.65;
+          cursor: pointer;
         }
 
         .stamp-image-small:hover {
@@ -444,7 +493,11 @@ export default function GuestbookEntry({
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.2) 100%);
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.4) 0%,
+            rgba(255, 255, 255, 0.2) 100%
+          );
         }
 
         .spinner {
@@ -457,14 +510,16 @@ export default function GuestbookEntry({
         }
 
         @keyframes spin {
-          to { transform: rotate(360deg); }
+          to {
+            transform: rotate(360deg);
+          }
         }
 
         .stamp-img {
           width: 100%;
           height: 100%;
           object-fit: contain;
-          opacity: 1;
+          opacity: 0.7;
         }
 
         @keyframes stamp {
@@ -787,6 +842,129 @@ export default function GuestbookEntry({
           .badge-icon {
             width: 8px;
             height: 8px;
+          }
+        }
+
+        /* Modal Styles */
+        .stamp-modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.8);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10000;
+          backdrop-filter: blur(5px);
+          animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        .stamp-modal-content {
+          position: relative;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(20px);
+          border-radius: 12px;
+          padding: 24px;
+          max-width: 90vw;
+          max-height: 90vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+          animation: scaleIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes scaleIn {
+          from {
+            transform: scale(0.8);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+
+        .stamp-modal-close {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          background: rgba(0, 0, 0, 0.8);
+          border: none;
+          border-radius: 50%;
+          width: 36px;
+          height: 36px;
+          font-size: 28px;
+          line-height: 1;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+          color: white;
+          font-weight: 300;
+          z-index: 10;
+        }
+
+        .stamp-modal-close:hover {
+          background: rgba(68, 71, 169, 1);
+          transform: rotate(90deg) scale(1.1);
+        }
+
+        .stamp-modal-img {
+          width: 100%;
+          height: auto;
+          max-width: 400px;
+          object-fit: contain;
+          border-radius: 8px;
+        }
+
+        .stamp-modal-info {
+          margin-top: 20px;
+          text-align: center;
+        }
+
+        .stamp-modal-info h3 {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #4447a9;
+          margin: 0 0 8px 0;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        .stamp-modal-info p {
+          font-size: 1rem;
+          color: #666;
+          margin: 0;
+        }
+
+        @media (max-width: 640px) {
+          .stamp-modal-content {
+            padding: 16px;
+          }
+
+          .stamp-modal-img {
+            max-width: 300px;
+          }
+
+          .stamp-modal-info h3 {
+            font-size: 1.2rem;
+          }
+
+          .stamp-modal-info p {
+            font-size: 0.9rem;
           }
         }
       `}</style>

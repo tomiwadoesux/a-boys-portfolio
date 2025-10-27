@@ -75,7 +75,7 @@ export default function VideoDisplay({ video, isMobile = false, savedTimestamp =
 
   return (
     <div className="w-full flex flex-col">
-      <div className="w-full flex items-center justify-center bg-gray-200 relative overflow-hidden rounded">
+      <div className="w-full flex h-full items-center justify-center bg-gray-200 relative overflow-hidden rounded">
         {videoSrc ? (
           <>
             {/* High-quality placeholder image shown while video loads */}
@@ -95,7 +95,7 @@ export default function VideoDisplay({ video, isMobile = false, savedTimestamp =
 
             {/* Loading spinner - only show if still loading after 500ms */}
             {isLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/10 z-10">
+              <div className="absolute inset-0 px flex items-center justify-center px-7 md:px-20 lg:px-56 bg-black/10 z-10">
                 <div className="animate-spin rounded-full h-10 w-10 border-2 border-white border-t-transparent"></div>
               </div>
             )}

@@ -8,8 +8,9 @@ export default function Socials() {
         <div className="flex justify-center">
           <Ayotomcs />
         </div>
-     
+      
       </div>
+
 
       <svg
         className="w-full py-2 h-px"

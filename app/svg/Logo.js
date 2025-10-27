@@ -5,23 +5,8 @@ import { gsap } from "gsap";
 export default function Logo() {
   const logoRef = useRef(null);
   const trailsContainerRef = useRef(null);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
-    // Check if this is the initial load
-    const hasLoadedBefore = sessionStorage.getItem("logo_has_loaded");
-    if (!hasLoadedBefore) {
-      sessionStorage.setItem("logo_has_loaded", "true");
-      setIsInitialLoad(true);
-      // Disable trail effect on initial load
-      return;
-    }
-    setIsInitialLoad(false);
-  }, []);
-
-  useEffect(() => {
-    // Skip scroll trail effect on initial load
-    if (isInitialLoad) return;
 
     if (
       typeof window === "undefined" ||
@@ -147,7 +132,7 @@ export default function Logo() {
         }
       });
     };
-  }, [isInitialLoad]);
+  }, []);
 
   return (
     <>

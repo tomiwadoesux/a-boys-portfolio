@@ -6,9 +6,7 @@ import Link from "next/link";
 export default function Front() {
   return (
     <section className="px-7 pt-16 md:pt-20 md:px-20 lg:px-56">
-      {/* <div className="w-full h-44">
-        <SvgHover />
-      </div> */}
+    
       {/* <Dock /> */}
       <div className="flex  pb-8 md:pb-11 flex-col">
         <div className="flex flex-row gap-1">

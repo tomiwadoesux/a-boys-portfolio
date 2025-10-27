@@ -123,7 +123,6 @@ export default function GuestbookClient({ initialEntries = [] }) {
                 link={entry.link}
                 date={entry.date}
                 stampImage={entry.stampImage}
-                stampGenerating={entry.stampGenerating}
                 reactions={entry.reactions}
                 isFirstFromCountry={entry.isFirstFromCountry}
               />

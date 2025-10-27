@@ -119,3 +119,11 @@ export const labQuery = groq`*[_type == "lab"] | order(order asc) {
   height,
   order
 }`
+
+// Query to fetch all active typewriter messages
+export const typewriterMessagesQuery = groq`*[_type == "typewriterMessage" && isActive == true] | order(order asc) {
+  _id,
+  message,
+  isActive,
+  order
+}`

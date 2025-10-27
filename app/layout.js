@@ -45,7 +45,7 @@ export default function RootLayout({ children }) {
           {/* Rounded border frame */}
           {/* <div className="fixed inset-2 border-2 rounded-xl md:rounded-2xl  pointer-events-none z-[9999]" style={{ borderColor: 'var(--background)' }}></div> */}
 
-          <div className="fixed inset-1.5 rounded-xl md:rounded-2xl  overflow-hidden z-10" style={{ backgroundColor: 'var(--background)' }}>
+          <div className="fixed  inset-1.5 rounded-xl md:rounded-2xl  overflow-hidden z-10" style={{ backgroundColor: 'var(--background)' }}>
             <div id="main-scroll-container" className="h-full w-full overflow-y-auto overflow-x-hidden">
               <Headd />
               <PersistentBody />

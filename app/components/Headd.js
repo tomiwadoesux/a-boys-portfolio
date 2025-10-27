@@ -3,12 +3,13 @@
 import { useState, useEffect, useRef, memo } from "react";
 import { usePathname } from "next/navigation";
 import TypewriterEffect from "./TypewriterEffect";
-import { getLastVisitorLocation } from "../../sanity/lib/fetch";
+import { getLastVisitorLocation, getTypewriterMessages } from "../../sanity/lib/fetch";
 import { useVisitorTracking } from "../hooks/useVisitorTracking";
 
 const Headd = memo(function Headd() {
   const pathname = usePathname();
   const [lastVisitor, setLastVisitor] = useState("Loading...");
+  const [typewriterMessages, setTypewriterMessages] = useState([]);
   const hasFetched = useRef(false);
 
   // Track current visitor
@@ -39,7 +40,21 @@ const Headd = memo(function Headd() {
       }
     }
 
+    async function fetchTypewriterMessages() {
+      try {
+        const messages = await getTypewriterMessages();
+        if (messages && messages.length > 0) {
+          // Extract just the message strings
+          const messageStrings = messages.map(m => m.message);
+          setTypewriterMessages(messageStrings);
+        }
+      } catch (error) {
+        console.error("Error fetching typewriter messages:", error);
+      }
+    }
+
     fetchLastVisitor();
+    fetchTypewriterMessages();
 
     // Poll for updates every 90 seconds
     const interval = setInterval(fetchLastVisitor, 90000);
@@ -53,7 +68,7 @@ const Headd = memo(function Headd() {
   return (
     <div className="hidden md:block">
        <div className="flex  flex-row justify-between px-7 lg:px-8 w-full relative top-7">
-      <TypewriterEffect />
+      <TypewriterEffect messages={typewriterMessages} />
       <div className="self-start text-xs ">
         <h4>
           Last Visitor: <span className="text-[#4447A9]">{lastVisitor}</span>

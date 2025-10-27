@@ -7,7 +7,8 @@ import { listType } from './list'
 import { screenType } from './screen'
 import { cardType } from './card'
 import { labType } from './lab'
+import { typewriterMessageType } from './typewriterMessage'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [nowType, projectType, guestbookType, visitorType, listType, screenType, cardType, labType],
+  types: [nowType, projectType, guestbookType, visitorType, listType, screenType, cardType, labType, typewriterMessageType],
 }

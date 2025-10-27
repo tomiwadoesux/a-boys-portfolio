@@ -1,5 +1,5 @@
 import { client } from './client'
-import { nowQuery, projectsQuery, featuredProjectsQuery, guestbookQuery, lastVisitorQuery, lastVisitorLocationQuery, listQuery, screensQuery, cardsQuery, labQuery } from './queries'
+import { nowQuery, projectsQuery, featuredProjectsQuery, guestbookQuery, lastVisitorQuery, lastVisitorLocationQuery, listQuery, screensQuery, cardsQuery, labQuery, typewriterMessagesQuery } from './queries'
 
 // Type definitions for the data
 export interface NowData {
@@ -72,6 +72,13 @@ export interface LabData {
   title: string
   description?: string
   height: string
+  order: number
+}
+
+export interface TypewriterMessageData {
+  _id: string
+  message: string
+  isActive: boolean
   order: number
 }
 
@@ -201,6 +208,19 @@ export async function getLabCards(): Promise<LabData[]> {
     return data
   } catch (error) {
     console.error('Error fetching lab cards:', error)
+    return []
+  }
+}
+
+// Fetch all active typewriter messages
+export async function getTypewriterMessages(): Promise<TypewriterMessageData[]> {
+  try {
+    const data = await client.fetch<TypewriterMessageData[]>(typewriterMessagesQuery, {}, {
+      next: { revalidate: 3600 } // Revalidate every hour
+    })
+    return data
+  } catch (error) {
+    console.error('Error fetching typewriter messages:', error)
     return []
   }
 }
