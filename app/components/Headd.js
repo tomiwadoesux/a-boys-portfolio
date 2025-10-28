@@ -53,12 +53,20 @@ const Headd = memo(function Headd() {
       }
     }
 
-    fetchLastVisitor();
-    fetchTypewriterMessages();
+    // Defer API calls until after page load to prevent loading indicator
+    // Use requestIdleCallback or setTimeout to prevent blocking page load
+    const timer = setTimeout(() => {
+      fetchLastVisitor();
+      fetchTypewriterMessages();
+    }, 100);
 
     // Poll for updates every 90 seconds
     const interval = setInterval(fetchLastVisitor, 90000);
-    return () => clearInterval(interval);
+
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
   }, []);
 
   if (shouldHide) {

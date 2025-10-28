@@ -181,19 +181,9 @@ export default function TypewriterEffect({ messages = [] }) {
       return;
     }
 
-    // Check if this is the initial load
-    const hasLoadedBefore = sessionStorage.getItem("has_loaded");
-
-    if (!hasLoadedBefore) {
-      // First load - show a static message without animation
-      setText("Loading... almost ready");
-      sessionStorage.setItem("has_loaded", "true");
-      return;
-    }
-
-    // Subsequent loads - run the typewriter effect
     let usedMessages = [];
     let isRunning = true;
+    let startTimer;
 
     const getRandomMessage = () => {
       // Reset if all messages have been used
@@ -236,12 +226,18 @@ export default function TypewriterEffect({ messages = [] }) {
       }
     };
 
-    // Start the typewriter effect
-    typeWriter();
+    // Delay typewriter effect to start after page loads
+    // This prevents it from blocking the initial page load
+    startTimer = setTimeout(() => {
+      if (isRunning) {
+        typeWriter();
+      }
+    }, 500);
 
     // Cleanup
     return () => {
       isRunning = false;
+      clearTimeout(startTimer);
     };
   }, [messages]);
 

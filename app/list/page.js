@@ -2,8 +2,15 @@ import PageConfig from "../components/PageConfig";
 import List from "../components/List";
 
 export const metadata = {
-  title: "List | Ayotomcs",
-  description: "A list of things I want to do.",
+  title: "Curated Resources & Developer Recommendations",
+  description: "My curated list of web development tools, design resources, and inspiration. Discover my favorite libraries, frameworks, and creative recommendations.",
+  keywords: ["Developer Tools", "Design Resources", "Web Development Resources", "Curated List", "Design Inspiration", "Frontend Tools"],
+  openGraph: {
+    title: "List | Wale-Durojaye Ayotomiwa",
+    description: "Curated resources and developer recommendations",
+    url: "https://ayotomcs.me/list",
+    images: ["/opengraph.png"],
+  },
 };
 export const revalidate = 3600;
 

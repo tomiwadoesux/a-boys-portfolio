@@ -4,8 +4,15 @@ import { getGuestbookEntries } from "../../sanity/lib/fetch";
 
 // Metadata for SEO
 export const metadata = {
-  title: "Guestbook | Ayotomcs",
-  description: "Sign in my digital guestbook.",
+  title: "Portfolio Guestbook & Visitor Messages",
+  description: "Sign my digital guestbook! Leave your mark, share feedback, and connect with other visitors. View messages from developers, designers, and clients worldwide.",
+  keywords: ["Portfolio Guestbook", "Visitor Messages", "Design Community", "Developer Network", "Testimonials", "Client Feedback"],
+  openGraph: {
+    title: "Guestbook | Wale-Durojaye Ayotomiwa",
+    description: "Sign my digital guestbook and leave your mark",
+    url: "https://ayotomcs.me/guestbook",
+    images: ["/opengraph.png"],
+  },
 };
 
 // Prerender at build time and revalidate every minute for fresh entries

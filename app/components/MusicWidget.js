@@ -69,9 +69,7 @@ const AudioVisualization = () => {
   const heightClass = isMobile ? "h-10" : "h-14";
 
   return (
-    <div
-      className={`flex items-center justify-center  ${heightClass}`}
-    >
+    <div className={`flex items-center justify-center  ${heightClass}`}>
       <svg
         viewBox="0 0 240 100"
         className="px-7 md:px-20 lg:px-56 h-full"
@@ -138,8 +136,8 @@ const AlbumArt = ({ src, alt }) => {
       <Image
         src={src}
         alt={alt}
-        width={80}
-        height={80}
+        width={180}
+        height={180}
         className={`rounded-md object-cover transition-opacity duration-300 ${
           loaded ? "opacity-100" : "opacity-0"
         }`}
@@ -157,7 +155,7 @@ const MusicWidgetContent = ({ song }) => (
       href={song.songUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-center gap-4 p-4 rounded-lg border border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all duration-200 hover:bg-black/2 dark:hover:bg-white/5"
+      className="group flex items-center gap-4 p-2 rounded-lg border border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all duration-200 hover:bg-black/2 dark:hover:bg-white/5"
     >
       {/* Album Art */}
       <div className="flex-shrink-0">
@@ -175,24 +173,20 @@ const MusicWidgetContent = ({ song }) => (
           <p className="truncate text-sm font-medium text-gray-900 group-hover:text-gray-800 transition-colors">
             {song.title}
           </p>
-          <p className="truncate text-xs text-gray-600">
-            {song.artists}
-          </p>
-          <p className="truncate text-xs text-gray-500 pt-1">
-            {song.lastPlayed}
-          </p>
+          <p className="truncate text-xs text-gray-600">{song.artists}</p>
+          <div className="pt-2">
+            <div className="flex flex-row gap-1 flex-shrink-0 items-center ">
+              <div
+                className={`h-2 w-2 rounded-full transition-all ${
+                  song.isPlaying ? "bg-[#4447A9] animate-pulse" : "bg-gray-300"
+                }`}
+              ></div>
+              <p className="truncate text-xs text-gray-500">
+                {song.lastPlayed}
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* Status Indicator */}
-      <div className="flex-shrink-0 flex items-center gap-2">
-        <div
-          className={`h-2 w-2 rounded-full transition-all ${
-            song.isPlaying
-              ? "bg-[#4447A9] animate-pulse"
-              : "bg-gray-300"
-          }`}
-        ></div>
       </div>
     </a>
   </div>

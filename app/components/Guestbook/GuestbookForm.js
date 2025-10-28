@@ -128,7 +128,7 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
       <style jsx>{`
         .guestbook-stamp.form-stamp {
           --stamp-width: clamp(300px, 90vw, 480px);
-          --perforation-size: 12px;
+          --perforation-size: 0px;
           --inner-padding: 16px;
           position: relative;
           width: var(--stamp-width);
@@ -152,101 +152,7 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
           border-radius: 2px;
         }
         .guestbook-stamp.form-stamp::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-image: radial-gradient(
-              circle at 12.5% 12.5%,
-              transparent 12px,
-              var(--border-accent) 12px,
-              var(--border-accent) 13px,
-              transparent 13px
-            ),
-            radial-gradient(
-              circle at 37.5% 12.5%,
-              transparent 12px,
-              var(--border-accent) 12px,
-              var(--border-accent) 13px,
-              transparent 13px
-            ),
-            radial-gradient(
-              circle at 62.5% 12.5%,
-              transparent 12px,
-              var(--border-accent) 12px,
-              var(--border-accent) 13px,
-              transparent 13px
-            ),
-            radial-gradient(
-              circle at 87.5% 12.5%,
-              transparent 12px,
-              var(--border-accent) 12px,
-              var(--border-accent) 13px,
-              transparent 13px
-            ),
-            radial-gradient(
-              circle at 12.5% 87.5%,
-              transparent 12px,
-              var(--border-accent) 12px,
-              var(--border-accent) 13px,
-              transparent 13px
-            ),
-            radial-gradient(
-              circle at 37.5% 87.5%,
-              transparent 12px,
-              var(--border-accent) 12px,
-              var(--border-accent) 13px,
-              transparent 13px
-            ),
-            radial-gradient(
-              circle at 62.5% 87.5%,
-              transparent 12px,
-              var(--border-accent) 12px,
-              var(--border-accent) 13px,
-              transparent 13px
-            ),
-            radial-gradient(
-              circle at 87.5% 87.5%,
-              transparent 12px,
-              var(--border-accent) 12px,
-              var(--border-accent) 13px,
-              transparent 13px
-            ),
-            radial-gradient(
-              circle at 12.5% 37.5%,
-              transparent 12px,
-              var(--border-accent) 12px,
-              var(--border-accent) 13px,
-              transparent 13px
-            ),
-            radial-gradient(
-              circle at 12.5% 62.5%,
-              transparent 12px,
-              var(--border-accent) 12px,
-              var(--border-accent) 13px,
-              transparent 13px
-            ),
-            radial-gradient(
-              circle at 87.5% 37.5%,
-              transparent 12px,
-              var(--border-accent) 12px,
-              var(--border-accent) 13px,
-              transparent 13px
-            ),
-            radial-gradient(
-              circle at 87.5% 62.5%,
-              transparent 12px,
-              var(--border-accent) 12px,
-              var(--border-accent) 13px,
-              transparent 13px
-            );
-          background-size: 25% 25%;
-          background-repeat: no-repeat;
-          opacity: 0.7;
-          z-index: 4;
-          pointer-events: none;
+          display: none;
         }
         .stamp-frame {
           position: absolute;
@@ -525,6 +431,7 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
           .guestbook-stamp.form-stamp {
             --stamp-width: clamp(280px, 85vw, 400px);
             min-height: 420px;
+  
             margin: 1.5rem auto;
           }
           .form-content {

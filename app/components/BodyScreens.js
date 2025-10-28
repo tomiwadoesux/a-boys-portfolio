@@ -94,14 +94,14 @@ export default function BodyScreens({
                     </a>
                   )}
                   {isScrambled ? (
-                    <Link href="/screens" className="pl-4">
+                    <a href="https://screens.ayotomcs.me" target="_blank" rel="noopener noreferrer" className="pl-4">
                       <ScrambleText
                         originalText="Projects"
                         targetText="Screens"
                         isScrambled={isScrambled}
                         className="text-[13px] underline underline-offset-2 "
                       />
-                    </Link>
+                    </a>
                   ) : (
                     <Link href="/projects" scroll={true} className="pl-4">
                       <ScrambleText

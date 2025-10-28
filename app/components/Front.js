@@ -10,13 +10,13 @@ export default function Front() {
       {/* <Dock /> */}
       <div className="flex  pb-8 md:pb-11 flex-col">
         <div className="flex flex-row gap-1">
-          <h6 className="text-xs text-[#4447A9] pb-3 ">
+          <h2 className="text-xs text-[#4447A9] pb-3 ">
             {" "}
             Who is Wale-Durojaye Ayotomiwa?.
-          </h6>
+          </h2>
         </div>
 
-        <h4 className="text-justify text-sm md:text-base ">
+        <p className="text-justify text-sm md:text-base ">
           {" "}
           I am a Design engineer who prototypes and ships designs you can feel,
           comfortable moving from Figma
@@ -114,7 +114,7 @@ export default function Front() {
             </svg>
           </span>
           . And then it all make sense.
-        </h4>
+        </p>
         <div className="pt-2">
           <svg
             className="w-full h-px"
@@ -135,24 +135,24 @@ export default function Front() {
       </div>
       <div className="flex pb-0  flex-col">
         <div className="flex flex-row justify-between">
-          <h6 className="text-xs pb-3 ">
+          <h2 className="text-xs pb-3 ">
             {" "}
             <span className=" text-[#4447A9]"> Lab.. </span>
-          </h6>
+          </h2>
         </div>
 
         <div className="flex flex-row">
-          <h4 className=" text-sm md:text-base ">
+          <p className=" text-sm md:text-base ">
             A collection of side-quests I explore from time to time to learn,
             experiment with new technologies, and just build anything.
             <span>
               <Link href="/lab" className=" self-center">
-                <h4 className="underline text-[#4447A9] text-sm underline-offset-2">
+                <span className="underline text-[#4447A9] text-sm underline-offset-2">
                   Visit lab
-                </h4>
+                </span>
               </Link>
             </span>
-          </h4>
+          </p>
         </div>
 
         <div className="pt-2">

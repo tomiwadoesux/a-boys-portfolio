@@ -1,7 +1,17 @@
+"use client";
+
+import { useState } from "react";
 import SvgHover from "./SvgHover";
 import Ayotomcs from "./Ayotomcs";
+import ContactModal from "./ContactModal";
 
 export default function Socials() {
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+
+  const handleContactClick = (e) => {
+    e.preventDefault();
+    setIsContactModalOpen(true);
+  };
   return (
     <div className="flex pb-8 px-0 pt-8 md:px-20 lg:px-56  flex-col items-center">
       <div className="hidden w-[30%] md:block ">
@@ -30,7 +40,8 @@ export default function Socials() {
 
       <div className="flex gap-3 px-3 justify-center flex-row flex-wrap">
         <a
-          href="mailto:hello@ayotomcs.me"
+          href="#"
+          onClick={handleContactClick}
           className="no-underline hover:opacity-70 transition-opacity"
         >
           <h4 className="text-sm flex items-center gap-1 cursor-pointer">
@@ -275,6 +286,10 @@ export default function Socials() {
           </h4>
         </a>
       </div>
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+      />
     </div>
   );
 }

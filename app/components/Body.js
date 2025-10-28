@@ -6,6 +6,7 @@ import Logo from "../svg/Logo";
 import NavIcon from "../svg/NavIcon";
 import ScrambleText from "./ScrambleText";
 import SvgHover from "./SvgHover";
+import ContactModal from "./ContactModal";
 
 const Body = memo(function Body({
   description = "A Design Engineer Now in Abuja, Nigeria",
@@ -13,10 +14,16 @@ const Body = memo(function Body({
 }) {
   const [isScrambled, setIsScrambled] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   const handleToggle = () => {
     setHasInteracted(true);
     setIsScrambled((prev) => !prev);
+  };
+
+  const handleContactClick = (e) => {
+    e.preventDefault();
+    setIsContactModalOpen(true);
   };
 
   return (
@@ -78,7 +85,7 @@ const Body = memo(function Body({
                           }`}
                         />
                       </Link>
-                      <Link href="/screens" className="pl-3 ">
+                      <a href="https://screens.ayotomcs.me" target="_blank" rel="noopener noreferrer" className="pl-3 ">
                         <ScrambleText
                           originalText="Resumé"
                           targetText="Screens"
@@ -88,7 +95,7 @@ const Body = memo(function Body({
                             activePage === "/screens" ? "text-[#4447A9]" : ""
                           }`}
                         />
-                      </Link>
+                      </a>
                       <Link href="/now" className="pl-3">
                         <ScrambleText
                           originalText="Contact"
@@ -152,7 +159,7 @@ const Body = memo(function Body({
                           }`}
                         />
                       </Link>
-                      <Link href="mailto:hello@ayotomcs.me" className="pl-3">
+                      <a href="#" onClick={handleContactClick} className="pl-3">
                         <ScrambleText
                           originalText="Contact"
                           targetText="Now"
@@ -162,7 +169,7 @@ const Body = memo(function Body({
                             activePage === "/contact" ? "text-[#4447A9]" : ""
                           }`}
                         />
-                      </Link>
+                      </a>
                     </>
                   )}
 
@@ -214,7 +221,7 @@ const Body = memo(function Body({
                             }`}
                           />
                         </Link>
-                        <Link href="/screens" className="pl-4 ">
+                        <a href="https://screens.ayotomcs.me" target="_blank" rel="noopener noreferrer" className="pl-4 ">
                           <ScrambleText
                             originalText="Resumé"
                             targetText="Screens"
@@ -224,7 +231,7 @@ const Body = memo(function Body({
                               activePage === "/screens" ? "text-[#4447A9]" : ""
                             }`}
                           />
-                        </Link>
+                        </a>
                         <Link href="/now" className="pl-4">
                           <ScrambleText
                             originalText="Contact"
@@ -290,7 +297,7 @@ const Body = memo(function Body({
                             }`}
                           />
                         </Link>
-                        <Link href="mailto:hello@ayotomcs.me" className="pl-4">
+                        <a href="#" onClick={handleContactClick} className="pl-4">
                           <ScrambleText
                             originalText="Contact"
                             targetText="Now"
@@ -300,7 +307,7 @@ const Body = memo(function Body({
                               activePage === "/contact" ? "text-[#4447A9]" : ""
                             }`}
                           />
-                        </Link>
+                        </a>
                       </>
                     )}
 
@@ -332,9 +339,13 @@ const Body = memo(function Body({
               </svg>
             </div>
           </div>
-          
+
         </div>
       </div>
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+      />
     </section>
   );
 });

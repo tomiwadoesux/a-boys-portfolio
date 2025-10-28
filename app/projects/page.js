@@ -4,8 +4,15 @@ import SvgHover from "../components/SvgHover";
 
 // Metadata for SEO
 export const metadata = {
-  title: "Projects | Ayotomcs",
-  description: "Explore my collection of design and engineering projects.",
+  title: "Web Development Projects & Case Studies",
+  description: "Explore my portfolio of web development projects featuring Next.js, React, and modern frontend technologies. Detailed case studies showcasing design engineering and UI/UX work.",
+  keywords: ["Web Development Projects", "Next.js Projects", "React Portfolio", "Frontend Development", "Design Engineering Case Studies", "UI/UX Projects"],
+  openGraph: {
+    title: "Projects | Wale-Durojaye Ayotomiwa",
+    description: "Portfolio of web development projects and case studies",
+    url: "https://ayotomcs.me/projects",
+    images: ["/opengraph.png"],
+  },
 };
 
 // Pre-render this page at build time and revalidate every hour
