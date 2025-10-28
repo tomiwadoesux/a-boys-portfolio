@@ -8,8 +8,14 @@ import { useVisitorTracking } from "../hooks/useVisitorTracking";
 
 const Headd = memo(function Headd() {
   const pathname = usePathname();
-  const [lastVisitor, setLastVisitor] = useState("Loading...");
-  const [typewriterMessages, setTypewriterMessages] = useState([]);
+  const [lastVisitor, setLastVisitor] = useState("...");
+  const [typewriterMessages, setTypewriterMessages] = useState([
+    "Design Engineer based in Abuja, Nigeria",
+    "Building high-performance web experiences",
+    "Specializing in Next.js and React",
+    "Creating visually dynamic animations with GSAP",
+    "Crafting pixel-perfect user interfaces"
+  ]);
   const hasFetched = useRef(false);
 
   // Track current visitor
@@ -32,11 +38,11 @@ const Headd = memo(function Headd() {
             : location.country;
           setLastVisitor(displayLocation);
         } else {
-          setLastVisitor("No visitors yet");
+          setLastVisitor("Be the first!");
         }
       } catch (error) {
         console.error("Error fetching last visitor:", error);
-        setLastVisitor("Unknown");
+        // Keep the default "..." instead of showing error
       }
     }
 
@@ -48,8 +54,10 @@ const Headd = memo(function Headd() {
           const messageStrings = messages.map(m => m.message);
           setTypewriterMessages(messageStrings);
         }
+        // If no messages, keep the default fallback messages
       } catch (error) {
         console.error("Error fetching typewriter messages:", error);
+        // Keep the default fallback messages
       }
     }
 

@@ -175,9 +175,8 @@ export default function TypewriterEffect({ messages = [] }) {
 
 
   useEffect(() => {
-    // If no messages provided, show fallback
+    // If no messages provided, don't show anything (parent provides fallbacks now)
     if (!messages || messages.length === 0) {
-      setText("Loading...");
       return;
     }
 
