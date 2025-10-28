@@ -32,7 +32,9 @@ const Headd = memo(function Headd() {
     async function fetchLastVisitor() {
       try {
         const location = await getLastVisitorLocation();
-        if (location) {
+        console.log("Fetched last visitor location:", location);
+
+        if (location && location.country) {
           const displayLocation = location.city
             ? `${location.city}, ${location.country}`
             : location.country;
@@ -42,7 +44,7 @@ const Headd = memo(function Headd() {
         }
       } catch (error) {
         console.error("Error fetching last visitor:", error);
-        // Keep the default "..." instead of showing error
+        setLastVisitor("Worldwide");
       }
     }
 

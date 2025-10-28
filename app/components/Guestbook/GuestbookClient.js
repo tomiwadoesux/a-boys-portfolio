@@ -60,17 +60,18 @@ export default function GuestbookClient({ initialEntries = [] }) {
         );
       }
 
-      const newEntry = await response.json();
-      console.log("Entry submitted successfully:", newEntry);
+      const result = await response.json();
+      console.log("Entry submitted successfully:", result);
 
-      // Add to local state
+      // Add to local state (don't include statusMessage in the entry)
+      const { statusMessage, success, ...newEntry } = result;
       setEntries([newEntry, ...entries]);
 
       // Refresh the page to show the new entry
       router.refresh();
 
       alert(
-        "Thank you for signing! Your signature will be added shortly with a custom stamp."
+        statusMessage || "Thank you for signing! Your signature will be added shortly with a custom stamp."
       );
     } catch (error) {
       console.error("Error submitting guestbook:", error);

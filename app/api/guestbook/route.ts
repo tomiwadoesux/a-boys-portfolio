@@ -14,9 +14,9 @@ async function getVisitorLocation(request: NextRequest) {
 
     console.log('Detected IP:', ip);
 
-    // If localhost or unknown, return default
+    // If localhost or unknown, return default with better labels
     if (ip === 'unknown' || ip === '127.0.0.1' || ip.startsWith('192.168.') || ip.startsWith('10.')) {
-      return { city: 'Unknown', region: 'Unknown', country: 'Unknown' };
+      return { city: 'Local', region: '', country: 'Development' };
     }
 
     // Use ipapi.co for geolocation (free tier: 1000 requests/day)
@@ -127,7 +127,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       ...newEntry,
-      message: 'Thank you for signing! Your signature will be added shortly.',
+      success: true,
+      statusMessage: 'Thank you for signing! Your signature will be added shortly.',
     }, { status: 201 });
   } catch (error) {
     console.error('Error submitting guestbook entry:', error);
