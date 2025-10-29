@@ -97,7 +97,7 @@ const getStampStyleVariation = (country: string): string => {
 
 export async function POST(request: NextRequest) {
   try {
-    const { entryId, city, country } = await request.json();
+    const { entryId, country } = await request.json();
 
     if (!entryId || !country) {
       return NextResponse.json(
@@ -106,13 +106,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log(`Generating stamp for ${city ? city + ", " : ""}${country}`);
+    console.log(`Generating stamp for ${country}`);
 
     // Get regional style variation
     const styleVariation = getStampStyleVariation(country);
 
     // Generate the stamp image with location-specific prompt
-    const location = city ? `${city}, ${country}` : country;
+    const location = country;
     const artStyles = [
       "1930s WPA travel poster style",
       "1940s-50s mid-century modern illustration",

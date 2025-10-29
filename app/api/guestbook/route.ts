@@ -19,7 +19,7 @@ async function sendEmailNotification(entry: any) {
 }
 
 // Function to trigger stamp generation in background
-async function triggerStampGeneration(entryId: string, city: string, country: string) {
+async function triggerStampGeneration(entryId: string, country: string) {
   try {
     // Call the stamp generation API endpoint
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
@@ -28,7 +28,7 @@ async function triggerStampGeneration(entryId: string, city: string, country: st
     fetch(`${baseUrl}/api/generate-stamp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ entryId, city, country }),
+      body: JSON.stringify({ entryId, country }),
     }).catch(error => {
       console.error('Background stamp generation failed:', error);
 
@@ -37,7 +37,7 @@ async function triggerStampGeneration(entryId: string, city: string, country: st
         fetch(`${baseUrl}/api/generate-stamp`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ entryId, city, country }),
+          body: JSON.stringify({ entryId, country }),
         }).catch(retryError => {
           console.error('Retry stamp generation failed:', retryError);
         });
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
 
     // Trigger stamp generation in background (non-blocking)
     console.log('Triggering stamp generation with country:', country);
-    triggerStampGeneration(newEntry._id, '', country);
+    triggerStampGeneration(newEntry._id, country);
 
     // Send email notification (non-blocking)
     sendEmailNotification(newEntry).catch(console.error);
