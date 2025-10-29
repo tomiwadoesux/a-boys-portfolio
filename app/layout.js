@@ -1,5 +1,4 @@
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { DescriptionProvider } from "./components/DescriptionProvider";
 import PersistentBody from "./components/PersistentBody";
@@ -48,7 +47,6 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} antialiased`}
         style={{ backgroundColor: 'var(--foreground)' }}
       >
-        <Analytics />
         <GsapInitializer />
         {/* <SmoothScroll /> */}
         <NavigationPauseWrapper />
