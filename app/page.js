@@ -19,7 +19,7 @@ export const metadata = {
     siteName: "Ayotomcs Portfolio",
     images: [
       {
-        url: "/opengraph.png",
+        url: "https://ayotomcs.me/images/opengraph.png",
         width: 1200,
         height: 630,
         alt: "Wale-Durojaye Ayotomiwa - Design Engineer Portfolio",
@@ -32,7 +32,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Wale-Durojaye Ayotomiwa | Design Engineer Portfolio",
     description: "Creative Next.js developer portfolio showcasing high-performance web experiences.",
-    images: ["/opengraph.png"],
+    images: ["https://ayotomcs.me/images/opengraph.png"],
     creator: "@ayotomcs",
   },
   robots: {
