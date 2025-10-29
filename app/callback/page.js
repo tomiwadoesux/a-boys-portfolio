@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 function SpotifyCallbackContent() {
   const searchParams = useSearchParams();
@@ -88,9 +89,9 @@ function SpotifyCallbackContent() {
           )}
 
           <div className="mt-8 pt-4 border-t" style={{ borderColor: 'var(--foreground)' }}>
-            <a href="/" className="text-blue-500 hover:underline">
+            <Link href="/" className="text-blue-500 hover:underline">
               ← Back to Home
-            </a>
+            </Link>
           </div>
         </div>
       </div>

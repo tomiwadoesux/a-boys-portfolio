@@ -13,7 +13,7 @@ import { useState, useCallback } from 'react';
  */
 export default function OptimizedImage({
   src,
-  alt,
+  alt = '',
   width,
   height,
   priority = false,

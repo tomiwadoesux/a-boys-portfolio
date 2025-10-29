@@ -8,8 +8,9 @@ export default function Ghost() {
   useEffect(() => {
     // Animate the clipped layer (children) moving left continuously
     // The path will slide from right to left within the clip frame
+    const pathElement = clippedPathRef.current;
 
-    gsap.to(clippedPathRef.current, {
+    gsap.to(pathElement, {
       x: -21, // Move left by the width of one wave cycle
       duration: 2,
       ease: "none", // Linear movement
@@ -20,7 +21,7 @@ export default function Ghost() {
     });
 
     return () => {
-      gsap.killTweensOf(clippedPathRef.current);
+      gsap.killTweensOf(pathElement);
     };
   }, []);
 
