@@ -447,95 +447,123 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
         }
         @media (max-width: 768px) {
           .guestbook-stamp.form-stamp {
-            --stamp-width: clamp(280px, 85vw, 400px);
+            --stamp-width: clamp(280px, 80vw, 380px);
             min-height: 420px;
-  
-            margin: 1.5rem auto;
+            margin: 1.2rem auto;
           }
           .form-content {
-            margin: calc(var(--perforation-size) + 12px);
-            padding: 0 16px 5px 16px;
+            margin: calc(var(--perforation-size) + 10px);
+            padding: 0 14px 5px 14px;
           }
           .form-title {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
           }
           .form-row {
             flex-direction: column;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
+            gap: 0.4rem;
+            margin-bottom: 0.4rem;
           }
           .form-group {
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.5rem;
           }
           .form-group.half-width {
             flex-basis: 100%;
             width: 100%;
           }
           .label {
-            font-size: 0.7rem;
-            margin-bottom: 0.3rem;
-          }
-          .input,
-          .textarea {
-            padding: 0.6rem 0.8rem;
-            font-size: 0.9rem;
-          }
-          .textarea {
-            resize: none;
-          }
-          .submit-button {
-            padding: 0.6rem 1.2rem;
-            font-size: 0.75rem;
-          }
-          .postmark {
-            width: 50px;
-            height: 50px;
-            top: 8%;
-            right: 8%;
-          }
-        }
-        @media (max-width: 400px) {
-          .guestbook-stamp.form-stamp {
-            --perforation-size: 10px;
-            --inner-padding: 12px;
-            width: 95vw;
-            min-height: auto;
-            margin: 1rem auto;
-          }
-          .form-content {
-            margin: calc(var(--perforation-size) + 10px);
-            padding: 0 12px;
-          }
-          .form-title {
-            font-size: 1.1rem;
-            margin-bottom: 0.75rem;
-          }
-          .label {
-            font-size: 0.7rem;
-            margin-bottom: 0.2rem;
+            font-size: 0.68rem;
+            margin-bottom: 0.25rem;
           }
           .input,
           .textarea {
             padding: 0.5rem 0.7rem;
             font-size: 0.85rem;
           }
+          .textarea {
+            resize: none;
+          }
+          .char-count {
+            font-size: 0.65rem;
+            margin-top: 0.2rem;
+          }
           .submit-button {
             padding: 0.5rem 1rem;
+            font-size: 0.7rem;
+          }
+          .postmark {
+            width: 48px;
+            height: 48px;
+            top: 7%;
+            right: 7%;
+          }
+        }
+        @media (max-width: 400px) {
+          .guestbook-stamp.form-stamp {
+            --perforation-size: 8px;
+            --inner-padding: 10px;
+            width: 90vw;
+            max-width: 340px;
+            min-height: auto;
+            margin: 0.75rem auto;
+          }
+          .form-content {
+            margin: calc(var(--perforation-size) + 6px);
+            padding: 0 10px 8px 10px;
+          }
+          .form-title {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+          }
+          .form-row {
+            flex-direction: column;
+            gap: 0.3rem;
+            margin-bottom: 0.3rem;
+          }
+          .form-group {
+            margin-bottom: 0.4rem;
+          }
+          .label {
+            font-size: 0.65rem;
+            margin-bottom: 0.15rem;
+          }
+          .input,
+          .textarea {
+            padding: 0.4rem 0.6rem;
             font-size: 0.8rem;
+          }
+          .textarea {
+            rows: 2;
+            resize: none;
+          }
+          .char-count {
+            font-size: 0.65rem;
+            margin-top: 0.2rem;
+          }
+          .submit-button {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.75rem;
             white-space: nowrap;
           }
           .form-footer {
-            padding-top: 0.5rem;
+            padding-top: 0.3rem;
+            margin-top: 0.5rem;
           }
           .stamp-value {
-            font-size: 1rem;
+            font-size: 0.9rem;
           }
           .postmark {
-            width: 45px;
-            height: 45px;
-            top: 8%;
-            right: 8%;
+            width: 40px;
+            height: 40px;
+            top: 6%;
+            right: 6%;
+          }
+          .postmark-text {
+            font-size: 0.5rem;
+            margin-bottom: 1px;
+          }
+          .postmark-date {
+            font-size: 0.45rem;
           }
         }
       `}</style>
