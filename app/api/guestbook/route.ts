@@ -20,6 +20,8 @@ async function sendEmailNotification(entry: any) {
 
 // Function to trigger stamp generation in background with retry logic
 async function triggerStampGeneration(entryId: string, country: string) {
+  // Use the configured base URL or detect from headers
+  // On Vercel, we can use relative URLs which work on the same server
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
   const attemptStampGeneration = (attempt: number = 1) => {
