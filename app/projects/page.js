@@ -8,7 +8,7 @@ export const metadata = {
   description: "Explore my portfolio of web development projects featuring Next.js, React, and modern frontend technologies. Detailed case studies showcasing design engineering and UI/UX work.",
   keywords: ["Web Development Projects", "Next.js Projects", "React Portfolio", "Frontend Development", "Design Engineering Case Studies", "UI/UX Projects"],
   openGraph: {
-    title: "Projects | Wale-Durojaye Ayotomiwa",
+    title: "Projects | Ayotomcs",
     description: "Portfolio of web development projects and case studies",
     url: "https://ayotomcs.me/projects",
     images: ["/opengraph.png"],

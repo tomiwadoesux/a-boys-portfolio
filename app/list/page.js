@@ -3,11 +3,11 @@ import List from "../components/List";
 
 export const metadata = {
   title: "Curated Resources & Developer Recommendations",
-  description: "My curated list of web development tools, design resources, and inspiration. Discover my favorite libraries, frameworks, and creative recommendations.",
-  keywords: ["Developer Tools", "Design Resources", "Web Development Resources", "Curated List", "Design Inspiration", "Frontend Tools"],
+  description: "List of things I want ",
+  keywords: ["Curated List", "Bucket List", "List 100"],
   openGraph: {
-    title: "List | Wale-Durojaye Ayotomiwa",
-    description: "Curated resources and developer recommendations",
+    title: "List | Ayotomcs",
+    description: "List of things I want ",
     url: "https://ayotomcs.me/list",
     images: ["/opengraph.png"],
   },

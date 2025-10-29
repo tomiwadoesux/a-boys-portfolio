@@ -3,12 +3,12 @@ import Now from "../components/Now";
 
 // Metadata for SEO
 export const metadata = {
-  title: "Current Work & Developer Updates",
+  title: "What is happening Now",
   description: "What I'm currently working on as a Design Engineer and Frontend Developer. Latest projects, learning updates, and professional activities.",
   keywords: ["Current Projects", "Developer Updates", "Now Page", "Work in Progress", "Learning Updates"],
   openGraph: {
-    title: "Now | Wale-Durojaye Ayotomiwa",
-    description: "Current work and developer updates",
+    title: "Now | Ayotomcs",
+    description: "What is happening Now",
     url: "https://ayotomcs.me/now",
     images: ["/opengraph.png"],
   },

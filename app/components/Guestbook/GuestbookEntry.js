@@ -292,7 +292,7 @@ export default function GuestbookEntry({
         <div className="stamp-location-text">
           <span className="country-label">VISIT FROM</span>
           <span className="country">
-            {region}, {country}
+           {country}
           </span>
           <div className="country-underline"></div>
         </div>
@@ -396,6 +396,7 @@ export default function GuestbookEntry({
           bottom: var(--perforation-size);
           overflow: hidden;
           border-radius: 2px;
+          padding: 12px;
           z-index: 1;
           box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
         }
@@ -405,6 +406,7 @@ export default function GuestbookEntry({
           top: 0;
           left: 0;
           width: 100%;
+          padding: 12px;
           height: 100%;
           background: linear-gradient(
             135deg,
@@ -423,6 +425,7 @@ export default function GuestbookEntry({
           background-color: var(--text-bg-overlay);
           z-index: 2;
           border-radius: 3px;
+          padding: 14px;
           box-shadow:
             0 0 15px rgba(255, 255, 255, 0.8),
             inset 0 0 2px rgba(0, 0, 0, 0.1);
@@ -817,7 +820,7 @@ export default function GuestbookEntry({
           }
 
           .country {
-            font-size: 0.75rem;
+            font-size: 0.85rem;
           }
 
           .country-label {

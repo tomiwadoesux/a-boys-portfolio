@@ -4,17 +4,17 @@ import { getLabCards } from "../../sanity/lib/fetch";
 
 export const metadata = {
   title: "Experimental Web Design & Animation Demos",
-  description: "Explore my web development experiments, GSAP animations, and creative prototypes. A playground for testing new technologies and design concepts.",
+  description: "Explore my playground for testing new technologies and design concepts.",
   keywords: ["Web Experiments", "GSAP Animations", "Design Prototypes", "Frontend Experiments", "Creative Coding", "Web Animation Lab"],
   openGraph: {
-    title: "Lab | Wale-Durojaye Ayotomiwa",
+    title: "Lab | Ayotomcs",
     description: "Experimental web design and animation demos",
     url: "https://ayotomcs.me/lab",
     images: ["/opengraph.png"],
   },
 };
 
-// Revalidate every hour
+
 export const revalidate = 3600;
 
 export default async function page() {

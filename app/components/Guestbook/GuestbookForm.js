@@ -53,7 +53,7 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
           '--rotate': '-1deg',
         }}
       >
-        <div className="stamp-frame">
+        <div className="stamp-frame p-5">
           <div className="stamp-bg-solid"></div>
         </div>
         <div className="content-overlay">
@@ -244,7 +244,7 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
           right: auto;
           bottom: auto;
           margin: calc(var(--perforation-size) + 16px);
-          padding: 0 24px 10px 24px;
+          padding: 24px 24px 10px 24px;
           z-index: 4;
           display: flex;
           flex-direction: column;
