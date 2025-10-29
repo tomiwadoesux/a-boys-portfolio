@@ -18,32 +18,37 @@ async function sendEmailNotification(entry: any) {
   console.log('Email notification would be sent for entry:', entry._id);
 }
 
-// Function to trigger stamp generation in background
+// Function to trigger stamp generation in background with retry logic
 async function triggerStampGeneration(entryId: string, country: string) {
-  try {
-    // Call the stamp generation API endpoint
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
-    // Use fetch with no-wait pattern for background execution
+  const attemptStampGeneration = (attempt: number = 1) => {
+    console.log(`Attempting stamp generation for entry ${entryId} (attempt ${attempt}/5)`);
+
     fetch(`${baseUrl}/api/generate-stamp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ entryId, country }),
     }).catch(error => {
-      console.error('Background stamp generation failed:', error);
+      console.error(`Stamp generation attempt ${attempt} failed:`, error.message);
 
-      // Retry after 30 seconds if it fails
-      setTimeout(() => {
-        fetch(`${baseUrl}/api/generate-stamp`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ entryId, country }),
-        }).catch(retryError => {
-          console.error('Retry stamp generation failed:', retryError);
-        });
-      }, 30000);
+      // Exponential backoff: 30s, 60s, 120s, 240s, 480s (2-8 minutes total)
+      if (attempt < 5) {
+        const waitTime = Math.pow(2, attempt - 1) * 30000; // 30s * 2^(attempt-1)
+        const waitSeconds = waitTime / 1000;
+        console.log(`Retrying stamp generation in ${waitSeconds}s...`);
+
+        setTimeout(() => {
+          attemptStampGeneration(attempt + 1);
+        }, waitTime);
+      } else {
+        console.error(`Final stamp generation failure for entry ${entryId} after 5 attempts. Entry may need manual retry.`);
+      }
     });
+  };
 
+  try {
+    attemptStampGeneration(1);
     console.log('Stamp generation triggered for entry:', entryId);
   } catch (error) {
     console.error('Error triggering stamp generation:', error);
