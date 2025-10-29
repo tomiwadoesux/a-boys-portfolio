@@ -244,10 +244,10 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
           right: auto;
           bottom: auto;
           margin: calc(var(--perforation-size) + 16px);
+          padding: 0 24px 10px 24px;
           z-index: 4;
           display: flex;
           flex-direction: column;
-          padding-bottom: 10px;
         }
         .form-title {
           text-align: center;
@@ -454,7 +454,7 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
           }
           .form-content {
             margin: calc(var(--perforation-size) + 12px);
-            padding-bottom: 5px;
+            padding: 0 16px 5px 16px;
           }
           .form-title {
             font-size: 1.2rem;
@@ -505,6 +505,7 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
           }
           .form-content {
             margin: calc(var(--perforation-size) + 10px);
+            padding: 0 12px;
           }
           .form-title {
             font-size: 1.1rem;
