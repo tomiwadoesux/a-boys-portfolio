@@ -14,29 +14,104 @@ async function getVisitorLocation(request: NextRequest) {
 
     console.log('Detected IP:', ip);
 
-    // If localhost or unknown, return default with better labels
-    if (ip === 'unknown' || ip === '127.0.0.1' || ip.startsWith('192.168.') || ip.startsWith('10.')) {
-      return { city: 'Local', region: '', country: 'Development' };
+    // If localhost or unknown, try to use a public IP lookup service (even for local testing)
+    if (ip === 'unknown' || ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1' || ip.startsWith('192.168.') || ip.startsWith('10.') || ip.startsWith('fd')) {
+      console.log('Local/private IP detected, attempting public IP lookup...');
+      try {
+        // Try to get your public IP
+        const publicIpResponse = await fetch('https://api.ipify.org?format=json', {
+          signal: AbortSignal.timeout(5000)
+        });
+        if (publicIpResponse.ok) {
+          const { ip: publicIp } = await publicIpResponse.json();
+          console.log('Public IP detected:', publicIp);
+
+          // Try ip-api.com first for public IP
+          let locationResponse = await fetch(`https://ip-api.com/json/${publicIp}?fields=status,country,regionName,city`, {
+            signal: AbortSignal.timeout(5000)
+          });
+
+          if (locationResponse.ok) {
+            const data = await locationResponse.json();
+            console.log('Location data from ip-api.com for public IP:', data);
+
+            if (data.status === 'success') {
+              return {
+                city: data.city || 'Unknown City',
+                region: data.regionName || 'Unknown Region',
+                country: data.country || 'Unknown Country',
+              };
+            }
+          }
+
+          // Fallback to ipapi.co
+          console.log('ip-api.com failed for public IP, trying ipapi.co...');
+          locationResponse = await fetch(`https://ipapi.co/${publicIp}/json/`, {
+            signal: AbortSignal.timeout(5000)
+          });
+
+          if (locationResponse.ok) {
+            const data = await locationResponse.json();
+            console.log('Location data from ipapi.co for public IP:', data);
+
+            if (!data.error) {
+              return {
+                city: data.city || 'Unknown City',
+                region: data.region || data.region_code || 'Unknown Region',
+                country: data.country_name || 'Unknown Country',
+              };
+            }
+          }
+        }
+      } catch (publicIpError) {
+        console.error('Failed to get public IP or lookup location:', publicIpError);
+      }
+
+      // Fallback for local development - return a development marker
+      console.log('All geolocation services failed for local IP, using development fallback');
+      return { city: 'Local Dev', region: 'Testing', country: 'Development' };
     }
 
-    // Use ipapi.co for geolocation (free tier: 1000 requests/day)
-    const response = await fetch(`https://ipapi.co/${ip}/json/`);
+    // Try ip-api.com first (more reliable, generous free tier)
+    let response = await fetch(`https://ip-api.com/json/${ip}?fields=status,country,regionName,city`);
 
-    if (!response.ok) {
-      console.error('Failed to fetch location:', response.statusText);
-      return { city: 'Unknown', region: 'Unknown', country: 'Unknown' };
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Location data from ip-api.com:', data);
+
+      if (data.status === 'success') {
+        return {
+          city: data.city || 'Unknown City',
+          region: data.regionName || 'Unknown Region',
+          country: data.country || 'Unknown Country',
+        };
+      }
     }
 
-    const data = await response.json();
+    // Fallback to ipapi.co if ip-api.com fails
+    console.log('ip-api.com failed, trying ipapi.co...');
+    response = await fetch(`https://ipapi.co/${ip}/json/`, {
+      signal: AbortSignal.timeout(5000) // 5 second timeout
+    });
 
-    return {
-      city: data.city || 'Unknown',
-      region: data.region || 'Unknown',
-      country: data.country_name || 'Unknown',
-    };
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Location data from ipapi.co:', data);
+
+      if (!data.error) {
+        return {
+          city: data.city || 'Unknown City',
+          region: data.region || data.region_code || 'Unknown Region',
+          country: data.country_name || 'Unknown Country',
+        };
+      }
+    }
+
+    console.error('All geolocation services failed');
+    return { city: 'Internet', region: 'Worldwide', country: 'Worldwide' };
   } catch (error) {
     console.error('Error getting visitor location:', error);
-    return { city: 'Unknown', region: 'Unknown', country: 'Unknown' };
+    return { city: 'Internet', region: 'Worldwide', country: 'Worldwide' };
   }
 }
 
@@ -118,6 +193,7 @@ export async function POST(request: NextRequest) {
     console.log('First from country:', firstFromCountry);
 
     // Trigger stamp generation in background (non-blocking)
+    console.log('Triggering stamp generation with location:', { city: location.city, country: location.country });
     triggerStampGeneration(newEntry._id, location.city, location.country);
 
     // Send email notification (non-blocking)

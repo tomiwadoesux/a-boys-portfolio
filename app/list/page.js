@@ -12,7 +12,8 @@ export const metadata = {
     images: ["/opengraph.png"],
   },
 };
-export const revalidate = 3600;
+// Dynamic rendering for randomization on each visit
+export const revalidate = 0;
 
 export default function page() {
   return (

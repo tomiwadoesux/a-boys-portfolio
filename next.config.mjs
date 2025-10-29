@@ -51,12 +51,6 @@ const nextConfig = {
     ppr: false, // Set to true when ready for production
   },
 
-  // Turbopack configuration for Next.js 16
-  turbopack: {
-    resolveAlias: {
-      'gsap/all': 'gsap/index.js',
-    },
-  },
 
   // Custom HTTP headers for caching strategy
   headers: async () => {

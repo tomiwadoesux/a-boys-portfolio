@@ -7,6 +7,11 @@ const client = new InferenceClient(process.env.HF_TOKEN);
 
 // Regional stamp style variations
 const getStampStyleVariation = (country: string): string => {
+  // Handle empty or invalid country values
+  if (!country || country === 'unknown' || country === 'Unknown Country') {
+    return "with classic vintage postcard aesthetics and global travel motifs";
+  }
+
   const countryLower = country.toLowerCase();
 
   // Tropical regions
@@ -75,6 +80,15 @@ const getStampStyleVariation = (country: string): string => {
     ].some((c) => countryLower.includes(c))
   ) {
     return "with warm earthy tones, savanna colors, and traditional African patterns";
+  }
+
+  // Development/Local testing
+  if (
+    ["development", "local", "worldwide", "internet"].some((c) =>
+      countryLower.includes(c)
+    )
+  ) {
+    return "with classic vintage postcard aesthetics and international travel themes";
   }
 
   // Default

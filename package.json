@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p 3000",
+    "dev": "next dev -p 3000",
     "build": "next build",
     "build:static": "./build-static.sh",
     "start": "next start",
@@ -13,12 +13,12 @@
     "prerender:videos": "node scripts/build-prerender.js"
   },
   "dependencies": {
-    "@huggingface/inference": "^4.11.3",
+    "@huggingface/inference": "^4.13.0",
     "@sanity/image-url": "^1.2.0",
     "@sanity/vision": "^4.10.3",
     "dotenv": "^17.2.3",
     "gsap": "^3.13.0",
-    "next": "^16.0.0",
+    "next": "^15.1.0",
     "next-sanity": "^11.5.5",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
