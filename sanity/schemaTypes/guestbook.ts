@@ -18,22 +18,11 @@ export const guestbookType = defineType({
       validation: (Rule) => Rule.required().max(500),
     }),
     defineField({
-      name: 'city',
-      title: 'City',
-      type: 'string',
-      description: 'Auto-detected city of the visitor',
-    }),
-    defineField({
-      name: 'region',
-      title: 'Region',
-      type: 'string',
-      description: 'Auto-detected region/state of the visitor',
-    }),
-    defineField({
       name: 'country',
       title: 'Country',
       type: 'string',
-      description: 'Auto-detected country of the visitor',
+      description: 'Country entered by the visitor',
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'stampImage',

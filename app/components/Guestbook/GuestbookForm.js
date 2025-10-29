@@ -7,6 +7,7 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
     name: "",
     link: "",
     message: "",
+    country: "",
   });
 
   const handleChange = (e) => {
@@ -27,6 +28,7 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
       name: "",
       link: "",
       message: "",
+      country: "",
     });
   };
 
@@ -78,6 +80,22 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
               />
             </div>
             <div className="form-group half-width">
+              <label htmlFor="country" className="label">Country</label>
+              <input
+                type="text"
+                name="country"
+                id="country"
+                required
+                className="input"
+                placeholder="e.g., Nigeria, USA, Canada"
+                maxLength={50}
+                value={formData.country}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="form-row">
+            <div className="form-group">
               <label htmlFor="link" className="label">Link (optional)</label>
               <input
                 type="url"
