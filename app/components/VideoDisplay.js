@@ -39,7 +39,6 @@ export default function VideoDisplay({ video, isMobile = false, savedTimestamp =
       videoElement.addEventListener('canplay', handleCanPlay, { once: true });
       videoElement.addEventListener('loadeddata', handleLoadedData, { once: true });
       videoElement.addEventListener('timeupdate', handleTimeUpdate);
-      videoElement.load(); // Trigger load immediately
 
       return () => {
         videoElement.removeEventListener('canplay', handleCanPlay);
@@ -108,7 +107,7 @@ export default function VideoDisplay({ video, isMobile = false, savedTimestamp =
               loop
               muted
               playsInline
-              preload="yes"
+              preload="none"
             />
           </>
         ) : (
