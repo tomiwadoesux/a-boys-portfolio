@@ -136,17 +136,20 @@ const Body = memo(function Body({
                           className="text-sm md:text-[12px]  underline px- underline-offset-2 "
                         />
                       </a>
-                      <Link href="/lab" className="pl-3">
+                      <div className="group relative pl-3 opacity-50">
                         <ScrambleText
                           originalText="Lab"
                           targetText="Guestbook"
                           isScrambled={isScrambled}
                           hasInteracted={hasInteracted}
-                          className={`text-sm md:text-[12px] px- underline underline-offset-2 ${
-                            activePage === "/lab" ? "text-[#4447A9]" : ""
-                          }`}
+                          className={`text-sm md:text-[12px] px- underline underline-offset-2`}
                         />
-                      </Link>
+                        <div className="absolute bottom-full mb-2 hidden group-hover:block">
+                          <div className="bg-black text-white text-xs rounded py-1 px-2 text-nowrap">
+                            Coming Soon
+                          </div>
+                        </div>
+                      </div>
 
                       <Link href="/projects" scroll={true} className="pl-3">
                         <ScrambleText
@@ -274,17 +277,20 @@ const Body = memo(function Body({
                             className="text-sm md:text-[13px]  underline px- underline-offset-2 "
                           />
                         </a>
-                        <Link href="/lab" className="pl-4">
+                        <div className="group relative pl-4 opacity-50">
                           <ScrambleText
                             originalText="Lab"
                             targetText="Guestbook"
                             isScrambled={isScrambled}
                             hasInteracted={hasInteracted}
-                            className={`text-sm md:text-[13px] px- underline underline-offset-2 ${
-                              activePage === "/lab" ? "text-[#4447A9]" : ""
-                            }`}
+                            className={`text-sm md:text-[13px] px- underline underline-offset-2`}
                           />
-                        </Link>
+                          <div className="absolute bottom-full mb-2 hidden group-hover:block">
+                            <div className="bg-black text-white text-xs rounded py-1 px-2 text-nowrap">
+                              Coming Soon
+                            </div>
+                          </div>
+                        </div>
 
                         <Link href="/projects" scroll={true} className="pl-4 ">
                           <ScrambleText

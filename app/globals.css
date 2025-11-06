@@ -61,3 +61,13 @@ h2 {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+::selection {
+  background: #4447A9;
+  color: white;
+}
+
+::-moz-selection { /* Code for Firefox */
+  background: #4447A9;
+  color: white;
+}
