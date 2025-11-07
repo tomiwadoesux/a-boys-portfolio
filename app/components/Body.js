@@ -85,7 +85,8 @@ const Body = memo(function Body({
                           }`}
                         />
                       </Link>
-                      <a href="https://screens.ayotomcs.me" target="_blank" rel="noopener noreferrer" className="pl-3 ">
+
+                      <Link href="/screens" className="">
                         <ScrambleText
                           originalText="Resumé"
                           targetText="Screens"
@@ -95,7 +96,7 @@ const Body = memo(function Body({
                             activePage === "/screens" ? "text-[#4447A9]" : ""
                           }`}
                         />
-                      </a>
+                      </Link>
                       <Link href="/now" className="pl-3">
                         <ScrambleText
                           originalText="Contact"
@@ -186,7 +187,7 @@ const Body = memo(function Body({
                   </div>
                 </div>
               </div>
-              
+
               <svg
                 className="w-full h-px"
                 viewBox="0 0 100 1"
@@ -224,7 +225,7 @@ const Body = memo(function Body({
                             }`}
                           />
                         </Link>
-                        <a href="https://screens.ayotomcs.me" target="_blank" rel="noopener noreferrer" className="pl-4 ">
+                        <Link href="/screens" className="pl-4 ">
                           <ScrambleText
                             originalText="Resumé"
                             targetText="Screens"
@@ -234,7 +235,7 @@ const Body = memo(function Body({
                               activePage === "/screens" ? "text-[#4447A9]" : ""
                             }`}
                           />
-                        </a>
+                        </Link>
                         <Link href="/now" className="pl-4">
                           <ScrambleText
                             originalText="Contact"
@@ -303,7 +304,11 @@ const Body = memo(function Body({
                             }`}
                           />
                         </Link>
-                        <a href="#" onClick={handleContactClick} className="pl-4">
+                        <a
+                          href="#"
+                          onClick={handleContactClick}
+                          className="pl-4"
+                        >
                           <ScrambleText
                             originalText="Contact"
                             targetText="Now"
@@ -345,7 +350,6 @@ const Body = memo(function Body({
               </svg>
             </div>
           </div>
-
         </div>
       </div>
       <ContactModal

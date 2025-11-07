@@ -6,7 +6,6 @@ export interface NowData {
   _id: string
   date: string
   text: string
-  order: number
 }
 
 export interface ListData {

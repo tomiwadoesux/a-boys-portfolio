@@ -1,11 +1,10 @@
 import { groq } from 'next-sanity'
 
 // Query to fetch all "Now" entries in default order
-export const nowQuery = groq`*[_type == "now"] {
+export const nowQuery = groq`*[_type == "now"] | order(_createdAt desc) {
   _id,
   date,
-  text,
-  order
+  text
 }`
 
 // Query to fetch all projects ordered by display order

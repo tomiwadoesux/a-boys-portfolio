@@ -24,14 +24,16 @@ async function triggerStampGeneration(entryId: string, country: string) {
   // On Vercel, we can use relative URLs which work on the same server
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
-  const attemptStampGeneration = (attempt: number = 1) => {
+  const attemptStampGeneration = async (attempt: number = 1) => {
     console.log(`Attempting stamp generation for entry ${entryId} (attempt ${attempt}/5)`);
 
-    fetch(`${baseUrl}/api/generate-stamp`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ entryId, country }),
-    }).catch(error => {
+    try {
+      await fetch(`${baseUrl}/api/generate-stamp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entryId, country }),
+      });
+    } catch (error) {
       console.error(`Stamp generation attempt ${attempt} failed:`, error.message);
 
       // Exponential backoff: 30s, 60s, 120s, 240s, 480s (2-8 minutes total)
@@ -46,15 +48,11 @@ async function triggerStampGeneration(entryId: string, country: string) {
       } else {
         console.error(`Final stamp generation failure for entry ${entryId} after 5 attempts. Entry may need manual retry.`);
       }
-    });
+    }
   };
 
-  try {
-    attemptStampGeneration(1);
-    console.log('Stamp generation triggered for entry:', entryId);
-  } catch (error) {
-    console.error('Error triggering stamp generation:', error);
-  }
+  await attemptStampGeneration(1);
+  console.log('Stamp generation triggered for entry:', entryId);
 }
 
 export async function POST(request: NextRequest) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Image from "next/image";
 
 // Helper function to get or create a unique device ID
@@ -31,6 +31,22 @@ export default function GuestbookEntry({
   const [dominantColor, setDominantColor] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const imageRef = useRef(null);
+  const containerRef = useRef(null);
+  const [randomPosition, setRandomPosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    if (containerRef.current && imageRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const imageRect = imageRef.current.getBoundingClientRect();
+
+      const randomX = Math.random() * (containerRect.width - imageRect.width);
+      const randomY = Math.random() * (containerRect.height - imageRect.height);
+
+      setRandomPosition({ x: randomX, y: randomY });
+    }
+  }, [entryId]);
+
   const displayDate =
     date instanceof Date
       ? date.toLocaleDateString(undefined, {
@@ -48,42 +64,18 @@ export default function GuestbookEntry({
   const location =
     region && region !== "Unknown" ? `${region}, ${country}` : country;
 
-  // Generate random hue for each entry (but keep it consistent per entry)
+  // Generate random hue for each entry
   const hue = useMemo(() => {
-    // Use entryId to generate consistent hue for each entry
-    const hash =
-      entryId?.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) ||
-      0;
-    return 243; // Using #4447a9 hue
-  }, [entryId]);
+    return Math.floor(Math.random() * 360); // Random hue between 0 and 359
+  }, []);
 
-  // Random position for the stamp image
-  const imagePosition = useMemo(() => {
-    if (!entryId) return { top: "15%", left: "10%", rotate: 5 };
-    const hash = entryId
-      .split("")
-      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    // Random position anywhere on the card
-    const positions = [
-      { top: "12%", left: "8%", rotate: -8 },
-      { top: "15%", right: "10%", rotate: 12 },
-      { top: "45%", left: "5%", rotate: -15 },
-      { top: "50%", right: "8%", rotate: 10 },
-      { bottom: "40%", left: "12%", rotate: -12 },
-      { bottom: "35%", right: "15%", rotate: 8 },
-      { top: "25%", left: "50%", rotate: -5 },
-      { top: "60%", left: "55%", rotate: 15 },
-    ];
-    return positions[hash % positions.length];
-  }, [entryId]);
-
-  const randomRotate = useMemo(() => {
-    // Generate deterministic rotation based on entryId to avoid hydration mismatch
+  // Random initial rotation for the stamp image
+  const imageRotation = useMemo(() => {
     if (!entryId) return 0;
     const hash = entryId
       .split("")
       .reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return (hash % 30) / 10 - 1.5; // Returns value between -1.5 and 1.5
+    return (hash % 24) - 12; // -12 to 12 degrees
   }, [entryId]);
 
   // Extract dominant color from image
@@ -144,7 +136,7 @@ export default function GuestbookEntry({
         const hsl = rgbToHsl(r, g, b);
 
         // Lighten the color for background (increase lightness)
-        const lightHsl = `hsl(${hsl.h}, ${Math.min(hsl.s, 60)}%, ${Math.min(hsl.l + 35, 95)}%)`;
+        const lightHsl = `hsl(${hsl.h}, ${Math.min(hsl.s, 60)}%, ${Math.min(hsl.l + 50, 98)}%)`;
 
         setDominantColor(lightHsl);
       }
@@ -194,6 +186,7 @@ export default function GuestbookEntry({
   return (
     <>
       <div
+        ref={containerRef}
         className="guestbook-stamp entry-stamp"
         style={{
           "--hue": `${hue}`,
@@ -207,7 +200,7 @@ export default function GuestbookEntry({
           "--gold-accent": `hsl(45, 80%, 60%)`,
           "--postmark-color-fixed": `hsla(${hue}, 40%, 30%, 0.8)`,
           "--border-accent": "#4447a9",
-          "--rotate": `${randomRotate.toFixed(2)}deg`,
+          "--rotate": `0deg`,
         }}
       >
         <div className="stamp-frame">
@@ -221,18 +214,18 @@ export default function GuestbookEntry({
           <div className="corner bottom-right"></div>
         </div>
 
-        {/* Generated stamp image - smaller and randomly positioned */}
+        {/* Generated stamp image - smaller and draggable */}
         {stampImage?.asset ? (
           <div
+            ref={imageRef}
             className={`stamp-image-small ${isStamping ? "animate-stamp" : ""}`}
             style={{
-              top: imagePosition.top,
-              left: imagePosition.left,
-              right: imagePosition.right,
-              bottom: imagePosition.bottom,
-              transform: `rotate(${imagePosition.rotate}deg)`,
+              position: 'absolute',
+              transform: `translate(${randomPosition.x}px, ${randomPosition.y}px) rotate(${imageRotation}deg)`,
             }}
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              setIsModalOpen(true)
+            }}
           >
             <Image
               src={stampImage.asset.url}
@@ -298,7 +291,7 @@ export default function GuestbookEntry({
         </div>
 
         <div className="guestbook-content">
-          <div className="header-row">
+          <div className="header-row pl-5 pt-5">
             {link ? (
               <a
                 href={link}
@@ -331,10 +324,15 @@ export default function GuestbookEntry({
       </div>
 
       <style jsx>{`
+        .stamp-image-small.dragging {
+          transition: none;
+          cursor: grabbing;
+          z-index: 10;
+        }
+
         .guestbook-stamp.entry-stamp {
           --stamp-width: 350px;
           --perforation-size: 12px;
-          --inner-padding: 16px;
           position: relative;
           width: var(--stamp-width);
           aspect-ratio: 4 / 5;
@@ -480,11 +478,9 @@ export default function GuestbookEntry({
             transform 0.3s ease,
             opacity 0.3s ease;
           opacity: 0.45;
-          cursor: pointer;
         }
 
         .stamp-image-small:hover {
-          transform: scale(1.15) !important;
           opacity: 1;
           box-shadow:
             0 5px 15px rgba(0, 0, 0, 0.3),
@@ -660,13 +656,9 @@ export default function GuestbookEntry({
         }
 
         .message-container {
-          background-color: rgba(255, 255, 255, 0.4);
-          border-radius: 3px;
           padding: 10px 12px;
           margin-top: 4px;
           flex-grow: 1;
-          border: 1px solid rgba(0, 0, 0, 0.05);
-          box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.7);
           position: relative;
           overflow: hidden;
         }
@@ -678,12 +670,7 @@ export default function GuestbookEntry({
           left: 0;
           right: 0;
           height: 4px;
-          background: linear-gradient(
-            90deg,
-            transparent,
-            hsla(var(--hue), 70%, 80%, 0.3),
-            transparent
-          );
+        
         }
 
         .entry-message {

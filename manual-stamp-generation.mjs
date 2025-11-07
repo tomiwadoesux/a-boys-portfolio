@@ -1,20 +1,27 @@
-import { NextRequest, NextResponse } from "next/server";
-import { InferenceClient } from "@huggingface/inference";
-import { writeClient } from "../../../sanity/lib/client";
-import sharp from "sharp";
+import { createClient } from '@sanity/client';
+import { InferenceClient } from '@huggingface/inference';
+import sharp from 'sharp';
+import { config } from 'dotenv';
 
-const client = new InferenceClient(process.env.HF_TOKEN);
+config({ path: '.env.local' });
 
-// Regional stamp style variations
-const getStampStyleVariation = (country: string): string => {
-  // Handle empty or invalid country values
+const sanityClient = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+  useCdn: false,
+  apiVersion: '2025-10-17',
+  token: process.env.SANITY_API_TOKEN,
+});
+
+const inferenceClient = new InferenceClient(process.env.HF_TOKEN);
+
+const getStampStyleVariation = (country) => {
   if (!country || country === 'unknown' || country === 'Unknown Country') {
     return "with classic vintage postcard aesthetics and global travel motifs";
   }
 
   const countryLower = country.toLowerCase();
 
-  // Tropical regions
   if (
     [
       "jamaica",
@@ -34,7 +41,6 @@ const getStampStyleVariation = (country: string): string => {
     return "with vibrant tropical colors, palm trees, and ocean blues";
   }
 
-  // Nordic/Cold regions
   if (
     ["norway", "sweden", "finland", "iceland", "denmark", "greenland"].some(
       (c) => countryLower.includes(c)
@@ -43,7 +49,6 @@ const getStampStyleVariation = (country: string): string => {
     return "with cool arctic blues, snow-capped mountains, and northern lights motifs";
   }
 
-  // Middle Eastern
   if (
     [
       "saudi arabia",
@@ -58,7 +63,6 @@ const getStampStyleVariation = (country: string): string => {
     return "with warm desert tones, golden yellows, and intricate geometric patterns";
   }
 
-  // Asian
   if (
     ["japan", "china", "korea", "thailand", "vietnam", "indonesia"].some((c) =>
       countryLower.includes(c)
@@ -67,7 +71,6 @@ const getStampStyleVariation = (country: string): string => {
     return "with traditional Asian aesthetics, cherry blossoms or bamboo elements, and rich reds and golds";
   }
 
-  // African
   if (
     [
       "nigeria",
@@ -82,7 +85,6 @@ const getStampStyleVariation = (country: string): string => {
     return "with warm earthy tones, savanna colors, and traditional African patterns";
   }
 
-  // Development/Local testing
   if (
     ["development", "local", "worldwide", "internet"].some((c) =>
       countryLower.includes(c)
@@ -91,28 +93,15 @@ const getStampStyleVariation = (country: string): string => {
     return "with classic vintage postcard aesthetics and international travel themes";
   }
 
-  // Default
   return "with classic vintage postcard aesthetics";
 };
 
-export async function POST(request: NextRequest) {
+async function generateStamp(entry) {
   try {
-    const { entryId, country } = await request.json();
+    console.log(`Generating stamp for ${entry.name} from ${entry.city}, ${entry.country}`);
 
-    if (!entryId || !country) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
-    }
-
-    console.log(`Generating stamp for ${country}`);
-
-    // Get regional style variation
-    const styleVariation = getStampStyleVariation(country);
-
-    // Generate the stamp image with location-specific prompt
-    const location = country;
+    const styleVariation = getStampStyleVariation(entry.country);
+    const location = entry.country;
     const artStyles = [
       "1930s WPA travel poster style",
       "1940s-50s mid-century modern illustration",
@@ -149,7 +138,6 @@ export async function POST(request: NextRequest) {
       "with multiple overlapping postmarks",
     ];
 
-    // Randomly select from each array
     const selectedArtStyle =
       artStyles[Math.floor(Math.random() * artStyles.length)];
     const selectedWeathering =
@@ -158,51 +146,45 @@ export async function POST(request: NextRequest) {
       perspectives[Math.floor(Math.random() * perspectives.length)];
     const selectedPostmark =
       postmarkStyles[Math.floor(Math.random() * postmarkStyles.length)];
-    const year = Math.floor(Math.random() * (1970 - 1920) + 1920); // Random year between 1920-1970
+    const year = Math.floor(Math.random() * (1970 - 1920) + 1920);
 
     const prompt = `A low-quality vintage postage stamp, ${selectedPerspective}. ${selectedArtStyle} cartoon illustration of the main airport in ${location}. The stamp has perforated/serrated edges with visible paper texture and printing imperfections. ${selectedWeathering}. ${selectedPostmark}. Warm nostalgic color palette with faded blues, yellows, ochres, and earthy burnt sienna tones. Off-register color printing with visible halftone dots and color bleeding. Deliberately crude and simple illustration with wobbly hand-drawn lines, like a cheap tourist souvenir stamp from a local print shop. Simplified geometric shapes for the landmark, minimal detail, flat color fills with no gradients. Non-photorealistic cartoon style with thick black outlines. Paper shows age spots, minor creases, and gum residue on edges. The overall composition is slightly off-center as if hastily printed. Low production value, amateurish design quality ${styleVariation}. No text, no numbers, no writing visible anywhere on the stamp.`;
-     console.log("Generating image with prompt:", prompt);
+    console.log("Generating image with prompt:", prompt);
 
-    const imageBlob = await client.textToImage({
+    const imageBlob = await inferenceClient.textToImage({
       provider: "nscale",
       model: "stabilityai/stable-diffusion-xl-base-1.0",
       inputs: prompt,
       parameters: {
-        num_inference_steps: 5, // Low steps for lower quality/faster generation
+        num_inference_steps: 5,
         guidance_scale: 7.5,
       },
     });
 
-    // Convert blob to buffer
     const arrayBuffer = await imageBlob.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Compress the image using sharp
-    // Convert to WebP for better compression (or keep as JPEG/PNG with compression)
     const compressedBuffer = await sharp(buffer)
       .resize(800, 800, {
-        // Resize to max 800x800 (maintain aspect ratio)
         fit: "inside",
         withoutEnlargement: true,
       })
-      .webp({ quality: 80 }) // Convert to WebP with 80% quality
+      .webp({ quality: 80 })
       .toBuffer();
 
     console.log(
       `Original size: ${(buffer.length / 1024 / 1024).toFixed(2)}MB, Compressed size: ${(compressedBuffer.length / 1024 / 1024).toFixed(2)}MB`
     );
 
-    // Upload to Sanity
-    const asset = await writeClient.assets.upload("image", compressedBuffer, {
-      filename: `stamp-${entryId}-${Date.now()}.webp`,
+    const asset = await sanityClient.assets.upload("image", compressedBuffer, {
+      filename: `stamp-${entry._id}-${Date.now()}.webp`,
       contentType: "image/webp",
     });
 
     console.log("Uploaded stamp to Sanity:", asset._id);
 
-    // Update the guestbook entry with the stamp image
-    await writeClient
-      .patch(entryId)
+    await sanityClient
+      .patch(entry._id)
       .set({
         stampImage: {
           _type: "image",
@@ -216,33 +198,43 @@ export async function POST(request: NextRequest) {
       .commit();
 
     console.log("Successfully updated entry with stamp");
-
-    return NextResponse.json({
-      success: true,
-      assetId: asset._id,
-    });
   } catch (error) {
     console.error("Error generating stamp:", error);
-
-    // If stamp generation fails, update the entry to show it's no longer generating
-    const { entryId } = await request.json();
-    if (entryId) {
-      try {
-        await writeClient
-          .patch(entryId)
-          .set({ stampGenerating: false })
-          .commit();
-      } catch (updateError) {
-        console.error("Failed to update entry after error:", updateError);
-      }
+    try {
+      await sanityClient
+        .patch(entry._id)
+        .set({ stampGenerating: false })
+        .commit();
+    } catch (updateError) {
+      console.error("Failed to update entry after error:", updateError);
     }
-
-    return NextResponse.json(
-      {
-        error: "Failed to generate stamp",
-        details: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 500 }
-    );
   }
 }
+
+async function generateStampsForMissing() {
+  try {
+    console.log('Fetching guestbook entries without a stamp...\n');
+
+    const entries = await sanityClient.fetch(
+      `*[_type == "guestbook" && approved == true && !defined(stampImage)] {
+        _id,
+        name,
+        city,
+        region,
+        country,
+        date
+      }`
+    );
+
+    console.log(`Found ${entries.length} entries without a stamp.\n`);
+
+    for (const entry of entries) {
+      await generateStamp(entry);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+generateStampsForMissing();

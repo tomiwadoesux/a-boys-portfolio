@@ -19,35 +19,15 @@ export const nowType = defineType({
       validation: (Rule) => Rule.required(),
       description: 'What you\'re doing or thinking about right now',
     }),
-    defineField({
-      name: 'order',
-      title: 'Display Order',
-      type: 'number',
-      description: 'Order in which this entry appears (lower numbers appear first)',
-      validation: (Rule) => Rule.required().min(0),
-    }),
-  ],
-  orderings: [
-    {
-      title: 'Order, Ascending',
-      name: 'orderAsc',
-      by: [{ field: 'order', direction: 'asc' }],
-    },
-    {
-      title: 'Order, Descending',
-      name: 'orderDesc',
-      by: [{ field: 'order', direction: 'desc' }],
-    },
   ],
   preview: {
     select: {
       title: 'date',
       subtitle: 'text',
-      order: 'order',
     },
-    prepare({ title, subtitle, order }) {
+    prepare({ title, subtitle }) {
       return {
-        title: `${order}. ${title}`,
+        title: title,
         subtitle: subtitle?.substring(0, 60) + (subtitle?.length > 60 ? '...' : ''),
       }
     },

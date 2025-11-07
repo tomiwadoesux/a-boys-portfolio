@@ -3,18 +3,16 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import VideoSidebar from "./VideoSidebar";
 import VideoDisplay from "./VideoDisplay";
-import { getCachedVideoUrl } from "../utils/videoCache";
 
 export default function Screens({ screens = [] }) {
   const [videoList, setVideoList] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTabletOrMobile, setIsTabletOrMobile] = useState(false);
   const [isPhoneOnly, setIsPhoneOnly] = useState(false);
-  const displayRef = useRef();
   const containerRef = useRef();
-  const scrollAccumulator = useRef(0);
-  const scrollThreshold = 50; // Pixels to scroll before changing video - lower for smoother feel
-  const videoTimestamps = useRef({}); // Store playback timestamps for each video
+  const videoTimestamps = useRef({});
+  const wheelTimeout = useRef(null);
+  const isTransitioning = useRef(false);
 
   // Memoize original video list
   const originalVideoList = useMemo(() => screens.length > 0 ? screens : [], [screens]);
@@ -26,7 +24,6 @@ export default function Screens({ screens = [] }) {
       return;
     }
 
-    // Fisher-Yates shuffle algorithm
     const shuffled = [...originalVideoList];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -35,9 +32,7 @@ export default function Screens({ screens = [] }) {
     setVideoList(shuffled);
   }, [originalVideoList]);
 
-  // Check device size on mount and on resize
-  // lg breakpoint is 1024px (tablet and up gets desktop videos)
-  // sm breakpoint is 640px (phone only)
+  // Check device size
   useEffect(() => {
     const checkSize = () => {
       setIsTabletOrMobile(window.innerWidth < 1024);
@@ -48,58 +43,48 @@ export default function Screens({ screens = [] }) {
     return () => window.removeEventListener("resize", checkSize);
   }, []);
 
-  // Preload all videos on mount
-  useEffect(() => {
-    if (videoList.length === 0) return;
-
-    videoList.forEach((video) => {
-      // Preload desktop video
-      if (video.desktopVideo) {
-        const videoUrl = getCachedVideoUrl(video.desktopVideo, video._id, 'desktop') || video.desktopVideo;
-        const videoElement = document.createElement('video');
-        videoElement.src = videoUrl;
-        videoElement.preload = 'auto';
-      }
-
-      // Preload mobile video
-      if (video.mobileVideo) {
-        const videoUrl = getCachedVideoUrl(video.mobileVideo, video._id, 'mobile') || video.mobileVideo;
-        const videoElement = document.createElement('video');
-        videoElement.src = videoUrl;
-        videoElement.preload = 'auto';
-      }
-    });
-  }, [videoList]);
-
-  // Handle continuous smooth scroll to navigate through videos (desktop only)
+  // Simple, smooth wheel handling with debouncing
   useEffect(() => {
     if (videoList.length === 0 || isTabletOrMobile) return;
 
     const handleWheel = (e) => {
-      // Prevent default scroll behavior on the entire page
       e.preventDefault();
+      
+      // Prevent rapid scrolling during transitions
+      if (isTransitioning.current) return;
 
-      // Accumulate scroll delta for smooth continuous scrolling
-      scrollAccumulator.current += e.deltaY;
-
-      // Check if we've scrolled enough to change video
-      if (scrollAccumulator.current >= scrollThreshold) {
-        // Scroll down to next video - use raw increment for infinite scroll
-        setActiveIndex((prev) => prev + 1);
-        scrollAccumulator.current = 0;
-      } else if (scrollAccumulator.current <= -scrollThreshold) {
-        // Scroll up to previous video - use raw decrement for infinite scroll
-        setActiveIndex((prev) => prev - 1);
-        scrollAccumulator.current = 0;
+      // Clear existing timeout
+      if (wheelTimeout.current) {
+        clearTimeout(wheelTimeout.current);
       }
+
+      // Debounce: only change video after user stops scrolling for 100ms
+      wheelTimeout.current = setTimeout(() => {
+        if (Math.abs(e.deltaY) > 10) {
+          isTransitioning.current = true;
+          
+          if (e.deltaY > 0) {
+            setActiveIndex((prev) => prev + 1);
+          } else {
+            setActiveIndex((prev) => prev - 1);
+          }
+
+          // Allow next transition after 600ms
+          setTimeout(() => {
+            isTransitioning.current = false;
+          }, 600);
+        }
+      }, 100);
     };
 
-    // Attach to the scroll container to capture all scroll events on this page
     const scrollContainer = document.getElementById('main-scroll-container');
     if (scrollContainer) {
       scrollContainer.addEventListener("wheel", handleWheel, { passive: false });
       return () => {
         scrollContainer.removeEventListener("wheel", handleWheel);
+        if (wheelTimeout.current) {
+          clearTimeout(wheelTimeout.current);
+        }
       };
     }
   }, [videoList.length, isTabletOrMobile]);
@@ -129,7 +114,7 @@ export default function Screens({ screens = [] }) {
 
   return (
     <div className="w-full h-full overflow-hidden flex flex-col lg:flex-row">
-      {/* Desktop (lg and up): Fixed left sidebar */}
+      {/* Desktop: Fixed left sidebar */}
       <div className="hidden lg:block fixed top-1/2 left-7 -translate-y-1/2 z-10">
         <VideoSidebar
           videos={videoList}
@@ -139,13 +124,14 @@ export default function Screens({ screens = [] }) {
         />
       </div>
 
-      {/* Desktop (lg and up): Main content area */}
+      {/* Desktop: Main content area with simple fade transition */}
       <div
         ref={containerRef}
         className="hidden lg:flex overflow-hidden px-7 md:px-20 lg:px-56 items-start lg:pt-3 w-full"
       >
-        <div className="flex-1 overflow-hidden w-full h-full" ref={displayRef}>
+        <div className="flex-1 overflow-hidden w-full h-full">
           <VideoDisplay
+            key={actualVideoIndex}
             video={videoList[actualVideoIndex]}
             isMobile={false}
             savedTimestamp={savedTimestamp}
@@ -154,15 +140,14 @@ export default function Screens({ screens = [] }) {
         </div>
       </div>
 
-      {/* Mobile/Tablet: Full screen layout with preview and carousel */}
+      {/* Mobile/Tablet: Full screen layout */}
       <div className="lg:hidden w-full h-full flex flex-col overflow-hidden">
-        {/* Video Preview - Top section (60vh height) */}
         <div
           ref={containerRef}
           className="flex-shrink-0 w-full overflow-hidden px-7 md:px-20 lg:px-56 pt-4"
           style={{ height: 'auto' }}
         >
-          <div className="w-full" ref={displayRef}>
+          <div className="w-full">
             <VideoDisplay
               video={videoList[actualVideoIndex]}
               isMobile={isPhoneOnly}
@@ -172,7 +157,6 @@ export default function Screens({ screens = [] }) {
           </div>
         </div>
 
-        {/* Horizontal Carousel - Bottom section */}
         <div className="w-full flex-1 px-4 py-4 border-t border-gray-200 overflow-hidden flex">
           <VideoSidebar
             videos={videoList}

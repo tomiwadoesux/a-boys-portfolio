@@ -8,7 +8,7 @@ import GsapInitializer from "./components/GsapInitializer";
 import NavigationPauseWrapper from "./components/NavigationPauseWrapper";
 import SmoothScroll from "./components/SmoothScroll";
 import SchemaMarkup from "./components/SchemaMarkup";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,7 +49,7 @@ export default function RootLayout({ children }) {
         style={{ backgroundColor: 'var(--foreground)' }}
       >
         <GsapInitializer />
-        {/* <SmoothScroll /> */}
+        <SmoothScroll />
         <NavigationPauseWrapper />
         <DescriptionProvider>
           {/* Rounded border frame */}

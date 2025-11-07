@@ -10,12 +10,9 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
   const itemRefs = useRef([]);
   const isScrollingRef = useRef(false);
   const isDraggingRef = useRef(false);
-  const startXRef = useRef(0);
-  const lastXRef = useRef(0);
-  const lastTimeRef = useRef(0);
   const [sortedVideos, setSortedVideos] = useState([]);
+  const [visibleVideos, setVisibleVideos] = useState(new Set());
 
-  // Use carousel picker for mobile/tablet, vertical scroll for desktop
   const useCarouselPicker = isMobile;
 
   // Sort videos by file size (smallest first)
@@ -25,7 +22,6 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
       return;
     }
 
-    // Create a copy and sort by file size (smallest first)
     const sorted = [...videos].sort((a, b) => {
       const sizeA = Math.min(
         a.desktopVideoSize || Infinity,
@@ -49,7 +45,35 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
 
   const displayIndex = activeIndex;
 
-  // iOS Picker Carousel: Smooth snapping with drag detection
+  // IntersectionObserver for lazy loading sidebar videos
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.dataset.index);
+            setVisibleVideos((prev) => new Set([...prev, index]));
+          }
+        });
+      },
+      {
+        root: sidebarRef.current,
+        rootMargin: "100px",
+        threshold: 0.1
+      }
+    );
+
+    itemRefs.current.forEach((item, index) => {
+      if (item) {
+        item.dataset.index = index;
+        observer.observe(item);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, [extendedVideos.length]);
+
+  // Carousel drag handling for mobile
   useEffect(() => {
     if (!useCarouselPicker || !sidebarRef.current) return;
 
@@ -64,21 +88,13 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
       isScrollingRef.current = true;
       startX = e.clientX || e.touches?.[0]?.clientX || 0;
       startScrollLeft = sidebar.scrollLeft;
-      startXRef.current = startX;
-      lastXRef.current = startX;
-      lastTimeRef.current = Date.now();
     };
 
     const handleMouseMove = (e) => {
       if (!isDragging) return;
-
       const currentX = e.clientX || e.touches?.[0]?.clientX || 0;
       const diff = startX - currentX;
-
-      // Update scroll position while dragging
       sidebar.scrollLeft = startScrollLeft + diff;
-
-      // Update display index in real-time while scrolling
       updateDisplayFromScroll();
     };
 
@@ -86,8 +102,6 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
       if (!isDragging) return;
       isDragging = false;
       isDraggingRef.current = false;
-
-      // Snap to nearest item
       snapToNearestItem();
     };
 
@@ -96,7 +110,6 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
       const sidebarWidth = sidebar.offsetWidth;
       const centerX = scrollLeft + sidebarWidth / 2;
 
-      // Find which item is closest to center
       let closestIndex = 0;
       let closestDistance = Infinity;
 
@@ -111,7 +124,6 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
         }
       });
 
-      // Update active index immediately
       const actualIndex = closestIndex % sortedVideos.length;
       setActiveIndex(actualIndex);
     };
@@ -119,11 +131,8 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
     const snapToNearestItem = () => {
       const scrollLeft = sidebar.scrollLeft;
       const sidebarWidth = sidebar.offsetWidth;
-
-      // Find center position of sidebar
       const centerX = scrollLeft + sidebarWidth / 2;
 
-      // Find which item is closest to center
       let closestIndex = 0;
       let closestDistance = Infinity;
 
@@ -138,7 +147,6 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
         }
       });
 
-      // Snap to center of that item
       const targetItem = itemRefs.current[closestIndex];
       if (targetItem) {
         const targetLeft = targetItem.offsetLeft + targetItem.offsetWidth / 2 - sidebarWidth / 2;
@@ -149,7 +157,6 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
           ease: "power2.out",
           onComplete: () => {
             isScrollingRef.current = false;
-            // Update active index to the snapped item
             const actualIndex = closestIndex % sortedVideos.length;
             setActiveIndex(actualIndex);
           }
@@ -161,13 +168,9 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
     sidebar.addEventListener('mousemove', handleMouseMove, { passive: true });
     sidebar.addEventListener('mouseup', handleMouseUp, { passive: true });
     sidebar.addEventListener('mouseleave', handleMouseUp, { passive: true });
-
-    // Touch events for mobile
     sidebar.addEventListener('touchstart', handleMouseDown, { passive: true });
     sidebar.addEventListener('touchmove', handleMouseMove, { passive: true });
     sidebar.addEventListener('touchend', handleMouseUp, { passive: true });
-
-    // Scroll event for real-time display update
     sidebar.addEventListener('scroll', updateDisplayFromScroll, { passive: true });
 
     return () => {
@@ -182,7 +185,7 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
     };
   }, [useCarouselPicker, sortedVideos.length, setActiveIndex]);
 
-  // Auto-scroll to active video in sidebar
+  // Auto-scroll to active video
   useEffect(() => {
     if (sidebarRef.current && sortedVideos.length > 0) {
       const wrappedIndex = displayIndex % extendedVideos.length;
@@ -192,7 +195,6 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
         const sidebar = sidebarRef.current;
 
         if (useCarouselPicker) {
-          // Horizontal scroll for mobile/tablet - center active item
           const itemLeft = activeItem.offsetLeft;
           const itemWidth = activeItem.offsetWidth;
           const sidebarWidth = sidebar.offsetWidth;
@@ -210,7 +212,6 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
             });
           }
         } else {
-          // Vertical scroll for desktop
           const itemTop = activeItem.offsetTop;
           const itemHeight = activeItem.offsetHeight;
           const sidebarHeight = sidebar.offsetHeight;
@@ -242,14 +243,9 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
         }
       >
         {extendedVideos.map((vid, idx) => {
-          // Get video source
-          const rawVideoUrl = vid.desktopVideo || vid.mobileVideo;
-          const videoType = vid.desktopVideo ? 'desktop' : 'mobile';
-          const videoSrc = getCachedVideoUrl(rawVideoUrl, vid._id, videoType) || rawVideoUrl;
           const originalIndex = idx % sortedVideos.length;
           const isActive = (displayIndex % extendedVideos.length) === idx;
-
-          // Get placeholder image (desktop screenshot preferred for sidebar)
+          const isVideoVisible = visibleVideos.has(idx);
           const placeholderImage = vid.desktopImage || vid.mobileImage;
 
           return (
@@ -271,33 +267,17 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
                 }`}
               onClick={() => setActiveIndex(originalIndex)}
             >
-              {videoSrc ? (
-                <>
-                  {/* Desktop screenshot placeholder - shown while video loads */}
-                  {placeholderImage && (
-                    <div className="absolute inset-0 w-full h-full z-5">
-                      <Image
-                        src={placeholderImage}
-                        alt={vid.alt || vid.title || "Video preview"}
-                        fill
-                        className="object-cover"
-                        quality={75}
-                        priority={isActive}
-                        sizes="(max-width: 768px) 96px, 160px"
-                      />
-                    </div>
-                  )}
-
-                  {/* Video element - loads after placeholder */}
-                  <video
-                    src={videoSrc}
-                    className="w-full h-full object-cover relative z-10"
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                  />
-                </>
+              {/* Only show placeholder images for sidebar - no videos */}
+              {placeholderImage ? (
+                <Image
+                  src={placeholderImage}
+                  alt={vid.alt || vid.title || "Video preview"}
+                  fill
+                  className="object-cover"
+                  quality={60}
+                  loading={isVideoVisible ? "eager" : "lazy"}
+                  sizes="(max-width: 768px) 96px, 160px"
+                />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-xs text-gray-500">
                   {vid.title || vid.name || "No preview"}
@@ -310,11 +290,11 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
 
       <style jsx>{`
         .scrollbar-hide {
-          scrollbar-width: none; /* Firefox */
-          -ms-overflow-style: none; /* IE and Edge */
+          scrollbar-width: none;
+          -ms-overflow-style: none;
         }
         .scrollbar-hide::-webkit-scrollbar {
-          display: none; /* Chrome, Safari, Opera */
+          display: none;
         }
         .scroll-smooth {
           scroll-behavior: smooth;
