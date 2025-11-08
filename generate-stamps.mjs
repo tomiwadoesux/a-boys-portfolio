@@ -29,7 +29,7 @@ async function generateStamps() {
       console.log(`Generating stamp for ${entry.name} from ${entry.city}, ${entry.country}`);
 
       try {
-        const response = await fetch('https://ayotomcs.me/api/generate-stamp', {
+        const response = await fetch('https://ayotomc/hHmms.me/api/generate-stamp/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -41,10 +41,13 @@ async function generateStamps() {
         });
 
         if (response.ok) {
-          console.log(`  Successfully generated stamp for ${entry.name}`);
+          const result = await response.json();
+          console.log(`  Successfully generated stamp for ${entry.name}`, result);
         } else {
-          const error = await response.json();
-          console.error(`  Failed to generate stamp for ${entry.name}:`, error);
+          const errorText = await response.text();
+          console.error(`  Failed to generate stamp for ${entry.name}:`);
+          console.error(`  Status: ${response.status}`);
+          console.error(`  Response: ${errorText}`);
         }
       } catch (error) {
         console.error(`  Error generating stamp for ${entry.name}:`, error.message);
