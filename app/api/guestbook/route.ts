@@ -26,7 +26,8 @@ async function triggerStampGeneration(entryId: string, country:string) {
     console.log(`Attempting stamp generation for entry ${entryId} (attempt ${attempt}/5)`);
 
     try {
-      const response = await fetch(`/api/generate-stamp`, {
+      const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
+      const response = await fetch(`${baseUrl}/api/generate-stamp/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ entryId, country }),

@@ -104,6 +104,7 @@ export default function GuestbookClient({ initialEntries = [] }) {
             currentPage={currentPage}
             hasNextPage={currentPage < totalPages}
             hasPrevPage={currentPage > 1}
+            onPageChange={setCurrentPage}
           />
         )}
       </div>

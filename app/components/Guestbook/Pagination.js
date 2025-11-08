@@ -32,39 +32,31 @@ const ArrowRightIcon = ({ size = 24 }) => (
   </svg>
 );
 
-export default function Pagination({ currentPage, hasNextPage, hasPrevPage }) {
-  const baseUrl = "/guestbook";
-
+export default function Pagination({ currentPage, hasNextPage, hasPrevPage, onPageChange }) {
   return (
     <>
       <nav className="pagination-simple" aria-label="Pagination">
-        {hasPrevPage ? (
-          <Link
-            href={`${baseUrl}?page=${currentPage - 1}`}
-            className="pagination-arrow prev"
-            aria-label="Previous Page"
-            title="Previous Page"
-          >
-            <ArrowLeftIcon size={24} />
-          </Link>
-        ) : (
-          <div className="placeholder-arrow" aria-hidden="true" />
-        )}
+        <button
+          onClick={() => onPageChange(currentPage - 1)}
+          className="pagination-arrow prev"
+          disabled={!hasPrevPage}
+          aria-label="Previous Page"
+          title="Previous Page"
+        >
+          <ArrowLeftIcon size={24} />
+        </button>
 
         <span className="page-indicator">Page {currentPage}</span>
 
-        {hasNextPage ? (
-          <Link
-            href={`${baseUrl}?page=${currentPage + 1}`}
-            className="pagination-arrow next"
-            aria-label="Next Page"
-            title="Next Page"
-          >
-            <ArrowRightIcon size={24} />
-          </Link>
-        ) : (
-          <div className="placeholder-arrow" aria-hidden="true" />
-        )}
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          className="pagination-arrow next"
+          disabled={!hasNextPage}
+          aria-label="Next Page"
+          title="Next Page"
+        >
+          <ArrowRightIcon size={24} />
+        </button>
       </nav>
 
       <style jsx>{`
