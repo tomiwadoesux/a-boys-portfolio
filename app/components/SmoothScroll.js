@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import LocomotiveScroll from 'locomotive-scroll';
 
 export default function SmoothScroll() {
   const pathname = usePathname();
@@ -15,33 +14,35 @@ export default function SmoothScroll() {
       return;
     }
 
-    const scroll = new LocomotiveScroll({
-      el: scrollEl,
-      smooth: true,
-      multiplier: 1,
-      class: 'is-loaded',
+    import('locomotive-scroll').then((locomotiveModule) => {
+      const LocomotiveScroll = locomotiveModule.default;
+      const scroll = new LocomotiveScroll({
+        el: scrollEl,
+        smooth: true,
+        multiplier: 1,
+        class: 'is-loaded',
+      });
+
+      // Refresh scroll on route changes
+      const handleRouteChange = () => {
+        if (scroll) {
+          scroll.update();
+        }
+      };
+
+      handleRouteChange(); // Initial update
+
+      // Listen for Next.js route changes
+      const observer = new MutationObserver(handleRouteChange);
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      return () => {
+        if (scroll) {
+          scroll.destroy();
+        }
+        observer.disconnect();
+      };
     });
-
-    // Refresh scroll on route changes
-    const handleRouteChange = () => {
-      if (scroll) {
-        scroll.update();
-      }
-    };
-
-    handleRouteChange(); // Initial update
-
-    // Listen for Next.js route changes
-    const observer = new MutationObserver(handleRouteChange);
-    observer.observe(document.body, { childList: true, subtree: true });
-
-
-    return () => {
-      if (scroll) {
-        scroll.destroy();
-      }
-      observer.disconnect();
-    };
   }, [pathname]);
 
   return null;

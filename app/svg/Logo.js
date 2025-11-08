@@ -50,11 +50,13 @@ export default function Logo() {
       trailWrapper.style.zIndex = "10000";
       trailWrapper.style.width = `${rect.width}px`;
       trailWrapper.style.height = `${rect.height}px`;
+      trailWrapper.style.transformOrigin = "center center";
 
       // Style the cloned SVG
       trail.style.width = "100%";
       trail.style.height = "100%";
       trail.style.display = "block";
+      trail.style.transformOrigin = "center center";
 
       const paths = trail.querySelectorAll("path");
       paths.forEach((path) => {

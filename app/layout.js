@@ -6,7 +6,7 @@ import Headd from "./components/Headd";
 import Socials from "./components/Socials";
 import GsapInitializer from "./components/GsapInitializer";
 import NavigationPauseWrapper from "./components/NavigationPauseWrapper";
-import SmoothScroll from "./components/SmoothScroll";
+import SmoothScrollWrapper from "./components/SmoothScrollWrapper";
 import SchemaMarkup from "./components/SchemaMarkup";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -49,7 +49,7 @@ export default function RootLayout({ children }) {
         style={{ backgroundColor: 'var(--foreground)' }}
       >
         <GsapInitializer />
-        <SmoothScroll />
+        {/* <SmoothScrollWrapper /> */}
         <NavigationPauseWrapper />
         <DescriptionProvider>
           {/* Rounded border frame */}

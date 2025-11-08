@@ -96,8 +96,12 @@ const getStampStyleVariation = (country: string): string => {
 };
 
 export async function POST(request: NextRequest) {
+  let entryId: string | null = null;
+
   try {
-    const { entryId, country } = await request.json();
+    const body = await request.json();
+    entryId = body.entryId;
+    const { country } = body;
 
     if (!entryId || !country) {
       return NextResponse.json(
@@ -105,7 +109,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
+    
     console.log(`Generating stamp for ${country}`);
 
     // Get regional style variation
@@ -225,7 +229,6 @@ export async function POST(request: NextRequest) {
     console.error("Error generating stamp:", error);
 
     // If stamp generation fails, update the entry to show it's no longer generating
-    const { entryId } = await request.json();
     if (entryId) {
       try {
         await writeClient
