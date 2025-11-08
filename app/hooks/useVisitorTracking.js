@@ -23,16 +23,17 @@ export function useVisitorTracking() {
         }
 
         // Create a simple hash of IP for privacy
-        const ipHash = data.ip
-          ? await crypto.subtle
-              .digest("SHA-256", new TextEncoder().encode(data.ip))
-              .then((hash) =>
-                Array.from(new Uint8Array(hash))
-                  .map((b) => b.toString(16).padStart(2, "0"))
-                  .join("")
-                  .substring(0, 16)
-              )
-          : undefined;
+        const ipHash =
+          data.ip && window.crypto && window.crypto.subtle
+            ? await crypto.subtle
+                .digest("SHA-256", new TextEncoder().encode(data.ip))
+                .then((hash) =>
+                  Array.from(new Uint8Array(hash))
+                    .map((b) => b.toString(16).padStart(2, "0"))
+                    .join("")
+                    .substring(0, 16)
+                )
+            : undefined;
 
         // Send to Sanity
         await writeClient.create({

@@ -22,13 +22,11 @@ async function sendEmailNotification(entry: any) {
 async function triggerStampGeneration(entryId: string, country:string) {
   // Use the configured base URL or detect from headers
   // On Vercel, we can use relative URLs which work on the same server
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-
   const attemptStampGeneration = async (attempt: number = 1) => {
     console.log(`Attempting stamp generation for entry ${entryId} (attempt ${attempt}/5)`);
 
     try {
-      const response = await fetch(`${baseUrl}/api/generate-stamp`, {
+      const response = await fetch(`/api/generate-stamp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ entryId, country }),

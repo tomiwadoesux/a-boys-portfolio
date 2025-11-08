@@ -96,14 +96,13 @@ const getStampStyleVariation = (country: string): string => {
 };
 
 export async function POST(request: NextRequest) {
-  let entryId: string | null = null;
+  const body = await request.json();
+  const { entryId, country } = body;
 
   try {
-    const body = await request.json();
-    entryId = body.entryId;
-    const { country } = body;
-
     if (!entryId || !country) {
+      // Log the received body for easier debugging of malformed requests
+      console.error("Missing required fields in request body:", body);
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
