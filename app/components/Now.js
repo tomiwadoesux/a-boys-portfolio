@@ -31,7 +31,7 @@ export default async function Now() {
           </div>
 
           <h4 className="text-sm md:text-base">{item.text}</h4>
-          <div className="pt-1">
+          <div className="pt-3">
             <svg
               className="w-full  h-px"
               viewBox="0 0 100 1"

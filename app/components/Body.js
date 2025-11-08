@@ -123,10 +123,8 @@ const Body = memo(function Body({
                     </>
                   ) : (
                     <>
-                      <a
-                        href="https://drive.google.com/file/d/1UcuH-oolA0c_vMYflzil6Dl1_EnEnOxd/view"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <Link
+                        href="/resume"
                         className=" pl-3"
                       >
                         <ScrambleText
@@ -136,7 +134,7 @@ const Body = memo(function Body({
                           hasInteracted={hasInteracted}
                           className="text-sm md:text-[12px]  underline px- underline-offset-2 "
                         />
-                      </a>
+                      </Link>
                       <div className="group relative pl-3 opacity-50">
                         <ScrambleText
                           originalText="Lab"
@@ -264,10 +262,8 @@ const Body = memo(function Body({
                       </>
                     ) : (
                       <>
-                        <a
-                          href="https://drive.google.com/file/d/1UcuH-oolA0c_vMYflzil6Dl1_EnEnOxd/view"
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <Link
+                          href="/resume"
                           className="pl-4"
                         >
                           <ScrambleText
@@ -277,7 +273,7 @@ const Body = memo(function Body({
                             hasInteracted={hasInteracted}
                             className="text-sm md:text-[13px]  underline px- underline-offset-2 "
                           />
-                        </a>
+                        </Link>
                         <div className="group relative pl-4 opacity-50">
                           <ScrambleText
                             originalText="Lab"

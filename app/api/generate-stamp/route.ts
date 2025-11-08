@@ -8,7 +8,7 @@ const client = new InferenceClient(process.env.HF_TOKEN);
 // Regional stamp style variations
 const getStampStyleVariation = (country: string): string => {
   // Handle empty or invalid country values
-  if (!country || country === 'unknown' || country === 'Unknown Country') {
+  if (!country || country.toLowerCase() === 'unknown' || country.toLowerCase() === 'unknown country') {
     return "with classic vintage postcard aesthetics and global travel motifs";
   }
 
@@ -164,7 +164,7 @@ export async function POST(request: NextRequest) {
       postmarkStyles[Math.floor(Math.random() * postmarkStyles.length)];
     const year = Math.floor(Math.random() * (1970 - 1920) + 1920); // Random year between 1920-1970
 
-    const prompt = `A low-quality vintage postage stamp, ${selectedPerspective}. ${selectedArtStyle} cartoon illustration of the main airport in ${location}. The stamp has perforated/serrated edges with visible paper texture and printing imperfections. ${selectedWeathering}. ${selectedPostmark}. Warm nostalgic color palette with faded blues, yellows, ochres, and earthy burnt sienna tones. Off-register color printing with visible halftone dots and color bleeding. Deliberately crude and simple illustration with wobbly hand-drawn lines, like a cheap tourist souvenir stamp from a local print shop. Simplified geometric shapes for the landmark, minimal detail, flat color fills with no gradients. Non-photorealistic cartoon style with thick black outlines. Paper shows age spots, minor creases, and gum residue on edges. The overall composition is slightly off-center as if hastily printed. Low production value, amateurish design quality ${styleVariation}. No text, no numbers, no writing visible anywhere on the stamp.`;
+    const prompt = `A low-quality vintage postage stamp, ${selectedPerspective}. ${selectedArtStyle} cartoon illustration inspired by the traditional art, symbols, and textile patterns of ${location}. It should reflect ${styleVariation}, featuring iconic cultural motifs or decorative designs typical of the region — such as local patterns, ornaments, or folk art shapes. The stamp has perforated edges with visible paper texture and printing imperfections. ${selectedWeathering}. ${selectedPostmark}. Warm nostalgic palette using colors inspired by the region’s landscape and traditional crafts. Off-register color printing, faded inks, halftone dots, and misaligned lines. The illustration is minimal, with simplified geometric shapes, no text, and no photorealism. Paper shows wear, creases, and gum residue — like an old, collectible travel souvenir.`;
      console.log("Generating image with prompt:", prompt);
 
     const imageBlob = await client.textToImage({
@@ -172,7 +172,7 @@ export async function POST(request: NextRequest) {
       model: "stabilityai/stable-diffusion-xl-base-1.0",
       inputs: prompt,
       parameters: {
-        num_inference_steps: 5, // Low steps for lower quality/faster generation
+        num_inference_steps: 10, // Increased steps for better quality
         guidance_scale: 7.5,
       },
     });

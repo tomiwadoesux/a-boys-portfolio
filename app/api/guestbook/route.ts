@@ -19,7 +19,7 @@ async function sendEmailNotification(entry: any) {
 }
 
 // Function to trigger stamp generation in background with retry logic
-async function triggerStampGeneration(entryId: string, country: string) {
+async function triggerStampGeneration(entryId: string, country:string) {
   // Use the configured base URL or detect from headers
   // On Vercel, we can use relative URLs which work on the same server
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
@@ -28,30 +28,49 @@ async function triggerStampGeneration(entryId: string, country: string) {
     console.log(`Attempting stamp generation for entry ${entryId} (attempt ${attempt}/5)`);
 
     try {
-      await fetch(`${baseUrl}/api/generate-stamp`, {
+      const response = await fetch(`${baseUrl}/api/generate-stamp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ entryId, country }),
       });
+
+      if (!response.ok) {
+        const errorBody = await response.json();
+        throw new Error(errorBody.error || `API error: ${response.status}`);
+      }
+      
+      console.log(`Stamp generation successful for entry ${entryId}`);
+
     } catch (error) {
       console.error(`Stamp generation attempt ${attempt} failed:`, error.message);
 
-      // Exponential backoff: 30s, 60s, 120s, 240s, 480s (2-8 minutes total)
+      // Exponential backoff: 30s, 60s, 120s, 240s (up to 4.5 minutes)
       if (attempt < 5) {
         const waitTime = Math.pow(2, attempt - 1) * 30000; // 30s * 2^(attempt-1)
         const waitSeconds = waitTime / 1000;
         console.log(`Retrying stamp generation in ${waitSeconds}s...`);
 
-        setTimeout(() => {
-          attemptStampGeneration(attempt + 1);
-        }, waitTime);
+        // Use a promise to wait for setTimeout
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+        await attemptStampGeneration(attempt + 1);
+
       } else {
         console.error(`Final stamp generation failure for entry ${entryId} after 5 attempts. Entry may need manual retry.`);
+        // Optionally, update the Sanity entry to reflect the failure
+        try {
+          await writeClient
+            .patch(entryId)
+            .set({ stampGenerating: false, stampError: true })
+            .commit();
+        } catch (patchError) {
+          console.error(`Failed to patch entry ${entryId} after final failure:`, patchError);
+        }
       }
     }
   };
 
-  await attemptStampGeneration(1);
+  // No need to await here, let it run in the background
+  attemptStampGeneration(1);
   console.log('Stamp generation triggered for entry:', entryId);
 }
 
