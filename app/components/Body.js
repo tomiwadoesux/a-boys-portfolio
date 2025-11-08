@@ -74,7 +74,7 @@ const Body = memo(function Body({
                 <div className="flex text-nowrap self-end justify-between ml-auto">
                   {isScrambled ? (
                     <>
-                      <Link href="/list" className="">
+                      <Link href="/list" className="pl-3">
                         <ScrambleText
                           originalText="Projects"
                           targetText="List∞"
@@ -86,7 +86,7 @@ const Body = memo(function Body({
                         />
                       </Link>
 
-                      <Link href="/screens" className="">
+                      <Link href="/screens" className="pl-3">
                         <ScrambleText
                           originalText="Resumé"
                           targetText="Screens"
@@ -127,7 +127,7 @@ const Body = memo(function Body({
                         href="https://drive.google.com/file/d/1UcuH-oolA0c_vMYflzil6Dl1_EnEnOxd/view"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className=""
+                        className=" pl-3"
                       >
                         <ScrambleText
                           originalText="Resumé"

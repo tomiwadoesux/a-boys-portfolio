@@ -97,7 +97,7 @@ export default function VideoDisplay({ video, isMobile = false, savedTimestamp =
   return (
     <div 
       ref={containerRef}
-      className="w-full flex flex-col animate-fadeIn"
+      className="w-full flex  pointer-events: none flex-col animate-fadeIn"
     >
       <div className="w-full flex h-full items-center justify-center bg-gray-200 relative overflow-hidden rounded">
         {videoSrc ? (

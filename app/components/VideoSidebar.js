@@ -73,7 +73,7 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
     return () => observer.disconnect();
   }, [extendedVideos.length]);
 
-  // Carousel drag handling for mobile
+  // Carousel drag handling for mobile with real-time video updates
   useEffect(() => {
     if (!useCarouselPicker || !sidebarRef.current) return;
 
@@ -81,6 +81,7 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
     let isDragging = false;
     let startX = 0;
     let startScrollLeft = 0;
+    let scrollUpdateTimer = null;
 
     const handleMouseDown = (e) => {
       isDragging = true;
@@ -95,7 +96,6 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
       const currentX = e.clientX || e.touches?.[0]?.clientX || 0;
       const diff = startX - currentX;
       sidebar.scrollLeft = startScrollLeft + diff;
-      updateDisplayFromScroll();
     };
 
     const handleMouseUp = () => {
@@ -106,26 +106,32 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
     };
 
     const updateDisplayFromScroll = () => {
-      const scrollLeft = sidebar.scrollLeft;
-      const sidebarWidth = sidebar.offsetWidth;
-      const centerX = scrollLeft + sidebarWidth / 2;
+      // Throttle updates during scroll
+      if (scrollUpdateTimer) return;
+      
+      scrollUpdateTimer = setTimeout(() => {
+        const scrollLeft = sidebar.scrollLeft;
+        const sidebarWidth = sidebar.offsetWidth;
+        const centerX = scrollLeft + sidebarWidth / 2;
 
-      let closestIndex = 0;
-      let closestDistance = Infinity;
+        let closestIndex = 0;
+        let closestDistance = Infinity;
 
-      itemRefs.current.forEach((item, idx) => {
-        if (!item) return;
-        const itemCenter = item.offsetLeft + item.offsetWidth / 2;
-        const distance = Math.abs(itemCenter - centerX);
+        itemRefs.current.forEach((item, idx) => {
+          if (!item) return;
+          const itemCenter = item.offsetLeft + item.offsetWidth / 2;
+          const distance = Math.abs(itemCenter - centerX);
 
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestIndex = idx;
-        }
-      });
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = idx;
+          }
+        });
 
-      const actualIndex = closestIndex % sortedVideos.length;
-      setActiveIndex(actualIndex);
+        const actualIndex = closestIndex % sortedVideos.length;
+        setActiveIndex(actualIndex);
+        scrollUpdateTimer = null;
+      }, 50); // Update every 50ms during scroll for smooth video changes
     };
 
     const snapToNearestItem = () => {
@@ -153,7 +159,7 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
 
         gsap.to(sidebar, {
           scrollLeft: targetLeft,
-          duration: 0.5,
+          duration: 0.4,
           ease: "power2.out",
           onComplete: () => {
             isScrollingRef.current = false;
@@ -171,9 +177,12 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
     sidebar.addEventListener('touchstart', handleMouseDown, { passive: true });
     sidebar.addEventListener('touchmove', handleMouseMove, { passive: true });
     sidebar.addEventListener('touchend', handleMouseUp, { passive: true });
+    
+    // Real-time scroll updates
     sidebar.addEventListener('scroll', updateDisplayFromScroll, { passive: true });
 
     return () => {
+      if (scrollUpdateTimer) clearTimeout(scrollUpdateTimer);
       sidebar.removeEventListener('mousedown', handleMouseDown);
       sidebar.removeEventListener('mousemove', handleMouseMove);
       sidebar.removeEventListener('mouseup', handleMouseUp);
@@ -269,16 +278,15 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
             >
               {/* Only show placeholder images for sidebar - no videos */}
               {placeholderImage ? (
-                <Image
-                  src={placeholderImage}
-                  alt={vid.alt || vid.title || "Video preview"}
-                  fill
-                  className="object-cover"
-                  quality={60}
-                  loading={isVideoVisible ? "eager" : "lazy"}
-                  sizes="(max-width: 768px) 96px, 160px"
-                />
-              ) : (
+                                  <Image
+                                    src={placeholderImage}
+                                    alt={vid.alt || vid.title || "Video preview"}
+                                    fill
+                                    className="object-cover"
+                                    quality={60}
+                                    loading={isVideoVisible ? "eager" : "lazy"}
+                                    sizes="(max-width: 768px) 96px, 160px"
+                                  />              ) : (
                 <div className="w-full h-full flex items-center justify-center text-xs text-gray-500">
                   {vid.title || vid.name || "No preview"}
                 </div>

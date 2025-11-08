@@ -38,7 +38,7 @@ export default async function List() {
                 x2="100"
                 y2="0.5"
                 stroke="black"
-                stroke-width="0.7"
+                strokeWidth="0.7"
               />
             </svg>
           </div>
