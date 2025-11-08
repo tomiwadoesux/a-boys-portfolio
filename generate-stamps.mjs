@@ -29,7 +29,7 @@ async function generateStamps() {
       console.log(`Generating stamp for ${entry.name} from ${entry.city}, ${entry.country}`);
 
       try {
-        const response = await fetch('https://ayotomc/hHmms.me/api/generate-stamp/', {
+        const response = await fetch('https://ayotomcs/hHmms.me/api/generate-stamp/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
