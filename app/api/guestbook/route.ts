@@ -4,7 +4,6 @@ import { writeClient } from '../../../sanity/lib/client';
 import { groq } from 'next-sanity';
 import { client } from '../../../sanity/lib/client';
 
-
 // Function to check if this is the first entry from a country
 async function isFirstFromCountry(country: string): Promise<boolean> {
   const query = groq`count(*[_type == "guestbook" && country == $country])`;
@@ -12,51 +11,57 @@ async function isFirstFromCountry(country: string): Promise<boolean> {
   return count === 0;
 }
 
-// Function to send email notification (we'll implement this later)
+// Function to send email notification
 async function sendEmailNotification(entry: any) {
-  // TODO: Implement email notification using Resend or similar service
   console.log('Email notification would be sent for entry:', entry._id);
 }
 
 // Function to trigger stamp generation in background with retry logic
-async function triggerStampGeneration(entryId: string, country:string) {
-  // Use the configured base URL or detect from headers
-  // On Vercel, we can use relative URLs which work on the same server
+async function triggerStampGeneration(entryId: string, country: string, request: NextRequest) {
   const attemptStampGeneration = async (attempt: number = 1) => {
     console.log(`Attempting stamp generation for entry ${entryId} (attempt ${attempt}/5)`);
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+      // Get the base URL from the request headers
+      const host = request.headers.get('host');
+      const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                      (host === 'ayotomcs.me' ? 'https://ayotomcs.me' : `${protocol}://${host}`);
+      
       console.log('Using base URL for stamp generation:', baseUrl);
-      const response = await fetch(`/api/generate-stamp/`, {
+      
+      const response = await fetch(`${baseUrl}/api/generate-stamp`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ entryId, country }),
       });
 
       if (!response.ok) {
-        const errorBody = await response.json();
-        throw new Error(errorBody.error || `API error: ${response.status}`);
+        const errorText = await response.text();
+        console.error(`Stamp generation failed with status ${response.status}:`, errorText);
+        throw new Error(`API error: ${response.status} - ${errorText}`);
       }
       
-      console.log(`Stamp generation successful for entry ${entryId}`);
+      const result = await response.json();
+      console.log(`Stamp generation successful for entry ${entryId}:`, result);
 
     } catch (error) {
-      console.error(`Stamp generation attempt ${attempt} failed:`, error.message);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error(`Stamp generation attempt ${attempt} failed:`, errorMessage);
 
-      // Exponential backoff: 30s, 60s, 120s, 240s (up to 4.5 minutes)
+      // Exponential backoff: 30s, 60s, 120s, 240s
       if (attempt < 5) {
         const waitTime = Math.pow(2, attempt - 1) * 30000; // 30s * 2^(attempt-1)
         const waitSeconds = waitTime / 1000;
         console.log(`Retrying stamp generation in ${waitSeconds}s...`);
 
-        // Use a promise to wait for setTimeout
         await new Promise(resolve => setTimeout(resolve, waitTime));
         await attemptStampGeneration(attempt + 1);
 
       } else {
-        console.error(`Final stamp generation failure for entry ${entryId} after 5 attempts. Entry may need manual retry.`);
-        // Optionally, update the Sanity entry to reflect the failure
+        console.error(`Final stamp generation failure for entry ${entryId} after 5 attempts.`);
         try {
           await writeClient
             .patch(entryId)
@@ -69,8 +74,11 @@ async function triggerStampGeneration(entryId: string, country:string) {
     }
   };
 
-  // No need to await here, let it run in the background
-  attemptStampGeneration(1);
+  // Start the process but don't wait for it
+  attemptStampGeneration(1).catch(err => {
+    console.error('Unhandled error in stamp generation:', err);
+  });
+  
   console.log('Stamp generation triggered for entry:', entryId);
 }
 
@@ -80,6 +88,7 @@ export async function POST(request: NextRequest) {
 
     console.log('Received guestbook submission:', body);
     console.log('Sanity token present:', !!process.env.SANITY_API_TOKEN);
+    console.log('HF token present:', !!process.env.HF_TOKEN);
 
     // Use country from form submission
     const country = body.country || 'Unknown Country';
@@ -94,7 +103,7 @@ export async function POST(request: NextRequest) {
       message: body.message,
       country: country,
       link: body.link || null,
-      date: new Date().toISOString(),
+      date: new Date().toISOString(), // Use server-side date
       approved: true,
       stampGenerating: true,
       reactions: 0,
@@ -106,7 +115,7 @@ export async function POST(request: NextRequest) {
 
     // Trigger stamp generation in background (non-blocking)
     console.log('Triggering stamp generation with country:', country);
-    triggerStampGeneration(newEntry._id, country);
+    triggerStampGeneration(newEntry._id, country, request);
 
     // Send email notification (non-blocking)
     sendEmailNotification(newEntry).catch(console.error);
@@ -124,7 +133,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       message: 'Error submitting guestbook entry',
       error: errorMessage,
-      details: error
+      details: error instanceof Error ? error.stack : error
     }, { status: 500 });
   }
 }

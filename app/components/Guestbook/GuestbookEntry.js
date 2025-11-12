@@ -290,8 +290,8 @@ export default function GuestbookEntry({
           <div className="country-underline"></div>
         </div>
 
-        <div className="guestbook-content">
-          <div className="header-row pl-5 pt-5">
+        <div className="guestbook-content pl-2 lg:pl-4 pt-2 lg:pt-3 ">
+          <div className="header-row ">
             {link ? (
               <a
                 href={link}
@@ -655,8 +655,8 @@ export default function GuestbookEntry({
           margin-top: 2px;
         }
 
-        .message-container {
-          padding: 10px 12px;
+        . {
+          padding: 4px 9px;
           margin-top: 4px;
           flex-grow: 1;
           position: relative;

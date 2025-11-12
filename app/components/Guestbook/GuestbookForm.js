@@ -40,17 +40,17 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
         onSubmit={handleSubmit}
         className="guestbook-stamp form-stamp"
         style={{
-          '--hue': formHue,
-          '--primary-stamp-color': '#4447a9',
-          '--light-stamp-bg': `hsl(${formHue}, 85%, 97%)`,
-          '--text-bg-overlay': `hsla(${formHue}, 95%, 98%, 0.82)`,
-          '--dark-text-fixed': `hsl(${formHue}, 60%, 20%)`,
-          '--mid-grey-fixed': `hsl(${formHue}, 20%, 35%)`,
-          '--gold-accent': `hsl(45, 80%, 60%)`,
-          '--postmark-color-fixed': `hsla(${formHue}, 40%, 30%, 0.8)`,
-          '--border-accent': '#4447a9',
-          '--input-bg': `hsla(0, 0%, 100%, 0.7) or hsla(220, 80%, 100%, 0.7)`,
-          '--rotate': '-1deg',
+          "--hue": formHue,
+          "--primary-stamp-color": "#4447a9",
+          "--light-stamp-bg": `hsl(${formHue}, 85%, 97%)`,
+          "--text-bg-overlay": `hsla(${formHue}, 95%, 98%, 0.82)`,
+          "--dark-text-fixed": `hsl(${formHue}, 60%, 20%)`,
+          "--mid-grey-fixed": `hsl(${formHue}, 20%, 35%)`,
+          "--gold-accent": `hsl(45, 80%, 60%)`,
+          "--postmark-color-fixed": `hsla(${formHue}, 40%, 30%, 0.8)`,
+          "--border-accent": "#4447a9",
+          "--input-bg": `hsla(0, 0%, 100%, 0.7) or hsla(220, 80%, 100%, 0.7)`,
+          "--rotate": "-1deg",
         }}
       >
         <div className="stamp-frame p-5">
@@ -66,7 +66,9 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
           <h3 className="form-title">Leave Your Mark</h3>
           <div className="form-row">
             <div className="form-group half-width">
-              <label htmlFor="name" className="label">Name</label>
+              <label htmlFor="name" className="label">
+                Name
+              </label>
               <input
                 type="text"
                 name="name"
@@ -80,7 +82,9 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
               />
             </div>
             <div className="form-group half-width">
-              <label htmlFor="country" className="label">Country</label>
+              <label htmlFor="country" className="label">
+                Country
+              </label>
               <input
                 type="text"
                 name="country"
@@ -96,7 +100,9 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
           </div>
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="link" className="label">Link (optional)</label>
+              <label htmlFor="link" className="label">
+                Link (optional)
+              </label>
               <input
                 type="url"
                 name="link"
@@ -109,7 +115,9 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
             </div>
           </div>
           <div className="form-group">
-            <label htmlFor="message" className="label">Message (max 500 chars)</label>
+            <label htmlFor="message" className="label">
+              Message (max 500 chars)
+            </label>
             <textarea
               name="message"
               id="message"
@@ -121,12 +129,14 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
               value={formData.message}
               onChange={handleChange}
             />
-            <div className="char-count">
-              {formData.message.length}/500
-            </div>
+            <div className="char-count">{formData.message.length}/500</div>
           </div>
           <div className="form-footer">
-                <button type="submit" disabled={isSubmitting} className="submit-button">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="submit-button"
+            >
               {isSubmitting ? "Posting..." : "Post Stamp"}
             </button>
           </div>
@@ -512,8 +522,8 @@ export default function GuestbookForm({ onSubmit, isSubmitting = false }) {
             padding: 0 10px 8px 10px;
           }
           .form-title {
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
           }
           .form-row {
             flex-direction: column;
