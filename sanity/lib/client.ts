@@ -7,6 +7,9 @@ export const client = createClient({
   dataset,
   apiVersion,
   useCdn: true, // Set to false if statically generating pages, using ISR or tag-based revalidation
+  withCredentials: true,
+  // Add CORS configuration
+  token: process.env.NEXT_PUBLIC_SANITY_TOKEN,
 })
 
 // Write client for API routes (requires SANITY_WRITE_TOKEN)

@@ -26,8 +26,9 @@ async function triggerStampGeneration(entryId: string, country:string) {
     console.log(`Attempting stamp generation for entry ${entryId} (attempt ${attempt}/5)`);
 
     try {
-      const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
-      const response = await fetch(`${baseUrl}/api/generate-stamp/`, {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+      console.log('Using base URL for stamp generation:', baseUrl);
+      const response = await fetch(`/api/generate-stamp/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ entryId, country }),

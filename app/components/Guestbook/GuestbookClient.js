@@ -55,9 +55,8 @@ export default function GuestbookClient({ initialEntries = [] }) {
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Server error response:", errorData);
-        throw new Error(
-          errorData.error || errorData.message || "Failed to submit entry"
-        );
+        alert(`Error: ${errorData.error || errorData.message || "Failed to submit entry"}. Please try again.`);
+        return;
       }
 
       const result = await response.json();

@@ -3,6 +3,11 @@ import { InferenceClient } from "@huggingface/inference";
 import { writeClient } from "../../../sanity/lib/client";
 import sharp from "sharp";
 
+if (!process.env.HF_TOKEN) {
+  console.error('HF_TOKEN is not set in environment variables');
+  throw new Error('Missing Hugging Face API token');
+}
+
 const client = new InferenceClient(process.env.HF_TOKEN);
 
 // Regional stamp style variations

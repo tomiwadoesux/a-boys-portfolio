@@ -862,8 +862,6 @@ export default function GuestbookEntry({
 
         .stamp-modal-content {
           position: relative;
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(20px);
           border-radius: 12px;
           padding: 24px;
           max-width: 90vw;
@@ -872,7 +870,7 @@ export default function GuestbookEntry({
           flex-direction: column;
           align-items: center;
           box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-          animation: scaleIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          animation: scaleIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         @keyframes scaleIn {

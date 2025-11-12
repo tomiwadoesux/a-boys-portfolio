@@ -14,6 +14,15 @@ export default defineConfig({
   projectId,
   dataset,
 
+  cors: {
+    credentials: true,
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3333',
+      'https://ayotomcs.me',
+    ],
+  },
+
   plugins: [
     structureTool({ structure }),
     visionTool({ defaultApiVersion: apiVersion }),
