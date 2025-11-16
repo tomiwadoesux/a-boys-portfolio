@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ProjectCard({
   title,
@@ -11,19 +12,32 @@ export default function ProjectCard({
   mobileImage,
   alt,
   link,
+  projectId,
+  projectIndex,
   showLivePreview = false,
   isMobile = false,
+  showDetailPage = true,
 }) {
   const [isScrollable, setIsScrollable] = useState(false);
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const iframeRef = useRef(null);
+  const router = useRouter();
 
   // Use mobile or desktop image based on isMobile prop
   const currentImage = isMobile ? mobileImage : desktopImage;
 
-  const handleClick = () => {
-    if (link && !showLivePreview) {
-      window.open(link, "_blank");
+  const handleClick = (e) => {
+    // Prevent event bubbling to avoid unintended scroll behavior
+    e.preventDefault();
+
+    if (!showLivePreview) {
+      if (showDetailPage && projectIndex !== undefined) {
+        // Navigate to project detail page using numeric index (1-based)
+        router.push(`/project/${projectIndex + 1}`);
+      } else if (link) {
+        // Go directly to the website
+        window.open(link, "_blank");
+      }
     }
   };
 
@@ -75,7 +89,8 @@ export default function ProjectCard({
                     : "pointer-events-none"
                 }`}
                 title={title}
-                scrolling="yes"
+                scrolling="auto"
+                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
                 style={
                   isMobile
                     ? {
@@ -114,12 +129,7 @@ export default function ProjectCard({
 
         {/* Card Footer */}
         <div className=" flex  border-1 border-black/15 border-t-0 py-2 bg-[#F7F7F7] px-3 justify-between items-center flex-row">
-          <a
-            href={link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full"
-          >
+          {showDetailPage ? (
             <div className="flex flex-row justify-between items-center w-full">
               <div className="flex items-center gap-2">
                 <h4 className="text-xs underline underline-offset-2">
@@ -131,7 +141,26 @@ export default function ProjectCard({
                 <h4 className="text-[11px]">{tech}</h4>
               </div>
             </div>
-          </a>
+          ) : (
+            <a
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full"
+            >
+              <div className="flex flex-row justify-between items-center w-full">
+                <div className="flex items-center gap-2">
+                  <h4 className="text-xs underline underline-offset-2">
+                    {title}
+                  </h4>
+                  <h4 className="text-[11px] opacity-50">| {subtitle}</h4>
+                </div>
+                <div>
+                  <h4 className="text-[11px]">{tech}</h4>
+                </div>
+              </div>
+            </a>
+          )}
         </div>
       </div>
     </figure>

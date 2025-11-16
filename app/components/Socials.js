@@ -4,6 +4,7 @@ import { useState } from "react";
 import SvgHover from "./SvgHover";
 import Ayotomcs from "./Ayotomcs";
 import ContactModal from "./ContactModal";
+import GitHubIcon from "./svg/GitHubIcon";
 
 export default function Socials() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
@@ -59,6 +60,17 @@ export default function Socials() {
             <span className="underline underline-offset-2">
               hello@ayotomcs.me
             </span>
+          </h4>
+        </a>
+        <a
+          href="https://github.com/tomiwadoesux"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="no-underline hover:opacity-70 transition-opacity"
+        >
+          <h4 className="text-sm flex items-center gap-1 cursor-pointer">
+            <GitHubIcon />
+            <span className="underline underline-offset-2">GitHub</span>
           </h4>
         </a>
         <a

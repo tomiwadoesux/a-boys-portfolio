@@ -27,6 +27,15 @@ export interface ScreenData {
   order: number
 }
 
+export interface InfoSection {
+  media: {
+    type: 'image' | 'video'
+    image?: string | null
+    video?: string | null
+  }
+  text: string
+}
+
 export interface ProjectData {
   _id: string
   title: string
@@ -39,9 +48,12 @@ export interface ProjectData {
   mobileVideo?: string | null
   link: string
   featured: boolean
+  showDetailPage: boolean
   figcaption: string
   description: string
+  role: string
   order: number
+  infoSections?: InfoSection[]
 }
 
 export interface GuestbookData {
@@ -104,7 +116,7 @@ export async function getNowData(): Promise<NowData[]> {
   }
 }
 
-// Fetch all projects
+// Fetch all projects (with caching)
 export async function getProjects(): Promise<ProjectData[]> {
   try {
     const data = await client.fetch<ProjectData[]>(projectsQuery, {}, {
@@ -114,6 +126,21 @@ export async function getProjects(): Promise<ProjectData[]> {
   } catch (error) {
     console.error('Error fetching projects:', error)
     return []
+  }
+}
+
+// Fetch a single project by numeric index (optimized for detail pages)
+export async function getProjectByIndex(index: number): Promise<ProjectData | null> {
+  try {
+    // Fetch all projects once and cache them
+    const allProjects = await getProjects()
+    if (index >= 0 && index < allProjects.length) {
+      return allProjects[index]
+    }
+    return null
+  } catch (error) {
+    console.error('Error fetching project by index:', error)
+    return null
   }
 }
 

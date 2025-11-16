@@ -86,6 +86,13 @@ export const projectType = defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'showDetailPage',
+      title: 'Show Detail Page',
+      type: 'boolean',
+      description: 'If enabled, clicking this project opens the detail page. If disabled, it goes directly to the website.',
+      initialValue: true,
+    }),
+    defineField({
       name: 'figcaption',
       title: 'Figure Caption',
       type: 'string',
@@ -101,12 +108,102 @@ export const projectType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'role',
+      title: 'Your Role',
+      type: 'string',
+      description: 'Your role in this project (e.g., Solo Design Engineer, Frontend Developer, Designer)',
+      validation: (Rule) => Rule.required(),
+      initialValue: 'Design Engineer',
+    }),
+    defineField({
       name: 'order',
       title: 'Display Order',
       type: 'number',
       description: 'Order in which projects appear (lower numbers appear first). E.g., 1, 2, 3...',
       validation: (Rule) => Rule.required().min(0),
       initialValue: 0,
+    }),
+    defineField({
+      name: 'infoSections',
+      title: 'Info Sections',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          name: 'infoSection',
+          title: 'Info Section',
+          fields: [
+            defineField({
+              name: 'media',
+              title: 'Media (Image or Video)',
+              type: 'object',
+              fields: [
+                defineField({
+                  name: 'type',
+                  title: 'Media Type',
+                  type: 'string',
+                  options: {
+                    list: [
+                      { title: 'Image', value: 'image' },
+                      { title: 'Video', value: 'video' },
+                    ],
+                    layout: 'radio',
+                  },
+                  validation: (Rule) => Rule.required(),
+                }),
+                defineField({
+                  name: 'image',
+                  title: 'Image',
+                  type: 'image',
+                  hidden: ({ parent }) => parent?.type !== 'image',
+                  validation: (Rule) => Rule.custom((value, context) => {
+                    if (context.parent.type === 'image' && !value) {
+                      return 'Image is required when media type is Image'
+                    }
+                    return true
+                  }),
+                }),
+                defineField({
+                  name: 'video',
+                  title: 'Video',
+                  type: 'file',
+                  options: {
+                    accept: 'video/*',
+                  },
+                  hidden: ({ parent }) => parent?.type !== 'video',
+                  validation: (Rule) => Rule.custom((value, context) => {
+                    if (context.parent.type === 'video' && !value) {
+                      return 'Video is required when media type is Video'
+                    }
+                    return true
+                  }),
+                }),
+              ],
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'text',
+              title: 'Text Content',
+              type: 'text',
+              rows: 4,
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: {
+            select: {
+              type: 'media.type',
+              text: 'text',
+            },
+            prepare({ type, text }) {
+              return {
+                title: type === 'image' ? '🖼️ Image Section' : '🎬 Video Section',
+                subtitle: text?.substring(0, 50) || 'No text',
+              }
+            },
+          },
+        },
+      ],
+      description: 'Add image or video sections with accompanying text content',
     }),
   ],
   orderings: [

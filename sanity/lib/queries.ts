@@ -20,9 +20,19 @@ export const projectsQuery = groq`*[_type == "project"] | order(order asc) {
   "mobileVideo": mobileVideo.asset->url,
   link,
   featured,
+  showDetailPage,
   figcaption,
   description,
-  order
+  role,
+  order,
+  infoSections[] {
+    media {
+      type,
+      "image": image.asset->url,
+      "video": video.asset->url
+    },
+    text
+  }
 }`
 
 // Query to fetch only featured projects
@@ -38,9 +48,19 @@ export const featuredProjectsQuery = groq`*[_type == "project" && featured == tr
   "mobileVideo": mobileVideo.asset->url,
   link,
   featured,
+  showDetailPage,
   figcaption,
   description,
-  order
+  role,
+  order,
+  infoSections[] {
+    media {
+      type,
+      "image": image.asset->url,
+      "video": video.asset->url
+    },
+    text
+  }
 }`
 
 // Query to fetch all approved guestbook entries

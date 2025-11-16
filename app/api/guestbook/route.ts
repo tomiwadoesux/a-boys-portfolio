@@ -16,79 +16,95 @@ async function sendEmailNotification(entry: any) {
   console.log('Email notification would be sent for entry:', entry._id);
 }
 
-// Function to trigger stamp generation in background with retry logic
-async function triggerStampGeneration(entryId: string, country: string, request: NextRequest) {
-  const attemptStampGeneration = async (attempt: number = 1) => {
-    console.log(`Attempting stamp generation for entry ${entryId} (attempt ${attempt}/5)`);
+// Function to trigger stamp generation in background (non-blocking)
+// Uses setTimeout to completely detach from the HTTP request lifecycle
+function triggerStampGeneration(entryId: string, country: string) {
+  // Fire-and-forget: schedule the generation to run outside the request context
+  // This prevents timeouts from blocking the user's form submission
+  setTimeout(async () => {
+    const attemptStampGeneration = async (attempt: number = 1) => {
+      console.log(`Attempting stamp generation for entry ${entryId} (attempt ${attempt}/3)`);
 
-    try {
-      // Get the base URL from the request headers
-      const host = request.headers.get('host');
-      const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
-                      (host === 'ayotomcs.me' ? 'https://ayotomcs.me' : `${protocol}://${host}`);
-      
-      console.log('Using base URL for stamp generation:', baseUrl);
-      
-      const response = await fetch(`${baseUrl}/api/generate-stamp`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ entryId, country }),
-      });
+      try {
+        // Call the API with a timeout - use internal API call path
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 55000); // 55 second timeout (leaves 5s buffer for Vercel)
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`Stamp generation failed with status ${response.status}:`, errorText);
-        throw new Error(`API error: ${response.status} - ${errorText}`);
-      }
-      
-      const result = await response.json();
-      console.log(`Stamp generation successful for entry ${entryId}:`, result);
+        const apiUrl = process.env.VERCEL_URL
+          ? `https://${process.env.VERCEL_URL}/api/generate-stamp`
+          : `http://localhost:3000/api/generate-stamp`;
 
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error(`Stamp generation attempt ${attempt} failed:`, errorMessage);
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ entryId, country }),
+          signal: controller.signal,
+        });
 
-      // Exponential backoff: 30s, 60s, 120s, 240s
-      if (attempt < 5) {
-        const waitTime = Math.pow(2, attempt - 1) * 30000; // 30s * 2^(attempt-1)
-        const waitSeconds = waitTime / 1000;
-        console.log(`Retrying stamp generation in ${waitSeconds}s...`);
+        clearTimeout(timeoutId);
 
-        await new Promise(resolve => setTimeout(resolve, waitTime));
-        await attemptStampGeneration(attempt + 1);
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(`Stamp generation failed with status ${response.status}:`, errorText);
+          throw new Error(`API error: ${response.status}`);
+        }
 
-      } else {
-        console.error(`Final stamp generation failure for entry ${entryId} after 5 attempts.`);
-        try {
-          await writeClient
-            .patch(entryId)
-            .set({ stampGenerating: false, stampError: true })
-            .commit();
-        } catch (patchError) {
-          console.error(`Failed to patch entry ${entryId} after final failure:`, patchError);
+        const result = await response.json();
+        console.log(`Stamp generation successful for entry ${entryId}:`, result);
+
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error(`Stamp generation attempt ${attempt} failed for entry ${entryId}:`, errorMessage);
+
+        // Retry with exponential backoff: 10s, 20s, 40s (much shorter than before)
+        if (attempt < 3) {
+          const waitTime = Math.pow(2, attempt - 1) * 10000; // 10s * 2^(attempt-1)
+          const waitSeconds = waitTime / 1000;
+          console.log(`Retrying stamp generation in ${waitSeconds}s (attempt ${attempt + 1}/3)...`);
+
+          // Use setTimeout instead of awaiting - keeps it non-blocking
+          setTimeout(() => {
+            attemptStampGeneration(attempt + 1);
+          }, waitTime);
+
+        } else {
+          console.error(`Final stamp generation failure for entry ${entryId} after 3 attempts.`);
+          try {
+            await writeClient
+              .patch(entryId)
+              .set({
+                stampGenerating: false,
+                stampError: true,
+                stampErrorMessage: `Failed to generate stamp after 3 attempts. Last error: ${errorMessage.substring(0, 100)}`
+              })
+              .commit();
+            console.log(`Updated entry ${entryId} with error flag`);
+          } catch (patchError) {
+            console.error(`Failed to patch entry ${entryId} after final failure:`, patchError);
+          }
         }
       }
-    }
-  };
+    };
 
-  // Start the process but don't wait for it
-  attemptStampGeneration(1).catch(err => {
-    console.error('Unhandled error in stamp generation:', err);
-  });
-  
-  console.log('Stamp generation triggered for entry:', entryId);
+    // Start retries
+    attemptStampGeneration(1);
+  }, 100); // Small delay to ensure HTTP response is sent before starting generation
+
+  console.log('Stamp generation scheduled for entry:', entryId);
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
+    console.log('=== GUESTBOOK SUBMISSION START ===');
     console.log('Received guestbook submission:', body);
     console.log('Sanity token present:', !!process.env.SANITY_API_TOKEN);
     console.log('HF token present:', !!process.env.HF_TOKEN);
+    console.log('NEXT_PUBLIC_BASE_URL:', process.env.NEXT_PUBLIC_BASE_URL);
+    console.log('Request host:', request.headers.get('host'));
 
     // Use country from form submission
     const country = body.country || 'Unknown Country';
@@ -115,12 +131,15 @@ export async function POST(request: NextRequest) {
 
     // Trigger stamp generation in background (non-blocking)
     console.log('Triggering stamp generation with country:', country);
-    triggerStampGeneration(newEntry._id, country, request);
+    triggerStampGeneration(newEntry._id, country);
+    console.log('Stamp generation scheduled successfully');
 
     // Send email notification (non-blocking)
     sendEmailNotification(newEntry).catch(console.error);
 
     revalidatePath('/guestbook');
+
+    console.log('=== GUESTBOOK SUBMISSION SUCCESS ===');
 
     return NextResponse.json({
       ...newEntry,
@@ -128,6 +147,7 @@ export async function POST(request: NextRequest) {
       statusMessage: 'Thank you for signing! Your signature will be added shortly.',
     }, { status: 201 });
   } catch (error) {
+    console.error('=== GUESTBOOK SUBMISSION ERROR ===');
     console.error('Error submitting guestbook entry:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json({

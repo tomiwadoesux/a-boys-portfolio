@@ -168,67 +168,84 @@ export async function POST(request: NextRequest) {
       postmarkStyles[Math.floor(Math.random() * postmarkStyles.length)];
     const year = Math.floor(Math.random() * (1970 - 1920) + 1920); // Random year between 1920-1970
 
-    const prompt = `A low-quality vintage postage stamp, ${selectedPerspective}. ${selectedArtStyle} cartoon illustration inspired by the traditional art, symbols, and textile patterns of ${location}. It should reflect ${styleVariation}, featuring iconic cultural motifs or decorative designs typical of the region — such as local patterns, ornaments, or folk art shapes. The stamp has perforated edges with visible paper texture and printing imperfections. ${selectedWeathering}. ${selectedPostmark}. Warm nostalgic palette using colors inspired by the region’s landscape and traditional crafts. Off-register color printing, faded inks, halftone dots, and misaligned lines. The illustration is minimal, with simplified geometric shapes, no text, and no photorealism. Paper shows wear, creases, and gum residue — like an old, collectible travel souvenir.`;
+    const prompt = `A low-quality vintage postage stamp, ${selectedPerspective}. ${selectedArtStyle} cartoon illustration inspired by the traditional art, symbols, and textile patterns of ${location}. It should reflect ${styleVariation}, featuring iconic cultural motifs or decorative designs typical of the region — such as local patterns, ornaments, or folk art shapes. The stamp has perforated edges with visible paper texture and printing imperfections. ${selectedWeathering}. ${selectedPostmark}. Warm nostalgic palette using colors inspired by the region's landscape and traditional crafts. Off-register color printing, faded inks, halftone dots, and misaligned lines. The illustration is minimal, with simplified geometric shapes, no text, and no photorealism. Paper shows wear, creases, and gum residue — like an old, collectible travel souvenir.`;
      console.log("Generating image with prompt:", prompt);
 
-    const imageBlob = await client.textToImage({
-      provider: "nscale",
-      model: "stabilityai/stable-diffusion-xl-base-1.0",
-      inputs: prompt,
-      parameters: {
-        num_inference_steps: 10, // Increased steps for better quality
-        guidance_scale: 7.5,
-      },
-    });
+    // Create an AbortController with a 50-second timeout (Vercel limit is 60s)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+      console.error(`Timeout: Image generation took too long for country ${country}`);
+    }, 50000);
 
-    // Convert blob to buffer
-    const arrayBuffer = await imageBlob.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    // Compress the image using sharp
-    // Convert to WebP for better compression (or keep as JPEG/PNG with compression)
-    const compressedBuffer = await sharp(buffer)
-      .resize(800, 800, {
-        // Resize to max 800x800 (maintain aspect ratio)
-        fit: "inside",
-        withoutEnlargement: true,
-      })
-      .webp({ quality: 80 }) // Convert to WebP with 80% quality
-      .toBuffer();
-
-    console.log(
-      `Original size: ${(buffer.length / 1024 / 1024).toFixed(2)}MB, Compressed size: ${(compressedBuffer.length / 1024 / 1024).toFixed(2)}MB`
-    );
-
-    // Upload to Sanity
-    const asset = await writeClient.assets.upload("image", compressedBuffer, {
-      filename: `stamp-${entryId}-${Date.now()}.webp`,
-      contentType: "image/webp",
-    });
-
-    console.log("Uploaded stamp to Sanity:", asset._id);
-
-    // Update the guestbook entry with the stamp image
-    await writeClient
-      .patch(entryId)
-      .set({
-        stampImage: {
-          _type: "image",
-          asset: {
-            _type: "reference",
-            _ref: asset._id,
-          },
+    try {
+      const imageBlob = await client.textToImage({
+        provider: "nscale",
+        model: "stabilityai/stable-diffusion-xl-base-1.0",
+        inputs: prompt,
+        parameters: {
+          num_inference_steps: 10, // Increased steps for better quality
+          guidance_scale: 7.5,
         },
-        stampGenerating: false,
-      })
-      .commit();
+        // @ts-ignore - signal option may not be in type definitions
+        signal: controller.signal,
+      });
 
-    console.log("Successfully updated entry with stamp");
+      clearTimeout(timeoutId);
 
-    return NextResponse.json({
-      success: true,
-      assetId: asset._id,
-    });
+      // Convert blob to buffer
+      const arrayBuffer = await imageBlob.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      // Compress the image using sharp
+      // Convert to WebP for better compression (or keep as JPEG/PNG with compression)
+      const compressedBuffer = await sharp(buffer)
+        .resize(800, 800, {
+          // Resize to max 800x800 (maintain aspect ratio)
+          fit: "inside",
+          withoutEnlargement: true,
+        })
+        .webp({ quality: 80 }) // Convert to WebP with 80% quality
+        .toBuffer();
+
+      console.log(
+        `Original size: ${(buffer.length / 1024 / 1024).toFixed(2)}MB, Compressed size: ${(compressedBuffer.length / 1024 / 1024).toFixed(2)}MB`
+      );
+
+      // Upload to Sanity
+      const asset = await writeClient.assets.upload("image", compressedBuffer, {
+        filename: `stamp-${entryId}-${Date.now()}.webp`,
+        contentType: "image/webp",
+      });
+
+      console.log("Uploaded stamp to Sanity:", asset._id);
+
+      // Update the guestbook entry with the stamp image
+      await writeClient
+        .patch(entryId)
+        .set({
+          stampImage: {
+            _type: "image",
+            asset: {
+              _type: "reference",
+              _ref: asset._id,
+            },
+          },
+          stampGenerating: false,
+        })
+        .commit();
+
+      console.log("Successfully updated entry with stamp");
+
+      return NextResponse.json({
+        success: true,
+        assetId: asset._id,
+      });
+    } catch (innerError) {
+      clearTimeout(timeoutId);
+      console.error("Error during stamp generation (image, compression, upload, or update):", innerError);
+      throw innerError; // Re-throw to be caught by outer catch
+    }
   } catch (error) {
     console.error("Error generating stamp:", error);
 
