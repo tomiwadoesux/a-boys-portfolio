@@ -9,7 +9,7 @@ import SvgHover from "./SvgHover";
 import ContactModal from "./ContactModal";
 
 const Body = memo(function Body({
-  description = "A Design Engineer Now in Abuja, Nigeria",
+  description = "A Design Engineer Now in TX, USA",
   activePage = "",
 }) {
   const [isScrambled, setIsScrambled] = useState(false);
