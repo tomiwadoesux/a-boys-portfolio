@@ -191,10 +191,8 @@ export default function GuestbookEntry({
         style={{
           "--hue": `${hue}`,
           "--primary-stamp-color": "#4447a9",
-          "--light-stamp-bg": dominantColor || "hsl(0, 0%, 100%)",
-          "--text-bg-overlay": dominantColor
-            ? `${dominantColor.replace(")", ", 0.7)")}`
-            : "hsla(0, 0%, 100%, 0.7)",
+          "--light-stamp-bg": "hsl(0, 0%, 100%)",
+          "--text-bg-overlay": "hsla(0, 0%, 100%, 0.7)",
           "--dark-text-fixed": `hsl(${hue}, 60%, 20%)`,
           "--mid-grey-fixed": `hsl(${hue}, 15%, 45%)`,
           "--gold-accent": `hsl(45, 80%, 60%)`,

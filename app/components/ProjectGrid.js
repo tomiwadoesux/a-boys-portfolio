@@ -26,18 +26,21 @@ export default function ProjectGrid({
         <h4 className="text-[11px] text-[#4447A9] ">
           {filter === "featured" ? "Selected Projects.." : "All Projects.."}
         </h4>
-        <button
-          onClick={handleToggle}
-          className={`relative inline-flex h-5 w-10 items-center rounded-full transition-colors focus:outline-none ${
-            showLivePreview ? "bg-[#4447A9]" : "bg-gray-300"
-          }`}
-        >
-          <span
-            className={`inline-block h-2.5 w-2.5 transform rounded-full bg-white transition-transform ${
-              showLivePreview ? "translate-x-[22px]" : "translate-x-[6px]"
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] text-[#4447A9]">Live Preview</span>
+          <button
+            onClick={handleToggle}
+            className={`relative inline-flex h-5 w-10 items-center rounded-full transition-colors focus:outline-none ${
+              showLivePreview ? "bg-[#4447A9]" : "bg-gray-300"
             }`}
-          />
-        </button>
+          >
+            <span
+              className={`inline-block h-2.5 w-2.5 transform rounded-full bg-white transition-transform ${
+                showLivePreview ? "translate-x-[22px]" : "translate-x-[6px]"
+              }`}
+            />
+          </button>
+        </div>
       </div>
 
       {/* Featured (Landing Page): Horizontal Scroll */}

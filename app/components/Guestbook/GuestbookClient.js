@@ -66,6 +66,22 @@ export default function GuestbookClient({ initialEntries = [] }) {
       const { statusMessage, success, ...newEntry } = result;
       setEntries([newEntry, ...entries]);
 
+      // Trigger stamp generation (client-side fire-and-forget)
+      // We do this client-side because Vercel serverless functions often kill 
+      // background tasks (setTimeout) once the response is sent.
+      if (newEntry._id && newEntry.country) {
+        console.log("Triggering stamp generation for:", newEntry._id);
+        fetch('/api/generate-stamp', {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({ entryId: newEntry._id, country: newEntry.country })
+        }).then(res => {
+            console.log("Stamp generation trigger response:", res.status);
+        }).catch(err => {
+            console.error("Error triggering stamp generation:", err);
+        });
+      }
+
       // Refresh the page to show the new entry
       router.refresh();
 
