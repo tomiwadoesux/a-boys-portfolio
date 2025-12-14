@@ -7,7 +7,7 @@ import NavIcon from "../svg/NavIcon";
 import ScrambleText from "./ScrambleText";
 
 export default function BodyScreens({
-  description = "A Design Engineer Now in TX, USA",
+  description = "A Design Engineer Now in Tx, USA",
 }) {
   const [isScrambled, setIsScrambled] = useState(false);
 

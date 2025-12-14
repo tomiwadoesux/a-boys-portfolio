@@ -60,7 +60,7 @@ export default function Home() {
         description={
           <>
             A Design Engineer Now in{" "}
-            <span className="text-[#4447A9]">TX, USA</span>
+            <span className="text-[#4447A9]">Tx, USA</span>
           </>
         }
         activePage="/"

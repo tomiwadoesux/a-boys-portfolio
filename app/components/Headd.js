@@ -10,7 +10,7 @@ const Headd = memo(function Headd() {
   const pathname = usePathname();
   const [lastVisitor, setLastVisitor] = useState("...");
   const [typewriterMessages, setTypewriterMessages] = useState([
-    "Design Engineer based in TX, USA",
+    "Design Engineer based in Tx, USA",
     "Building high-performance web experiences",
     "Specializing in Next.js and React",
     "Creating visually dynamic animations with GSAP",

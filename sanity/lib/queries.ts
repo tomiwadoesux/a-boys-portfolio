@@ -8,7 +8,7 @@ export const nowQuery = groq`*[_type == "now"] | order(_createdAt desc) {
 }`
 
 // Query to fetch all projects ordered by display order
-export const projectsQuery = groq`*[_type == "project"] | order(order asc) {
+export const projectsQuery = groq`*[_type == "project"] | order(order asc, _createdAt desc) {
   _id,
   title,
   subtitle,
@@ -36,7 +36,7 @@ export const projectsQuery = groq`*[_type == "project"] | order(order asc) {
 }`
 
 // Query to fetch only featured projects
-export const featuredProjectsQuery = groq`*[_type == "project" && featured == true] | order(order asc) {
+export const featuredProjectsQuery = groq`*[_type == "project" && featured == true] | order(order asc, _createdAt desc) {
   _id,
   title,
   subtitle,
