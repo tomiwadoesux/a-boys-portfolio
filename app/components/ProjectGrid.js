@@ -14,7 +14,7 @@ export default function ProjectGrid({ projects = [], filter = "all" }) {
 
   return (
     <section className="pt-16">
-      <div className="px-7 pb-3 md:px-20 lg:px-56 flex flex-col md:flex-row md:justify-between gap-4 md:gap-0">
+      <div className="px-7 pb-3 md:px-20 lg:px-56 flex flex-row md:justify-between gap-4 md:gap-0">
         <h4 className="text-[11px] text-[#4447A9] ">
           {filter === "featured" ? "Selected Projects.." : "All Projects.."}
         </h4>
