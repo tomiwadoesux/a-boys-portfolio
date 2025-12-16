@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, Suspense } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
-import gsap from 'gsap';
+import { useEffect, useRef, Suspense } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import gsap from "gsap";
 
 /**
  * Inner component that uses useSearchParams
@@ -20,12 +20,24 @@ function NavigationPauseInner() {
       return;
     }
 
-    // Pause all GSAP timelines during navigation
-    gsap.globalTimeline.paused(true);
+    // Safely pause all GSAP timelines during navigation
+    try {
+      if (gsap.globalTimeline) {
+        gsap.globalTimeline.paused(true);
+      }
+    } catch (e) {
+      console.warn("Failed to pause GSAP timeline:", e);
+    }
 
     // Resume animations after a short delay (allows page to render)
     const resumeTimer = setTimeout(() => {
-      gsap.globalTimeline.paused(false);
+      try {
+        if (gsap.globalTimeline) {
+          gsap.globalTimeline.paused(false);
+        }
+      } catch (e) {
+        console.warn("Failed to resume GSAP timeline:", e);
+      }
     }, 50);
 
     return () => clearTimeout(resumeTimer);

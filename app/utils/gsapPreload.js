@@ -52,7 +52,10 @@ export async function preloadScrollTrigger() {
 
   try {
     const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-    if (!gsap.plugins.ScrollTrigger) {
+    // Safely check if ScrollTrigger already registered
+    if (gsap.plugins && !gsap.plugins.ScrollTrigger) {
+      gsap.registerPlugin(ScrollTrigger);
+    } else if (!gsap.plugins) {
       gsap.registerPlugin(ScrollTrigger);
     }
     isScrollTriggerLoaded = true;
@@ -94,26 +97,34 @@ export function preloadFonts() {
 export function initializeGsap() {
   if (typeof window === "undefined") return;
 
-  // Preload GSAP core
-  preloadGsap();
+  try {
+    // Preload GSAP core
+    preloadGsap();
 
-  // Preload ScrollTrigger asynchronously
-  preloadScrollTrigger();
+    // Preload ScrollTrigger asynchronously
+    preloadScrollTrigger();
 
-  // Preload fonts
-  preloadFonts();
+    // Preload fonts
+    preloadFonts();
 
-  // Set global GSAP defaults for better performance
-  gsap.defaults({
-    ease: "power2.out",
-    duration: 0.6,
-  });
+    // Set global GSAP defaults for better performance
+    gsap.defaults({
+      ease: "power2.out",
+      duration: 0.6,
+    });
 
-  // Force ticker to start and set optimal lag smoothing
-  gsap.ticker.lagSmoothing(0);
+    // Force ticker to start and set optimal lag smoothing
+    if (gsap.ticker && typeof gsap.ticker.lagSmoothing === "function") {
+      gsap.ticker.lagSmoothing(0);
+    }
 
-  // Set autoKill to false for better control
-  gsap.config({ autoKill: false });
+    // Set autoKill to false for better control
+    if (typeof gsap.config === "function") {
+      gsap.config({ autoKill: false });
+    }
 
-  console.log("✓ GSAP initialized with optimizations");
+    console.log("✓ GSAP initialized with optimizations");
+  } catch (error) {
+    console.warn("GSAP initialization failed:", error);
+  }
 }

@@ -4,7 +4,14 @@ import { useEffect, useRef, useState, memo } from "react";
 import gsap from "gsap";
 import { TextPlugin } from "gsap/TextPlugin";
 
-gsap.registerPlugin(TextPlugin);
+// Safely register TextPlugin
+if (typeof window !== "undefined") {
+  try {
+    gsap.registerPlugin(TextPlugin);
+  } catch (e) {
+    console.warn("TextPlugin registration failed:", e);
+  }
+}
 
 const ScrambleText = memo(function ScrambleText({
   originalText,
