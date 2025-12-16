@@ -26,6 +26,11 @@ const Body = memo(function Body({
     setIsContactModalOpen(true);
   };
 
+  const handleLinkClick = () => {
+    // Dispatch custom event to show loading overlay immediately
+    window.dispatchEvent(new Event("start-loading"));
+  };
+
   return (
     <section>
       <div className=" px-7 pt-5 md:pt-20 md:px-20 lg:px-56 ">
@@ -34,12 +39,16 @@ const Body = memo(function Body({
             <div className="hidden md:block">
               <div className=" flex flex-row justify-between">
                 <div className=" flex flex-row gap-3">
-                  <Link href="/" className=" ">
+                  <Link href="/" className=" " onClick={handleLinkClick}>
                     <h4 className="text-2xl md:text-3xl uppercase font-bold">
                       Ayotomcs
                     </h4>
                   </Link>
-                  <Link href="/" className=" self-center">
+                  <Link
+                    href="/"
+                    className=" self-center"
+                    onClick={handleLinkClick}
+                  >
                     <div className="">
                       <Logo />
                     </div>
@@ -64,7 +73,11 @@ const Body = memo(function Body({
                   strokeWidth="1"
                 />
               </svg> */}
-              <Link href="/" className=" md:hidden self-center ">
+              <Link
+                href="/"
+                className=" md:hidden self-center "
+                onClick={handleLinkClick}
+              >
                 <div className="">
                   <Logo />
                 </div>
@@ -74,7 +87,11 @@ const Body = memo(function Body({
                 <div className="flex text-nowrap self-end justify-between ml-auto">
                   {isScrambled ? (
                     <>
-                      <Link href="/list" className="pl-3">
+                      <Link
+                        href="/list"
+                        className="pl-3"
+                        onClick={handleLinkClick}
+                      >
                         <ScrambleText
                           originalText="Projects"
                           targetText="List∞"
@@ -86,7 +103,11 @@ const Body = memo(function Body({
                         />
                       </Link>
 
-                      <Link href="/screens" className="pl-3">
+                      <Link
+                        href="/screens"
+                        className="pl-3"
+                        onClick={handleLinkClick}
+                      >
                         <ScrambleText
                           originalText="Resumé"
                           targetText="Screens"
@@ -97,7 +118,11 @@ const Body = memo(function Body({
                           }`}
                         />
                       </Link>
-                      <Link href="/now" className="pl-3">
+                      <Link
+                        href="/now"
+                        className="pl-3"
+                        onClick={handleLinkClick}
+                      >
                         <ScrambleText
                           originalText="Contact"
                           targetText="Now"
@@ -109,7 +134,11 @@ const Body = memo(function Body({
                         />
                       </Link>
 
-                      <Link href="/guestbook" className="pl-3 ">
+                      <Link
+                        href="/guestbook"
+                        className="pl-3 "
+                        onClick={handleLinkClick}
+                      >
                         <ScrambleText
                           originalText="Lab"
                           targetText="GuestBook"
@@ -126,6 +155,7 @@ const Body = memo(function Body({
                       <Link
                         href="/resume"
                         className=" pl-3"
+                        onClick={handleLinkClick}
                       >
                         <ScrambleText
                           originalText="Resumé"
@@ -135,7 +165,11 @@ const Body = memo(function Body({
                           className="text-sm md:text-[12px]  underline px- underline-offset-2 "
                         />
                       </Link>
-                      <Link href="/lab" className="pl-3">
+                      <Link
+                        href="/lab"
+                        className="pl-3"
+                        onClick={handleLinkClick}
+                      >
                         <ScrambleText
                           originalText="Lab"
                           targetText="Guestbook"
@@ -147,7 +181,12 @@ const Body = memo(function Body({
                         />
                       </Link>
 
-                      <Link href="/projects" scroll={true} className="pl-3">
+                      <Link
+                        href="/projects"
+                        scroll={true}
+                        className="pl-3"
+                        onClick={handleLinkClick}
+                      >
                         <ScrambleText
                           originalText="Projects"
                           targetText="Lab"
@@ -209,7 +248,11 @@ const Body = memo(function Body({
                   <div className="flex ">
                     {isScrambled ? (
                       <>
-                        <Link href="/list" className="pl-4 ">
+                        <Link
+                          href="/list"
+                          className="pl-4 "
+                          onClick={handleLinkClick}
+                        >
                           <ScrambleText
                             originalText="Projects"
                             targetText="List∞"
@@ -220,7 +263,11 @@ const Body = memo(function Body({
                             }`}
                           />
                         </Link>
-                        <Link href="/screens" className="pl-4 ">
+                        <Link
+                          href="/screens"
+                          className="pl-4 "
+                          onClick={handleLinkClick}
+                        >
                           <ScrambleText
                             originalText="Resumé"
                             targetText="Screens"
@@ -231,7 +278,11 @@ const Body = memo(function Body({
                             }`}
                           />
                         </Link>
-                        <Link href="/now" className="pl-4">
+                        <Link
+                          href="/now"
+                          className="pl-4"
+                          onClick={handleLinkClick}
+                        >
                           <ScrambleText
                             originalText="Contact"
                             targetText="Now"
@@ -243,7 +294,11 @@ const Body = memo(function Body({
                           />
                         </Link>
 
-                        <Link href="/guestbook" className="pl-4 ">
+                        <Link
+                          href="/guestbook"
+                          className="pl-4 "
+                          onClick={handleLinkClick}
+                        >
                           <ScrambleText
                             originalText="Lab"
                             targetText="GuestBook"
@@ -262,6 +317,7 @@ const Body = memo(function Body({
                         <Link
                           href="/resume"
                           className="pl-4"
+                          onClick={handleLinkClick}
                         >
                           <ScrambleText
                             originalText="Resumé"
@@ -271,7 +327,11 @@ const Body = memo(function Body({
                             className="text-sm md:text-[13px]  underline px- underline-offset-2 "
                           />
                         </Link>
-                        <Link href="/lab" className="pl-4">
+                        <Link
+                          href="/lab"
+                          className="pl-4"
+                          onClick={handleLinkClick}
+                        >
                           <ScrambleText
                             originalText="Lab"
                             targetText="Guestbook"
@@ -283,7 +343,12 @@ const Body = memo(function Body({
                           />
                         </Link>
 
-                        <Link href="/projects" scroll={true} className="pl-4 ">
+                        <Link
+                          href="/projects"
+                          scroll={true}
+                          className="pl-4 "
+                          onClick={handleLinkClick}
+                        >
                           <ScrambleText
                             originalText="Projects"
                             targetText="Lab"

@@ -24,6 +24,16 @@ export default function LoadingOverlay() {
   }, [pathname]);
 
   useEffect(() => {
+    const handleStartLoading = () => {
+      setIsVisible(true);
+    };
+
+    window.addEventListener("start-loading", handleStartLoading);
+    return () =>
+      window.removeEventListener("start-loading", handleStartLoading);
+  }, []);
+
+  useEffect(() => {
     if (!overlayRef.current || !contentRef.current) return;
 
     if (isVisible) {

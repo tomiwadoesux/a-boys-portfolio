@@ -14,7 +14,7 @@ export default function ProjectGrid({ projects = [], filter = "all" }) {
 
   return (
     <section className="pt-16">
-      <div className="px-7 pb-3 md:px-20 lg:px-56 flex flex-row md:justify-between gap-4 md:gap-0">
+      <div className="px-7 pb-3 md:px-20 lg:px-56 flex flex-row justify-between gap-4 md:gap-0">
         <h4 className="text-[11px] text-[#4447A9] ">
           {filter === "featured" ? "Selected Projects.." : "All Projects.."}
         </h4>
@@ -38,13 +38,14 @@ export default function ProjectGrid({ projects = [], filter = "all" }) {
       {/* Featured (Landing Page): Horizontal Scroll */}
       {filter === "featured" ? (
         <>
-          {/* Mobile: Horizontal Scroll */}
-          <div className="md:hidden overflow-x-auto scroll-smooth scrollbar-hide">
-            <div className="flex gap-4 pb-4 px-7">
+          {/* Mobile: Vertical Stack with Desktop Images */}
+          <div className="md:hidden px-7 pb-4">
+            <div className="flex flex-col gap-8">
               {projects.map((project, index) => (
-                <div key={project._id} className="min-w-[250px] flex-shrink-0">
+                <div key={project._id} className="w-full">
                   <ProjectCard
                     title={project.title}
+                    subtitle={project.subtitle}
                     tech={project.tech}
                     desktopImage={project.desktopImage}
                     mobileImage={project.mobileImage}
@@ -59,7 +60,7 @@ export default function ProjectGrid({ projects = [], filter = "all" }) {
                         : index
                     }
                     showLivePreview={showLivePreview}
-                    isMobile={true}
+                    isMobile={false}
                     showDetailPage={project.showDetailPage}
                   />
                 </div>

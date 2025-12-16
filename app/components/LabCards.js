@@ -79,7 +79,7 @@ export default function LabCards({ cards = [] }) {
   }, [isClient, cards]);
 
   return (
-    <div className="lab-container w-full px-20 lg:px-56 p-4">
+    <div className="lab-container w-full px-7 md:px-20 lg:px-56 p-4">
     <div ref={containerRef} className="lab-grid">
         {cards.map((card, idx) => {
           const CardContent = () => (
