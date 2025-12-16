@@ -18,7 +18,8 @@ export default function ProjectGrid({ projects = [], filter = "all" }) {
         <h4 className="text-[11px] text-[#4447A9] ">
           {filter === "featured" ? "Selected Projects.." : "All Projects.."}
         </h4>
-        <div className="flex items-center gap-2">
+        {/* Live Preview toggle - hidden on mobile since iframes are disabled */}
+        <div className="hidden md:flex items-center gap-2">
           <span className="text-[11px] text-[#4447A9]">Live Preview</span>
           <button
             onClick={handleToggle}
