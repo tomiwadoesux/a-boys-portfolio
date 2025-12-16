@@ -41,8 +41,13 @@ export default function ProjectCard({
     }
   };
 
-  // Preload iframe after initial render
+  // Preload iframe after initial render - ONLY on desktop, iframes crash mobile browsers
   useEffect(() => {
+    // Skip iframe preloading on mobile devices - this causes crashes
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      return;
+    }
+
     if (link && !iframeLoaded) {
       // Small delay to let the page load first
       const timer = setTimeout(() => {

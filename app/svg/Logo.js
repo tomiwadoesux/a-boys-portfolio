@@ -95,9 +95,6 @@ export default function Logo() {
     const trailInterval = 60; // ms between trail spawns
 
     const handleScroll = () => {
-      // Disable trails on mobile
-      if (window.innerWidth < 768) return;
-
       const currentScrollY = scrollContainer.scrollTop;
       const delta = Math.abs(currentScrollY - lastScrollY);
       const now = Date.now();
