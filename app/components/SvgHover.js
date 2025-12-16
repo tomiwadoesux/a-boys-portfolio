@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
 
 export default function SvgHover({ className = "", style = {} }) {
   const svgRef = useRef(null);
@@ -11,17 +11,22 @@ export default function SvgHover({ className = "", style = {} }) {
     y: 0,
     prevX: 0,
     prevY: 0,
-    speed: 0
+    speed: 0,
   });
   const svgDataRef = useRef({
     width: 1,
     height: 1,
     x: 0,
-    y: 0
+    y: 0,
   });
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
+    // Skip on mobile devices
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      return;
+    }
+
     const svg = svgRef.current;
     if (!svg) return;
 
@@ -31,7 +36,7 @@ export default function SvgHover({ className = "", style = {} }) {
 
     const circle = {
       radius: 2,
-      margin: 20
+      margin: 20,
     };
 
     let animationFrame;
@@ -67,31 +72,34 @@ export default function SvgHover({ className = "", style = {} }) {
           const dot = {
             anchor: {
               x: x + col * dotSize + dotSize / 2,
-              y: y + row * dotSize + dotSize / 2
-            }
+              y: y + row * dotSize + dotSize / 2,
+            },
           };
 
           dot.position = {
             x: dot.anchor.x,
-            y: dot.anchor.y
+            y: dot.anchor.y,
           };
 
           dot.smooth = {
             x: dot.anchor.x,
-            y: dot.anchor.y
+            y: dot.anchor.y,
           };
 
           dot.velocity = {
             x: 0,
-            y: 0
+            y: 0,
           };
 
-          dot.el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          dot.el.setAttribute('cx', dot.anchor.x);
-          dot.el.setAttribute('cy', dot.anchor.y);
-          dot.el.setAttribute('r', circle.radius / 2);
-          dot.el.setAttribute('opacity', '1');
-          dot.el.setAttribute('fill', '#4447a9');
+          dot.el = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "circle"
+          );
+          dot.el.setAttribute("cx", dot.anchor.x);
+          dot.el.setAttribute("cy", dot.anchor.y);
+          dot.el.setAttribute("r", circle.radius / 2);
+          dot.el.setAttribute("opacity", "1");
+          dot.el.setAttribute("fill", "#4447a9");
 
           svg.appendChild(dot.el);
           dots.push(dot);
@@ -124,7 +132,7 @@ export default function SvgHover({ className = "", style = {} }) {
 
     // Tick using GSAP
     function tick() {
-      dots.forEach(dot => {
+      dots.forEach((dot) => {
         const distX = mouse.x - svgData.x - dot.position.x;
         const distY = mouse.y - svgData.y - dot.position.y;
         const dist = Math.max(Math.hypot(distX, distY), 1);
@@ -154,8 +162,8 @@ export default function SvgHover({ className = "", style = {} }) {
         gsap.set(dot.el, {
           attr: {
             cx: dot.smooth.x,
-            cy: dot.smooth.y
-          }
+            cy: dot.smooth.y,
+          },
         });
       });
 
@@ -164,8 +172,8 @@ export default function SvgHover({ className = "", style = {} }) {
 
     // Initialize
     createDots();
-    window.addEventListener('resize', resizeHandler);
-    window.addEventListener('mousemove', mouseHandler);
+    window.addEventListener("resize", resizeHandler);
+    window.addEventListener("mousemove", mouseHandler);
 
     // Start speed tracking
     speedInterval = setInterval(mouseSpeed, 10);
@@ -175,8 +183,8 @@ export default function SvgHover({ className = "", style = {} }) {
 
     // Cleanup
     return () => {
-      window.removeEventListener('resize', resizeHandler);
-      window.removeEventListener('mousemove', mouseHandler);
+      window.removeEventListener("resize", resizeHandler);
+      window.removeEventListener("mousemove", mouseHandler);
       clearInterval(speedInterval);
       cancelAnimationFrame(animationFrame);
     };
@@ -187,10 +195,10 @@ export default function SvgHover({ className = "", style = {} }) {
       ref={svgRef}
       className={className}
       style={{
-        width: '100%',
-        height: '100%',
-        overflow: 'visible',
-        ...style
+        width: "100%",
+        height: "100%",
+        overflow: "visible",
+        ...style,
       }}
     />
   );

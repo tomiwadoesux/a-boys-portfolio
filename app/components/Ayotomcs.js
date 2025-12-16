@@ -7,30 +7,58 @@ export default function Ayotomcs() {
   const codeRef = useRef(null);
   const shakeTimeline = useRef(null);
 
-  // Shaking animation for the whole SVG
+  // Shaking animation for the whole SVG - disabled on mobile for performance
   useEffect(() => {
-    // Set transform origin to center
-    gsap.set(svgRef.current, { transformOrigin: "50% 50%" });
+    // Skip animation on mobile devices
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      return;
+    }
 
-    // Subtle shake animation (rotation only)
-    shakeTimeline.current = gsap.timeline({ repeat: -1, repeatDelay: 2 }); // 0.3s shake, 3.7s pause = 4s total
-    shakeTimeline.current
-      .to(svgRef.current, {
-        rotation: -8,
-        duration: 0.2,
-        ease: "power1.inOut",
-      })
-      .to(svgRef.current, {
-        rotation: 12,
-        duration: 0.12,
-        ease: "power1.inOut",
-      })
-      .to(svgRef.current, { rotation: -8, duration: 0.1, ease: "power1.inOut" })
-      .to(svgRef.current, { rotation: 8, duration: 0.1, ease: "power1.inOut" })
-      .to(svgRef.current, { rotation: 0, duration: 0.1, ease: "power1.inOut" });
+    // Safety check for refs
+    if (!svgRef.current) return;
+
+    try {
+      // Set transform origin to center
+      gsap.set(svgRef.current, { transformOrigin: "50% 50%" });
+
+      // Subtle shake animation (rotation only)
+      shakeTimeline.current = gsap.timeline({ repeat: -1, repeatDelay: 2 }); // 0.3s shake, 3.7s pause = 4s total
+      shakeTimeline.current
+        .to(svgRef.current, {
+          rotation: -8,
+          duration: 0.2,
+          ease: "power1.inOut",
+        })
+        .to(svgRef.current, {
+          rotation: 12,
+          duration: 0.12,
+          ease: "power1.inOut",
+        })
+        .to(svgRef.current, {
+          rotation: -8,
+          duration: 0.1,
+          ease: "power1.inOut",
+        })
+        .to(svgRef.current, {
+          rotation: 8,
+          duration: 0.1,
+          ease: "power1.inOut",
+        })
+        .to(svgRef.current, {
+          rotation: 0,
+          duration: 0.1,
+          ease: "power1.inOut",
+        });
+    } catch (error) {
+      console.warn("Ayotomcs animation failed:", error);
+    }
 
     return () => {
-      shakeTimeline.current && shakeTimeline.current.kill();
+      try {
+        shakeTimeline.current && shakeTimeline.current.kill();
+      } catch (e) {
+        // Ignore cleanup errors
+      }
     };
   }, []);
 
