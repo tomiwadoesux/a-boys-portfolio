@@ -135,6 +135,8 @@ export const cardsQuery = groq`*[_type == "card"] | order(order asc) {
 export const labQuery = groq`*[_type == "lab"] | order(order asc) {
   title,
   description,
+  "image": image.asset->url,
+  link,
   height,
   order
 }`

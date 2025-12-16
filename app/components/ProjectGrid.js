@@ -3,21 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import ProjectCard from "./ProjectCard";
-import { useLivePreviewScroll } from "../hooks/useLivePreviewScroll";
-
-export default function ProjectGrid({
-  projects = [],
-  filter = "all",
-}) {
+export default function ProjectGrid({ projects = [], filter = "all" }) {
   const [showLivePreview, setShowLivePreview] = useState(false);
-
-  // Use hook to manage scroll behavior
-  useLivePreviewScroll(showLivePreview);
 
   const handleToggle = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setShowLivePreview(prev => !prev);
+    setShowLivePreview((prev) => !prev);
   };
 
   return (
@@ -61,7 +53,11 @@ export default function ProjectGrid({
                     alt={project.alt}
                     link={project.link}
                     projectId={project._id}
-                    projectIndex={project._actualIndex !== undefined ? project._actualIndex : index}
+                    projectIndex={
+                      project._actualIndex !== undefined
+                        ? project._actualIndex
+                        : index
+                    }
                     showLivePreview={showLivePreview}
                     isMobile={true}
                     showDetailPage={project.showDetailPage}
@@ -87,7 +83,11 @@ export default function ProjectGrid({
                     alt={project.alt}
                     link={project.link}
                     projectId={project._id}
-                    projectIndex={project._actualIndex !== undefined ? project._actualIndex : index}
+                    projectIndex={
+                      project._actualIndex !== undefined
+                        ? project._actualIndex
+                        : index
+                    }
                     showLivePreview={showLivePreview}
                     isMobile={false}
                     showDetailPage={project.showDetailPage}
@@ -112,7 +112,11 @@ export default function ProjectGrid({
                 alt={project.alt}
                 link={project.link}
                 projectId={project._id}
-                projectIndex={project._actualIndex !== undefined ? project._actualIndex : index}
+                projectIndex={
+                  project._actualIndex !== undefined
+                    ? project._actualIndex
+                    : index
+                }
                 showLivePreview={showLivePreview}
                 isMobile={false}
                 showDetailPage={project.showDetailPage}
@@ -136,7 +140,11 @@ export default function ProjectGrid({
               alt={project.alt}
               link={project.link}
               projectId={project._id}
-              projectIndex={project._actualIndex !== undefined ? project._actualIndex : index}
+              projectIndex={
+                project._actualIndex !== undefined
+                  ? project._actualIndex
+                  : index
+              }
               showLivePreview={showLivePreview}
               isMobile={false}
               showDetailPage={project.showDetailPage}
@@ -146,7 +154,9 @@ export default function ProjectGrid({
       )}
       {filter === "featured" && (
         <Link href="/projects/">
-          <h4 className="text-[11px] text-right px-7 md:px-20 lg:px-56 underline underline-offset-2 pt-3 text-[#4447A9] hover:opacity-70 transition-opacity cursor-pointer">See All Projects </h4>
+          <h4 className="text-sm text-right px-7 md:px-20 lg:px-56 underline underline-offset-2 pt-3 text-[#4447A9] hover:opacity-70 transition-opacity cursor-pointer">
+            See All Projects{" "}
+          </h4>
         </Link>
       )}
     </section>

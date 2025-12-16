@@ -29,9 +29,6 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 
-  // Trailing slash for consistent routing
-  trailingSlash: true,
-
   // Skip TypeScript and ESLint errors during build (optional - remove if you want strict checks)
   typescript: {
     ignoreBuildErrors: true,

@@ -22,77 +22,60 @@ const ErrorIcon = ({ className }) => (
   </svg>
 );
 
-const AudioVisualization = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  const [bars, setBars] = useState([]);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 640);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  useEffect(() => {
-    const barCount = isMobile ? 11 : 15;
-    const spacing = isMobile ? 20 : 15;
-    const initialBars = Array.from({ length: barCount }, (_, i) => ({
-      x: i * spacing + 10,
-      height: 20,
-      targetHeight: 20,
-    }));
-    setBars(initialBars);
-  }, [isMobile]);
+const AudioVisualization = ({ isPlaying }) => {
+  const containerRef = useRef(null);
+  const barsRef = useRef([]);
 
   useEffect(() => {
     let animationFrame;
+    // Local state for animation physics, not React state
+    const barStates = Array.from({ length: 4 }, (_, i) => ({
+      height: 4,
+      targetHeight: 12,
+      x: i * 10,
+    }));
+
     const animate = () => {
-      setBars((prev) =>
-        prev.map((bar) => {
-          const newHeight = bar.height + (bar.targetHeight - bar.height) * 0.2;
-          if (Math.random() < 0.05) {
-            return {
-              ...bar,
-              height: newHeight,
-              targetHeight: 10 + Math.random() * 60,
-            };
+      const time = Date.now() / 1000;
+
+      barStates.forEach((bar, i) => {
+        const domNode = barsRef.current[i];
+        if (!domNode) return;
+
+        let newHeight;
+        if (!isPlaying) {
+          // Idle animation: gentle sine wave
+          newHeight = 4 + Math.sin(time * 3 + i) * 2;
+        } else {
+          // Playing animation: random jumps
+          bar.height = bar.height + (bar.targetHeight - bar.height) * 0.2;
+          if (Math.abs(bar.height - bar.targetHeight) < 1) {
+            bar.targetHeight = 4 + Math.random() * 20;
           }
-          return { ...bar, height: newHeight };
-        })
-      );
+          newHeight = bar.height;
+        }
+
+        // Update DOM directly
+        domNode.style.height = `${Math.max(2, newHeight)}px`;
+      });
+
       animationFrame = requestAnimationFrame(animate);
     };
+
     animationFrame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrame);
-  }, []);
-
-  const heightClass = isMobile ? "h-10" : "h-14";
+  }, [isPlaying]);
 
   return (
-    <div className={`flex items-center justify-center  ${heightClass}`}>
-      <svg
-        viewBox="0 0 240 100"
-        className="px-7 md:px-20 lg:px-56 h-full"
-        style={{ display: "block", maxWidth: "100%" }}
-      >
-        <defs>
-          <linearGradient id="audioGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#1DB954" />
-            <stop offset="100%" stopColor="#1ED760" />
-          </linearGradient>
-        </defs>
-        {bars.map((bar, i) => (
-          <rect
-            key={i}
-            x={bar.x}
-            y={50 - bar.height / 2}
-            width={8}
-            height={bar.height}
-            rx={4}
-            fill="url(#audioGradient)"
-          />
-        ))}
-      </svg>
+    <div className="flex items-end justify-center h-8 gap-1" ref={containerRef}>
+      {[0, 1, 2, 3].map((i) => (
+        <div
+          key={i}
+          ref={(el) => (barsRef.current[i] = el)}
+          className="w-1.5 bg-[#4447A9] rounded-full"
+          style={{ height: "4px" }}
+        />
+      ))}
     </div>
   );
 };
@@ -187,6 +170,10 @@ const MusicWidgetContent = ({ song }) => (
             </div>
           </div>
         </div>
+      </div>
+      {/* Visualizer */}
+      <div className="flex-shrink-0 ml-auto pl-4">
+        <AudioVisualization isPlaying={song?.isPlaying ?? false} />
       </div>
     </a>
   </div>

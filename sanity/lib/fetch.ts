@@ -92,6 +92,8 @@ export interface CardData {
 export interface LabData {
   title: string
   description?: string
+  image?: string
+  link?: string
   height: string
   order: number
 }
@@ -120,7 +122,7 @@ export async function getNowData(): Promise<NowData[]> {
 export async function getProjects(): Promise<ProjectData[]> {
   try {
     const data = await client.fetch<ProjectData[]>(projectsQuery, {}, {
-      next: { revalidate: 3600 } // Revalidate every hour
+      next: { revalidate: 0 } // Disable cache for debugging
     })
     return data
   } catch (error) {
@@ -148,7 +150,7 @@ export async function getProjectByIndex(index: number): Promise<ProjectData | nu
 export async function getFeaturedProjects(): Promise<ProjectData[]> {
   try {
     const data = await client.fetch<ProjectData[]>(featuredProjectsQuery, {}, {
-      next: { revalidate: 3600 } // Revalidate every hour
+      next: { revalidate: 0 } // Disable cache for debugging
     })
     return data
   } catch (error) {

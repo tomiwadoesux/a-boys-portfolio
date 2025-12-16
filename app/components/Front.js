@@ -1,6 +1,3 @@
-import SvgHover from "./SvgHover";
-import Dock from "./Dock";
-import Socials from "./Socials";
 import Link from "next/link";
 import AsciiMask from "./AsciiMask";
 
@@ -192,12 +189,14 @@ export default function Front() {
         </div>
 
         <div className="flex flex-row">
-          <p className=" text-sm md:text-base ">
-            A collection of side-quests I explore from time to time to learn,
-            experiment with new technologies, and just build anything. 
+          <p className=" text-sm flex flex-col md:text-base text-justify ">
+            A curated collection of experiments and side-quests. This space is
+            dedicated to continuous learning, exploring new tech stacks, and
+            building for the sheer joy of creation. (You should Visit here
+            first).
             <span>
-              <Link href="" className=" self-center">
-                <span className="underline text-[#4447A9]/60 text-sm underline-offset-2">
+              <Link href="/lab">
+                <span className="underline text-[#4447A9] text-sm underline-offset-2">
                   Visit lab
                 </span>
               </Link>

@@ -73,54 +73,39 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
     return () => observer.disconnect();
   }, [extendedVideos.length]);
 
-  // Carousel drag handling for mobile with real-time video updates
+  // Handle scroll updates to sync active video
   useEffect(() => {
-    if (!useCarouselPicker || !sidebarRef.current) return;
+    if (!sidebarRef.current) return;
 
     const sidebar = sidebarRef.current;
-    let isDragging = false;
-    let startX = 0;
-    let startScrollLeft = 0;
     let scrollUpdateTimer = null;
-
-    const handleMouseDown = (e) => {
-      isDragging = true;
-      isDraggingRef.current = true;
-      isScrollingRef.current = true;
-      startX = e.clientX || e.touches?.[0]?.clientX || 0;
-      startScrollLeft = sidebar.scrollLeft;
-    };
-
-    const handleMouseMove = (e) => {
-      if (!isDragging) return;
-      const currentX = e.clientX || e.touches?.[0]?.clientX || 0;
-      const diff = startX - currentX;
-      sidebar.scrollLeft = startScrollLeft + diff;
-    };
-
-    const handleMouseUp = () => {
-      if (!isDragging) return;
-      isDragging = false;
-      isDraggingRef.current = false;
-      snapToNearestItem();
-    };
 
     const updateDisplayFromScroll = () => {
       // Throttle updates during scroll
       if (scrollUpdateTimer) return;
       
       scrollUpdateTimer = setTimeout(() => {
-        const scrollLeft = sidebar.scrollLeft;
-        const sidebarWidth = sidebar.offsetWidth;
-        const centerX = scrollLeft + sidebarWidth / 2;
+        if (!sidebar) return;
+        
+        // Calculate center point
+        const scrollOffset = useCarouselPicker ? sidebar.scrollLeft : sidebar.scrollTop;
+        const containerSize = useCarouselPicker ? sidebar.offsetWidth : sidebar.offsetHeight;
+        const centerPoint = scrollOffset + containerSize / 2;
 
         let closestIndex = 0;
         let closestDistance = Infinity;
 
         itemRefs.current.forEach((item, idx) => {
           if (!item) return;
-          const itemCenter = item.offsetLeft + item.offsetWidth / 2;
-          const distance = Math.abs(itemCenter - centerX);
+          
+          let itemCenter;
+          if (useCarouselPicker) {
+            itemCenter = item.offsetLeft + item.offsetWidth / 2;
+          } else {
+            itemCenter = item.offsetTop + item.offsetHeight / 2;
+          }
+
+          const distance = Math.abs(itemCenter - centerPoint);
 
           if (distance < closestDistance) {
             closestDistance = distance;
@@ -128,71 +113,27 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
           }
         });
 
-        const actualIndex = closestIndex % sortedVideos.length;
-        setActiveIndex(actualIndex);
-        scrollUpdateTimer = null;
-      }, 50); // Update every 50ms during scroll for smooth video changes
-    };
-
-    const snapToNearestItem = () => {
-      const scrollLeft = sidebar.scrollLeft;
-      const sidebarWidth = sidebar.offsetWidth;
-      const centerX = scrollLeft + sidebarWidth / 2;
-
-      let closestIndex = 0;
-      let closestDistance = Infinity;
-
-      itemRefs.current.forEach((item, idx) => {
-        if (!item) return;
-        const itemCenter = item.offsetLeft + item.offsetWidth / 2;
-        const distance = Math.abs(itemCenter - centerX);
-
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestIndex = idx;
-        }
-      });
-
-      const targetItem = itemRefs.current[closestIndex];
-      if (targetItem) {
-        const targetLeft = targetItem.offsetLeft + targetItem.offsetWidth / 2 - sidebarWidth / 2;
-
-        gsap.to(sidebar, {
-          scrollLeft: targetLeft,
-          duration: 0.4,
-          ease: "power2.out",
-          onComplete: () => {
-            isScrollingRef.current = false;
-            const actualIndex = closestIndex % sortedVideos.length;
-            setActiveIndex(actualIndex);
+        // Only update if changed and we're not currently auto-scrolling
+        if (!isScrollingRef.current) {
+          const actualIndex = closestIndex % sortedVideos.length;
+          // We only update if the calculated index is different to avoid loops
+          // But we need to be careful not to cause re-renders during scroll
+          if (actualIndex !== activeIndex) {
+               setActiveIndex(actualIndex);
           }
-        });
-      }
+        }
+        
+        scrollUpdateTimer = null;
+      }, 100); 
     };
-
-    sidebar.addEventListener('mousedown', handleMouseDown, { passive: true });
-    sidebar.addEventListener('mousemove', handleMouseMove, { passive: true });
-    sidebar.addEventListener('mouseup', handleMouseUp, { passive: true });
-    sidebar.addEventListener('mouseleave', handleMouseUp, { passive: true });
-    sidebar.addEventListener('touchstart', handleMouseDown, { passive: true });
-    sidebar.addEventListener('touchmove', handleMouseMove, { passive: true });
-    sidebar.addEventListener('touchend', handleMouseUp, { passive: true });
     
-    // Real-time scroll updates
     sidebar.addEventListener('scroll', updateDisplayFromScroll, { passive: true });
 
     return () => {
       if (scrollUpdateTimer) clearTimeout(scrollUpdateTimer);
-      sidebar.removeEventListener('mousedown', handleMouseDown);
-      sidebar.removeEventListener('mousemove', handleMouseMove);
-      sidebar.removeEventListener('mouseup', handleMouseUp);
-      sidebar.removeEventListener('mouseleave', handleMouseUp);
-      sidebar.removeEventListener('touchstart', handleMouseDown);
-      sidebar.removeEventListener('touchmove', handleMouseMove);
-      sidebar.removeEventListener('touchend', handleMouseUp);
-      sidebar.removeEventListener('scroll', updateDisplayFromScroll);
+      if (sidebar) sidebar.removeEventListener('scroll', updateDisplayFromScroll);
     };
-  }, [useCarouselPicker, sortedVideos.length, setActiveIndex]);
+  }, [useCarouselPicker, sortedVideos.length, activeIndex, setActiveIndex]);
 
   // Auto-scroll to active video
   useEffect(() => {
@@ -247,7 +188,7 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
       <div
         ref={sidebarRef}
         className={useCarouselPicker
-          ? "flex flex-row gap-2 overflow-x-auto w-full scrollbar-hide scroll-smooth"
+          ? "flex flex-row gap-2 overflow-x-auto w-full scrollbar-hide scroll-smooth snap-x snap-mandatory px-[50%] md:px-0"
           : "flex flex-col gap-4 max-h-[450px] overflow-y-auto w-auto pr-4 scrollbar-hide"
         }
       >
@@ -261,7 +202,7 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
             <div
               key={`${vid._id}-${idx}`}
               ref={(el) => (itemRefs.current[idx] = el)}
-              className={`bg-gray-300 rounded transition-all border-2 cursor-pointer flex-shrink-0 overflow-hidden relative
+              className={`bg-gray-300 rounded transition-all border-2 cursor-pointer flex-shrink-0 overflow-hidden relative snap-center
                 ${useCarouselPicker
                   ? `aspect-video h-24 w-auto ${
                       isActive

@@ -39,9 +39,6 @@ const ScrambleText = memo(function ScrambleText({
         value: "",
       },
       ease: "none",
-      onUpdate: function() {
-        setCurrentText(this.targets()[0].textContent);
-      }
     });
 
     // Write in (type characters)
@@ -51,9 +48,9 @@ const ScrambleText = memo(function ScrambleText({
         value: endText,
       },
       ease: "none",
-      onUpdate: function() {
-        setCurrentText(this.targets()[0].textContent);
-      }
+      onComplete: () => {
+        setCurrentText(endText);
+      },
     });
 
     return () => {
@@ -61,7 +58,6 @@ const ScrambleText = memo(function ScrambleText({
         timelineRef.current.kill();
       }
     };
-
   }, [isScrambled, originalText, targetText, hasInteracted]);
 
   return (

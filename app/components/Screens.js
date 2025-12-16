@@ -53,40 +53,31 @@ export default function Screens({ screens = [] }) {
       // Prevent rapid scrolling during transitions
       if (isTransitioning.current) return;
 
-      // Clear existing timeout
+      // Threshold for triggering a change (small enough to be responsive)
+      if (Math.abs(e.deltaY) > 15) {
+        isTransitioning.current = true;
+        
+        if (e.deltaY > 0) {
+          setActiveIndex((prev) => prev + 1);
+        } else {
+          setActiveIndex((prev) => prev - 1);
+        }
+
+        // Lock transitions for 800ms to prevent skipping multiple videos during one scroll
+        // This handles trackpad inertia gracefully
+        setTimeout(() => {
+          isTransitioning.current = false;
+        }, 800);
+      }
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
       if (wheelTimeout.current) {
         clearTimeout(wheelTimeout.current);
       }
-
-      // Debounce: only change video after user stops scrolling for 100ms
-      wheelTimeout.current = setTimeout(() => {
-        if (Math.abs(e.deltaY) > 10) {
-          isTransitioning.current = true;
-          
-          if (e.deltaY > 0) {
-            setActiveIndex((prev) => prev + 1);
-          } else {
-            setActiveIndex((prev) => prev - 1);
-          }
-
-          // Allow next transition after 600ms
-          setTimeout(() => {
-            isTransitioning.current = false;
-          }, 600);
-        }
-      }, 100);
     };
-
-    const scrollContainer = document.getElementById('main-scroll-container');
-    if (scrollContainer) {
-      scrollContainer.addEventListener("wheel", handleWheel, { passive: false });
-      return () => {
-        scrollContainer.removeEventListener("wheel", handleWheel);
-        if (wheelTimeout.current) {
-          clearTimeout(wheelTimeout.current);
-        }
-      };
-    }
   }, [videoList.length, isTabletOrMobile]);
 
   // Handle saving video playback time

@@ -29,8 +29,7 @@ export default function Down() {
 
         <div className="flex ">
           <h4 className="text-sm md:text-base text-justify ">
-            Is Where Visitors Sign and leave their Mark on my website, Everyone
-            has a unique generated stamp :)
+         Leave your mark. A space for visitors to say hello, where everyone gets their own unique, custom-generated stamp :)
             <span>
               <Link href="/guestbook">
                 <h4 className="underline text-[#4447A9] text-sm underline-offset-2">

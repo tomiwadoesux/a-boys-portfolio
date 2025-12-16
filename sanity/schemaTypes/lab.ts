@@ -19,6 +19,21 @@ export const labType = defineType({
       description: 'Optional description for the card',
     }),
     defineField({
+      name: 'image',
+      title: 'Card Image',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      description: 'Image displayed on the card',
+    }),
+    defineField({
+      name: 'link',
+      title: 'Website Link',
+      type: 'url',
+      description: 'Link to the project website (optional)',
+    }),
+    defineField({
       name: 'height',
       title: 'Card Height',
       type: 'string',
@@ -47,11 +62,13 @@ export const labType = defineType({
       title: 'title',
       subtitle: 'height',
       order: 'order',
+      media: 'image',
     },
-    prepare({ title, subtitle, order }) {
+    prepare({ title, subtitle, order, media }) {
       return {
         title: `${order}. ${title}`,
         subtitle: `Height: ${subtitle}`,
+        media,
       }
     },
   },

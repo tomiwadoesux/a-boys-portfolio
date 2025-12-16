@@ -80,44 +80,70 @@ export default function LabCards({ cards = [] }) {
 
   return (
     <div className="lab-container w-full px-20 lg:px-56 p-4">
-      <div ref={containerRef} className="lab-grid">
-        {cards.map((card, idx) => (
-          <div
-            key={card.id || idx}
-            className="lab-card bg-[#D9D9D9] rounded-t-lg overflow-hidden cursor-not-allowed relative group pointer-events-none"
-            style={{ height: card.height || 'auto', opacity: 0.5 }}
-          >
-            {/* Coming Soon Tooltip */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-auto cursor-pointer transition-opacity duration-300 z-10 bg-black/40 backdrop-blur-sm">
-              <div className="bg-black text-white px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap">
-                Coming Soon
+    <div ref={containerRef} className="lab-grid">
+        {cards.map((card, idx) => {
+          const CardContent = () => (
+            <div className="flex flex-col h-full bg-white">
+              {card.image ? (
+                <div className="relative w-full aspect-[16/10] bg-[#E5E5E5]">
+                  <Image
+                    src={card.image}
+                    alt={card.title || 'Card image'}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    unoptimized
+                  />
+                </div>
+              ) : (
+                <div className="relative w-full aspect-[16/10] bg-[#E5E5E5] flex items-center justify-center">
+                  <span className="text-gray-400 text-xs">No Image</span>
+                </div>
+              )}
+              
+              {/* Card Footer matching ProjectCard style */}
+              <div className="flex-shrink-0 border-t border-black/15 bg-[#F7F7F7] px-3 py-2">
+                <div className="flex flex-col gap-1">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-xs underline underline-offset-2 font-bold">{card.title}</h3>
+                    {card.link && (
+                      <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <path d="M11 1V11M11 1H1M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
+                  </div>
+                  {card.description && (
+                   <div className="flex items-start gap-1">
+                      <p className="text-sm opacity-80">{card.description}</p>
+                   </div>
+                  )}
+                </div>
               </div>
             </div>
-            {/* Replace with your card content */}
-            {card.image && (
-              <div className="relative w-full h-full">
-                <Image
-                  src={card.image}
-                  alt={card.title || 'Card image'}
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
-              </div>
-            )}
-            {card.title && (
-              <div className="px-4 py-3 border-1 rounded-t-lg border-black/15 bg-[#F7F7F7]">
-                <h3 className="text-sm font-semibold ">{card.title}</h3>
-                {card.description && (
-                  <>
-                    <div className="w-full h-px bg-black/15 my-2"></div>
-                    <p className="text-xs">{card.description}</p>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
-        ))}
+          );
+
+          if (card.link) {
+            return (
+              <a
+                key={card.id || idx}
+                href={card.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="lab-card block rounded-xl overflow-hidden relative group border border-black/15 hover:shadow-md transition-all duration-300"
+              >
+                <CardContent />
+              </a>
+            );
+          }
+
+          return (
+            <div
+              key={card.id || idx}
+              className="lab-card rounded-xl overflow-hidden relative group border border-black/15"
+            >
+              <CardContent />
+            </div>
+          );
+        })}
       </div>
 
       <style jsx>{`
