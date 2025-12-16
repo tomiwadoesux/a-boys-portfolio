@@ -1,13 +1,12 @@
 "use client";
 import { useRef, useEffect, useState } from "react";
-import { gsap } from "gsap";
+import gsap from "gsap";
 
 export default function Logo() {
   const logoRef = useRef(null);
   const trailsContainerRef = useRef(null);
 
   useEffect(() => {
-
     if (
       typeof window === "undefined" ||
       !logoRef.current ||
@@ -15,12 +14,7 @@ export default function Logo() {
     )
       return;
 
-    const colors = [
-      "#4447A9",
-      "#060760",
-      "#deec06",
-      "#0b0a0a",
-    ];
+    const colors = ["#4447A9", "#060760", "#deec06", "#0b0a0a"];
 
     const scrollContainer = document.getElementById("main-scroll-container");
     if (!scrollContainer) return;

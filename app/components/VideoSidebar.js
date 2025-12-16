@@ -1,11 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
+import gsap from "gsap";
 import Image from "next/image";
 import { getCachedVideoUrl } from "../utils/videoCache";
 
-export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMobile = false }) {
+export default function VideoSidebar({
+  videos,
+  activeIndex,
+  setActiveIndex,
+  isMobile = false,
+}) {
   const sidebarRef = useRef();
   const itemRefs = useRef([]);
   const isScrollingRef = useRef(false);
@@ -39,9 +44,7 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
 
   // Create extended array for infinite scroll effect
   const repetitions = 20;
-  const extendedVideos = Array(repetitions)
-    .fill(sortedVideos)
-    .flat();
+  const extendedVideos = Array(repetitions).fill(sortedVideos).flat();
 
   const displayIndex = activeIndex;
 
@@ -59,7 +62,7 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
       {
         root: sidebarRef.current,
         rootMargin: "100px",
-        threshold: 0.1
+        threshold: 0.1,
       }
     );
 
@@ -83,13 +86,17 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
     const updateDisplayFromScroll = () => {
       // Throttle updates during scroll
       if (scrollUpdateTimer) return;
-      
+
       scrollUpdateTimer = setTimeout(() => {
         if (!sidebar) return;
-        
+
         // Calculate center point
-        const scrollOffset = useCarouselPicker ? sidebar.scrollLeft : sidebar.scrollTop;
-        const containerSize = useCarouselPicker ? sidebar.offsetWidth : sidebar.offsetHeight;
+        const scrollOffset = useCarouselPicker
+          ? sidebar.scrollLeft
+          : sidebar.scrollTop;
+        const containerSize = useCarouselPicker
+          ? sidebar.offsetWidth
+          : sidebar.offsetHeight;
         const centerPoint = scrollOffset + containerSize / 2;
 
         let closestIndex = 0;
@@ -97,7 +104,7 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
 
         itemRefs.current.forEach((item, idx) => {
           if (!item) return;
-          
+
           let itemCenter;
           if (useCarouselPicker) {
             itemCenter = item.offsetLeft + item.offsetWidth / 2;
@@ -119,19 +126,22 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
           // We only update if the calculated index is different to avoid loops
           // But we need to be careful not to cause re-renders during scroll
           if (actualIndex !== activeIndex) {
-               setActiveIndex(actualIndex);
+            setActiveIndex(actualIndex);
           }
         }
-        
+
         scrollUpdateTimer = null;
-      }, 100); 
+      }, 100);
     };
-    
-    sidebar.addEventListener('scroll', updateDisplayFromScroll, { passive: true });
+
+    sidebar.addEventListener("scroll", updateDisplayFromScroll, {
+      passive: true,
+    });
 
     return () => {
       if (scrollUpdateTimer) clearTimeout(scrollUpdateTimer);
-      if (sidebar) sidebar.removeEventListener('scroll', updateDisplayFromScroll);
+      if (sidebar)
+        sidebar.removeEventListener("scroll", updateDisplayFromScroll);
     };
   }, [useCarouselPicker, sortedVideos.length, activeIndex, setActiveIndex]);
 
@@ -158,7 +168,7 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
               ease: "power2.out",
               onComplete: () => {
                 isScrollingRef.current = false;
-              }
+              },
             });
           }
         } else {
@@ -175,26 +185,32 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
               ease: "power2.out",
               onComplete: () => {
                 isScrollingRef.current = false;
-              }
+              },
             });
           }
         }
       }
     }
-  }, [displayIndex, sortedVideos.length, extendedVideos.length, useCarouselPicker]);
+  }, [
+    displayIndex,
+    sortedVideos.length,
+    extendedVideos.length,
+    useCarouselPicker,
+  ]);
 
   return (
     <>
       <div
         ref={sidebarRef}
-        className={useCarouselPicker
-          ? "flex flex-row gap-2 overflow-x-auto w-full scrollbar-hide scroll-smooth snap-x snap-mandatory px-[50%] md:px-0"
-          : "flex flex-col gap-4 max-h-[450px] overflow-y-auto w-auto pr-4 scrollbar-hide"
+        className={
+          useCarouselPicker
+            ? "flex flex-row gap-2 overflow-x-auto w-full scrollbar-hide scroll-smooth snap-x snap-mandatory px-[50%] md:px-0"
+            : "flex flex-col gap-4 max-h-[450px] overflow-y-auto w-auto pr-4 scrollbar-hide"
         }
       >
         {extendedVideos.map((vid, idx) => {
           const originalIndex = idx % sortedVideos.length;
-          const isActive = (displayIndex % extendedVideos.length) === idx;
+          const isActive = displayIndex % extendedVideos.length === idx;
           const isVideoVisible = visibleVideos.has(idx);
           const placeholderImage = vid.desktopImage || vid.mobileImage;
 
@@ -203,31 +219,33 @@ export default function VideoSidebar({ videos, activeIndex, setActiveIndex, isMo
               key={`${vid._id}-${idx}`}
               ref={(el) => (itemRefs.current[idx] = el)}
               className={`bg-gray-300 rounded transition-all border-2 cursor-pointer flex-shrink-0 overflow-hidden relative snap-center
-                ${useCarouselPicker
-                  ? `aspect-video h-24 w-auto ${
-                      isActive
-                        ? "border-4 border-[#ededed] scale-100"
-                        : "border-transparent opacity-40 scale-75"
-                    }`
-                  : `aspect-video w-40 ${
-                      isActive
-                        ? "border-4 border-[#ededed] scale-95"
-                        : "border-transparent opacity-60"
-                    }`
+                ${
+                  useCarouselPicker
+                    ? `aspect-video h-24 w-auto ${
+                        isActive
+                          ? "border-4 border-[#ededed] scale-100"
+                          : "border-transparent opacity-40 scale-75"
+                      }`
+                    : `aspect-video w-40 ${
+                        isActive
+                          ? "border-4 border-[#ededed] scale-95"
+                          : "border-transparent opacity-60"
+                      }`
                 }`}
               onClick={() => setActiveIndex(originalIndex)}
             >
               {/* Only show placeholder images for sidebar - no videos */}
               {placeholderImage ? (
-                                  <Image
-                                    src={placeholderImage}
-                                    alt={vid.alt || vid.title || "Video preview"}
-                                    fill
-                                    className="object-cover"
-                                    quality={60}
-                                    loading={isVideoVisible ? "eager" : "lazy"}
-                                    sizes="(max-width: 768px) 96px, 160px"
-                                  />              ) : (
+                <Image
+                  src={placeholderImage}
+                  alt={vid.alt || vid.title || "Video preview"}
+                  fill
+                  className="object-cover"
+                  quality={60}
+                  loading={isVideoVisible ? "eager" : "lazy"}
+                  sizes="(max-width: 768px) 96px, 160px"
+                />
+              ) : (
                 <div className="w-full h-full flex items-center justify-center text-xs text-gray-500">
                   {vid.title || vid.name || "No preview"}
                 </div>

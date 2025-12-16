@@ -1,13 +1,13 @@
 "use client";
 import { useRef, useEffect } from "react";
-import { gsap } from "gsap";
+import gsap from "gsap";
 
 export function Shine({
   delay = 0.5,
   duration = 1.7,
   repeat = -1,
   repeatDelay = 3.2,
-  gradient = "linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.6) 50%, transparent 70%)"
+  gradient = "linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.6) 50%, transparent 70%)",
 }) {
   const shineRef = useRef(null);
 

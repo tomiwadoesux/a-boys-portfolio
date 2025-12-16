@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
+import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PageConfig from "../components/PageConfig";
 import Headd from "../components/Headd";
@@ -15,15 +15,51 @@ export default function Page() {
 
   // Sample video data - replace with your actual videos
   const videos = [
-    { id: 1, src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", title: "Big Buck Bunny" },
-    { id: 2, src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", title: "Elephants Dream" },
-    { id: 3, src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", title: "For Bigger Blazes" },
-    { id: 4, src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", title: "For Bigger Escapes" },
-    { id: 5, src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", title: "For Bigger Fun" },
-    { id: 6, src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", title: "For Bigger Joyrides" },
-    { id: 7, src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4", title: "For Bigger Meltdowns" },
-    { id: 8, src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4", title: "Sintel" },
-    { id: 9, src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", title: "Tears of Steel" },
+    {
+      id: 1,
+      src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      title: "Big Buck Bunny",
+    },
+    {
+      id: 2,
+      src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      title: "Elephants Dream",
+    },
+    {
+      id: 3,
+      src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      title: "For Bigger Blazes",
+    },
+    {
+      id: 4,
+      src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      title: "For Bigger Escapes",
+    },
+    {
+      id: 5,
+      src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+      title: "For Bigger Fun",
+    },
+    {
+      id: 6,
+      src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+      title: "For Bigger Joyrides",
+    },
+    {
+      id: 7,
+      src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+      title: "For Bigger Meltdowns",
+    },
+    {
+      id: 8,
+      src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+      title: "Sintel",
+    },
+    {
+      id: 9,
+      src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+      title: "Tears of Steel",
+    },
   ];
 
   useEffect(() => {
@@ -58,8 +94,7 @@ export default function Page() {
   return (
     <div>
       <PageConfig activePage="/test" />
-      <div className="fixed top-0 left-0 right-0 z-50 bg-white">
-      </div>
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white"></div>
 
       {/* Main container with px-56 */}
       <div className="px-7 md:px-20 lg:px-56 pt-[200px]">
@@ -69,7 +104,9 @@ export default function Page() {
             <div
               key={video.id}
               className={`bg-gray-300 aspect-square rounded-md overflow-hidden transition-all duration-300 flex-shrink-0 ${
-                activeVideoIndex === index ? "ring-2 ring-black opacity-100" : "opacity-40"
+                activeVideoIndex === index
+                  ? "ring-2 ring-black opacity-100"
+                  : "opacity-40"
               }`}
             >
               {/* Empty box */}

@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useEffect } from "react";
-import { gsap } from "gsap";
+import gsap from "gsap";
 
 export default function Ghost() {
   const clippedPathRef = useRef(null);
@@ -16,8 +16,8 @@ export default function Ghost() {
       ease: "none", // Linear movement
       repeat: -1, // Infinite loop
       modifiers: {
-        x: gsap.utils.unitize(x => parseFloat(x) % 21) // Loop seamlessly
-      }
+        x: gsap.utils.unitize((x) => parseFloat(x) % 21), // Loop seamlessly
+      },
     });
 
     return () => {
