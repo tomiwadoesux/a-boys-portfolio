@@ -287,6 +287,7 @@ export default async function ProjectPage({ params }) {
               className="border-none w-full"
               title={currentProject.title}
               loading="lazy"
+              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               style={{
                 transform: "scale(0.75)",
                 transformOrigin: "top left",

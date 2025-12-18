@@ -96,6 +96,7 @@ export default function ProjectCard({
                 title={title}
                 scrolling="auto"
                 sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 style={
                   isMobile
                     ? {
