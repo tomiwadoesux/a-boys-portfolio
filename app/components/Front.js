@@ -167,6 +167,67 @@ export default function Front() {
           </svg>
         </div>
       </div>
+      <div className="flex pb-8 md:pb-11 flex-col">
+        <div className="flex flex-row gap-1">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 512 512"
+            fill="#4447A9"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g>
+              <path
+                d="M432.9,458.9V131.3c0-28.9-23.3-52.1-52.1-52.1H53c-28.9,0-52.1,23.3-52.1,52.1v328.6   C0.9,488.7,24.2,512,53,512h328.6C409.6,512,432.9,487.8,432.9,458.9L432.9,458.9z M135,314.6l55.9,79.1l81.9-118.2l108,157.3H53   L135,314.6z"
+                fill="#4447A9"
+              />
+              <path
+                d="M458.9,0H131.2c-28.9,0-52.1,23.3-52.1,52.1v6.5h321.2c28.9,0,52.1,23.3,52.1,52.1v322.1h6.5   c28.9,0,52.1-23.3,52.1-52.1V52.1C512,23.3,488.7,0,458.9,0z"
+                fill="#4447A9"
+              />
+            </g>
+          </svg>
+
+          <h2 className="text-xs pb-3 ">
+            <span className=" text-[#4447A9]"> PhotoBook.. </span>
+          </h2>
+        </div>
+
+        <div className="flex flex-row">
+          <p className=" text-sm flex flex-col md:text-base text-justify ">
+           An archive of photographs I share here, they are added over time. Less about perfection.
+            <span>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://photos.ayotomcs.me/"
+              >
+                <span className="underline text-[#4447A9] text-sm underline-offset-2">
+                  PhotoBook
+                </span>
+              </a>
+            </span>
+          </p>
+        </div>
+
+        <div className="pt-2">
+          <svg
+            className="w-full h-px"
+            viewBox="0 0 100 1"
+            preserveAspectRatio="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line
+              x1="0"
+              y1="0.5"
+              x2="100"
+              y2="0.5"
+              stroke="black"
+              strokeWidth="1"
+            />
+          </svg>
+        </div>
+      </div>
       <div className="flex pb-0  flex-col">
         <div className="flex flex-row gap-1">
           <svg

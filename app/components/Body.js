@@ -40,9 +40,9 @@ const Body = memo(function Body({
               <div className=" flex flex-row justify-between">
                 <div className=" flex flex-row gap-3">
                   <Link href="/" className=" " onClick={handleLinkClick}>
-                    <h4 className="text-2xl md:text-3xl uppercase font-bold">
+                    <h1 className="text-2xl md:text-3xl uppercase font-bold">
                       Ayotomcs
-                    </h4>
+                    </h1>
                   </Link>
                   <Link
                     href="/"
@@ -103,33 +103,32 @@ const Body = memo(function Body({
                         />
                       </Link>
 
-                      <Link
-                        href="/screens"
+                      <a
+                        href="https://photos.ayotomcs.me"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="pl-3"
-                        onClick={handleLinkClick}
                       >
                         <ScrambleText
                           originalText="Resumé"
-                          targetText="Screens"
+                          targetText="Photos"
                           isScrambled={isScrambled}
                           hasInteracted={hasInteracted}
-                          className={`text-sm md:text-[12px] underline underline-offset-2 ${
-                            activePage === "/screens" ? "text-[#4447A9]" : ""
-                          }`}
+                          className="text-sm md:text-[12px] underline underline-offset-2"
                         />
-                      </Link>
+                      </a>
                       <Link
-                        href="/now"
+                        href="/writings"
                         className="pl-3"
                         onClick={handleLinkClick}
                       >
                         <ScrambleText
-                          originalText="Contact"
+                          originalText="Writings"
                           targetText="Now"
                           isScrambled={isScrambled}
                           hasInteracted={hasInteracted}
                           className={`text-sm md:text-[12px] underline underline-offset-2 ${
-                            activePage === "/now" ? "text-[#4447A9]" : ""
+                            activePage === "/writings" ? "text-[#4447A9]" : ""
                           }`}
                         />
                       </Link>
@@ -197,17 +196,21 @@ const Body = memo(function Body({
                           }`}
                         />
                       </Link>
-                      <a href="#" onClick={handleContactClick} className="pl-3">
+                      <Link
+                        href="/writings"
+                        className="pl-3"
+                        onClick={handleLinkClick}
+                      >
                         <ScrambleText
-                          originalText="Contact"
+                          originalText="Writings"
                           targetText="Now"
                           isScrambled={isScrambled}
                           hasInteracted={hasInteracted}
                           className={`text-sm md:text-[12px] underline underline-offset-2 ${
-                            activePage === "/contact" ? "text-[#4447A9]" : ""
+                            activePage === "/writings" ? "text-[#4447A9]" : ""
                           }`}
                         />
-                      </a>
+                      </Link>
                     </>
                   )}
 
@@ -263,33 +266,32 @@ const Body = memo(function Body({
                             }`}
                           />
                         </Link>
-                        <Link
-                          href="/screens"
-                          className="pl-4 "
-                          onClick={handleLinkClick}
+                        <a
+                          href="https://photos.ayotomcs.me"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="pl-4"
                         >
                           <ScrambleText
                             originalText="Resumé"
-                            targetText="Screens"
+                            targetText="Photos"
                             isScrambled={isScrambled}
                             hasInteracted={hasInteracted}
-                            className={`text-sm md:text-[13px] underline underline-offset-2 ${
-                              activePage === "/screens" ? "text-[#4447A9]" : ""
-                            }`}
+                            className="text-sm md:text-[13px] underline underline-offset-2"
                           />
-                        </Link>
+                        </a>
                         <Link
-                          href="/now"
+                          href="/writings"
                           className="pl-4"
                           onClick={handleLinkClick}
                         >
                           <ScrambleText
-                            originalText="Contact"
+                            originalText="Writings"
                             targetText="Now"
                             isScrambled={isScrambled}
                             hasInteracted={hasInteracted}
                             className={`text-sm md:text-[13px] underline underline-offset-2 ${
-                              activePage === "/now" ? "text-[#4447A9]" : ""
+                              activePage === "/writings" ? "text-[#4447A9]" : ""
                             }`}
                           />
                         </Link>
@@ -359,21 +361,21 @@ const Body = memo(function Body({
                             }`}
                           />
                         </Link>
-                        <a
-                          href="#"
-                          onClick={handleContactClick}
+                        <Link
+                          href="/writings"
                           className="pl-4"
+                          onClick={handleLinkClick}
                         >
                           <ScrambleText
-                            originalText="Contact"
+                            originalText="Writings"
                             targetText="Now"
                             isScrambled={isScrambled}
                             hasInteracted={hasInteracted}
                             className={`text-sm md:text-[13px] underline underline-offset-2 ${
-                              activePage === "/contact" ? "text-[#4447A9]" : ""
+                              activePage === "/writings" ? "text-[#4447A9]" : ""
                             }`}
                           />
-                        </a>
+                        </Link>
                       </>
                     )}
 
