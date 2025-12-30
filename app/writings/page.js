@@ -8,6 +8,9 @@ export const metadata = {
   description: "Thoughts",
 };
 
+// Revalidate every minute to show new writings from Sanity
+export const revalidate = 60;
+
 export default function Writings() {
   return (
     <div className="pt-16 md:pt-20">
