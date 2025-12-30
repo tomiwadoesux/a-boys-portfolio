@@ -41,7 +41,7 @@ export default function Signature() {
             // Animate path 0001 first
             gsap.to(path1, {
               strokeDashoffset: 0,
-              duration: 2,
+              duration: 1,
               ease: "power2.inOut",
               onComplete: () => {
                 // Fill path 0001 and hide stroke instantly
@@ -53,7 +53,7 @@ export default function Signature() {
                 // Then animate path 0002
                 gsap.to(path2, {
                   strokeDashoffset: 0,
-                  duration: 2,
+                  duration: 1.4,
                   ease: "power2.inOut",
                   onComplete: () => {
                     // Fill path 0002 and hide stroke instantly
