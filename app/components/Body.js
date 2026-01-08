@@ -118,7 +118,7 @@ const Body = memo(function Body({
                         />
                       </a>
                       <Link
-                        href="/writings"
+                        href="/now"
                         className="pl-3"
                         onClick={handleLinkClick}
                       >
@@ -128,7 +128,7 @@ const Body = memo(function Body({
                           isScrambled={isScrambled}
                           hasInteracted={hasInteracted}
                           className={`text-sm md:text-[12px] underline underline-offset-2 ${
-                            activePage === "/writings" ? "text-[#4447A9]" : ""
+                            activePage === "/now" ? "text-[#4447A9]" : ""
                           }`}
                         />
                       </Link>
@@ -281,7 +281,7 @@ const Body = memo(function Body({
                           />
                         </a>
                         <Link
-                          href="/writings"
+                          href="/now"
                           className="pl-4"
                           onClick={handleLinkClick}
                         >
@@ -291,7 +291,7 @@ const Body = memo(function Body({
                             isScrambled={isScrambled}
                             hasInteracted={hasInteracted}
                             className={`text-sm md:text-[13px] underline underline-offset-2 ${
-                              activePage === "/writings" ? "text-[#4447A9]" : ""
+                              activePage === "/now" ? "text-[#4447A9]" : ""
                             }`}
                           />
                         </Link>
