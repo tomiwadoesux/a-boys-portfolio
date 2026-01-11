@@ -7,8 +7,9 @@ const DescriptionContext = createContext();
 export function DescriptionProvider({ children }) {
   const [description, setDescription] = useState(
     <>
-      A Design Engineer Now in{" "}
+      A Design Engineer transitioning to an AI Engineer Now in{" "}
       <span className="text-[#4447A9]">Tx, USA</span>
+      
     </>
   );
   const [activePage, setActivePage] = useState("");
